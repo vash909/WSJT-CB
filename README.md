@@ -1,4 +1,5 @@
-# WSJT-CB Fork: Changes vs Original WSJT-X
+# WSJT-CB: a 27MHz version of wsjt-x by Joe Taylor K1JT
+# mod by 1AT106 / 1XZ001 Vash
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
