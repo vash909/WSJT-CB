@@ -150,4 +150,32 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
+## 8) Arch Linux / CachyOS Build Notes
+
+These package names are for Arch Linux and CachyOS (Arch-based distributions):
+
+- `base-devel` (includes essential build tools)
+- `cmake`
+- `ninja`
+- `gcc-fortran` (provides gfortran)
+- `boost` (includes boost-log and boost-thread)
+- `fftw`
+- `hamlib`
+- `libusb`
+- `qt5-base`
+- `qt5-multimedia`
+- `qt5-tools`
+- `qt5-serialport`
+- `qt5-websockets`
+- `asciidoc` (only needed if manpages are generated)
+
+Example local configure command (no manpages/docs):
+
+```bash
+cmake -S . -B build -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DWSJT_SKIP_MANPAGES=ON \
+  -DWSJT_GENERATE_DOCS=OFF
+```
+
 # WSJT-CB
