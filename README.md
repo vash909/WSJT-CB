@@ -44,7 +44,22 @@ Changes:
 Impact:
 - The fork no longer treats 27.265 MHz as out-of-band for normal operation in this added 11m segment.
 
-## 3) Auto-Sequence Fixes for Long CB Callsigns
+## 3) CB NNN Country Lookup in Decoded Display
+
+Files:
+- `logbook/AD1CCty.cpp`
+- `widgets/displaytext.cpp`
+
+Changes:
+- Added CB country-resolution using first 3 digits (NNN) for CB callsigns `NNNLLNNN`.
+- Added static NNN→country map based on international CB prefix list.
+- Added lookup in `AD1CCty::lookup(...)` before standard DXCC lookup. For CB callsigns it returns a record with `entity_name` country and primary_prefix NNN.
+- Kept fallback lookup behavior unchanged for regular non-CB callsigns.
+
+Impact:
+- CB calls like `001AB123` now display the CB country (e.g. `Italy`) directly in decoded text, instead of falling back to DXCC prefix logic.
+
+## 4) Auto-Sequence Fixes for Long CB Callsigns
 
 File:
 - `widgets/mainwindow.cpp`
