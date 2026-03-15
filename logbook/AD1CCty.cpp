@@ -3,6 +3,7 @@
 #include <string>
 #include <stdexcept>
 #include <algorithm>
+#include <map>
 #include <boost/multi_index_container.hpp>
 #include <boost/multi_index/hashed_index.hpp>
 #include <boost/multi_index/ordered_index.hpp>
@@ -31,6 +32,207 @@ namespace
   auto const file_name = "cty.dat";
   auto const grid_file_name = "grid.dat";    // NJ0A
 //  auto const logFileName = "wsjtx_log.adi";  // NJ0A
+
+  std::map<QString, QString> const& cb_NNN_to_country ()
+  {
+    static std::map<QString, QString> const m {
+      {"001", "Italy"}, {"002", "United States Of America"},
+      {"003", "Brazil"}, {"004", "Argentina"},
+      {"005", "Venezuela"}, {"006", "Colombia"},
+      {"008", "Peru"}, {"009", "Canada"},
+      {"010", "Mexico"}, {"011", "Puerto Rico"},
+      {"012", "Uruguay"}, {"013", "Germany"},
+      {"014", "France"}, {"015", "Switzerland"},
+      {"016", "Belgium"}, {"017", "Hawaiian Islands"},
+      {"018", "Greece"}, {"019", "Netherlands"},
+      {"020", "Norway"}, {"021", "Sweden"},
+      {"022", "French Guyana"}, {"023", "Jamaica"},
+      {"024", "Panama"}, {"025", "Japan"},
+      {"026", "England"}, {"027", "Iceland"},
+      {"028", "Honduras"}, {"029", "Ireland"},
+      {"030", "Spain"}, {"031", "Portugal"},
+      {"032", "Chile"}, {"033", "Alaska"},
+      {"034", "Canary Islands"}, {"035", "Austria"},
+      {"036", "San Marino"}, {"037", "Dominican Republic"},
+      {"038", "Greenland"}, {"039", "Angola"},
+      {"040", "Liechtenstein"}, {"041", "New Zealand"},
+      {"042", "Liberia"}, {"043", "Australia"},
+      {"044", "South Africa"}, {"045", "Serbia"},
+      {"046", "East Germany"}, {"047", "Denmark"},
+      {"048", "Saudi Arabia"}, {"049", "Balearic Islands"},
+      {"050", "European Russia"}, {"051", "Andorra"},
+      {"052", "Faroe Islands"}, {"053", "El Salvador"},
+      {"054", "Luxembourg"}, {"055", "Gibraltar"},
+      {"056", "Finland"}, {"057", "India"},
+      {"058", "East Malaysia"}, {"059", "Dodecanese Islands"},
+      {"060", "Hong Kong"}, {"061", "Ecuador"},
+      {"062", "Guam Island"}, {"063", "St. Helena Island"},
+      {"064", "Senegal"}, {"065", "Sierra Leone"},
+      {"066", "Mauritania"}, {"067", "Paraguay"},
+      {"068", "Northern Ireland"}, {"069", "Costa Rica"},
+      {"070", "American Samoa Islands"}, {"071", "Midway Islands"},
+      {"072", "Guatemala"}, {"073", "Suriname"},
+      {"074", "Namibia"}, {"075", "Azores Islands"},
+      {"076", "Morocco"}, {"077", "Ghana"},
+      {"078", "Zambia"}, {"079", "Philippine Islands"},
+      {"080", "Bolivia"}, {"081", "San Andres Providencia"},
+      {"082", "Guantanamo Bay"}, {"083", "Tanzania"},
+      {"084", "Ivory Coast"}, {"085", "Zimbabwe"},
+      {"086", "Nepal"}, {"087", "Yemen"},
+      {"088", "Cuba"}, {"089", "Nigeria"},
+      {"090", "Crete Island"}, {"091", "Indonesia"},
+      {"092", "Libya"}, {"093", "Malta"},
+      {"094", "United Arab Emirates"}, {"095", "Mongolia"},
+      {"096", "Tonga Islands"}, {"097", "Israel"},
+      {"098", "Singapore"}, {"099", "Fiji Islands"},
+      {"100", "Korea"}, {"101", "Papua – New Guinea"},
+      {"102", "Kuwait"}, {"103", "Haiti"},
+      {"104", "Corsica"}, {"105", "Botswana"},
+      {"106", "Ceuta & Melilla"}, {"107", "Monaco"},
+      {"108", "Scotland"}, {"109", "Hungary"},
+      {"110", "Cyprus"}, {"111", "Jordan"},
+      {"112", "Lebanon"}, {"113", "West Malaysia"},
+      {"114", "Pakistan"}, {"115", "Qatar"},
+      {"116", "Turkey"}, {"117", "Egypt"},
+      {"118", "The Gambia"}, {"119", "Madeira Island"},
+      {"120", "Antigua & Barbuda Isl"}, {"121", "The Bahamas"},
+      {"122", "Barbados Island"}, {"123", "Bermuda Island"},
+      {"124", "Amsterdam & St. Paul Isl"}, {"125", "Cayman Islands"},
+      {"126", "Nicaragua"}, {"127", "Virgin Islands"},
+      {"128", "British Virgin Isl."}, {"129", "Macquarie Islands"},
+      {"130", "Norfolk Islands"}, {"131", "Guyana"},
+      {"132", "Marshall Islands"}, {"133", "Marianas Islands"},
+      {"134", "Republic Of Palau"}, {"135", "Solomon Islands"},
+      {"136", "Martinique Island"}, {"137", "Isle Of Man"},
+      {"138", "Vatican City State"}, {"139", "Southern Yemen"},
+      {"140", "Antarctica"}, {"141", "St. Pierre & Miquelon"},
+      {"142", "Lesotho"}, {"143", "St. Lucia Island"},
+      {"144", "Easter Island"}, {"145", "Galapagos Islands"},
+      {"146", "Algeria"}, {"147", "Tunisia"},
+      {"148", "Ascension Island"}, {"149", "Laccadive Islands"},
+      {"150", "Bahrain"}, {"151", "Iraq"},
+      {"152", "Maldives Islands"}, {"153", "Thailand"},
+      {"154", "Iran"}, {"155", "Taiwan"},
+      {"156", "Cameroon"}, {"157", "Montserrat Island"},
+      {"158", "Trinidad & Tobago Isl"}, {"159", "Somali Republic"},
+      {"160", "Sudan"}, {"161", "Poland"},
+      {"162", "Democratic Republic Of Congo"}, {"163", "Wales"},
+      {"164", "Togo Republic"}, {"165", "Sardegna"},
+      {"166", "St. Maarten, Saba & St.Eustatius"}, {"167", "Jersey Island"},
+      {"168", "Mauritius Islands"}, {"169", "Guernsey Island"},
+      {"170", "Burkina Faso"}, {"171", "Svalbard Islands"},
+      {"172", "New Caledonia"}, {"173", "Reunion Island"},
+      {"174", "Uganda"}, {"175", "Chad Republic"},
+      {"176", "Central African Republic"}, {"177", "Sri Lanka"},
+      {"178", "Bulgaria"}, {"179", "Czechoslovakia"},
+      {"180", "Oman"}, {"181", "Syria"},
+      {"182", "Republic Of Guinea"}, {"183", "Benin"},
+      {"184", "Burundi"}, {"185", "Comoros Islands"},
+      {"186", "Djibouti"}, {"187", "Kenya"},
+      {"188", "Malagasy Republic"}, {"189", "Mayotte Island"},
+      {"190", "Seychelles Islands"}, {"191", "Kingdom of Eswatini"},
+      {"192", "Cocos Islands"}, {"193", "Keeling Islands"},
+      {"194", "Dominica Island"}, {"195", "Grenada Island"},
+      {"196", "Guadeloupe Islands"}, {"197", "Vanuatu Islands"},
+      {"198", "Falkland Islands"}, {"199", "Equatorial Guinea"},
+      {"200", "South Shetland Islands"}, {"201", "French Polynesia"},
+      {"202", "Bhutan"}, {"203", "China"},
+      {"204", "Mozambique"}, {"205", "Republic Of Cape Verde"},
+      {"206", "Ethiopia"}, {"207", "St. Martin Island"},
+      {"208", "Glorieuses Islands"}, {"209", "Juan De Nova Island"},
+      {"210", "Wallis & Futuna Islands"}, {"211", "Jan Mayen Island"},
+      {"212", "Aland Islands"}, {"213", "Market Reef"},
+      {"214", "Congo Republic"}, {"215", "Gabon Republic"},
+      {"216", "Mali"}, {"217", "Christmas Island"},
+      {"218", "Belize"}, {"219", "Anguilla Island"},
+      {"220", "St. Vincent Island"}, {"221", "South Orkney Islands"},
+      {"222", "South Sandwich Islands"}, {"223", "Western Samoa Islands"},
+      {"224", "Western Kiribati"}, {"225", "Brunei"},
+      {"226", "Malawi"}, {"227", "Rwanda"},
+      {"228", "Chagos Islands"}, {"229", "Heard Island"},
+      {"230", "Federated States Of Micronesia"}, {"231", "St. Peter & St. Paul Rock"},
+      {"232", "Aruba Island"}, {"233", "Romania"},
+      {"234", "Afghanistan"}, {"235", "Geneva"},
+      {"236", "Bangladesh"}, {"237", "Union Of Myanmar"},
+      {"238", "Cambodia"}, {"239", "Laos"},
+      {"240", "Macao"}, {"241", "Spratly Island"},
+      {"242", "Vietnam"}, {"243", "Gleam & St.Brandon Isl"},
+      {"244", "Pagalu Island"}, {"245", "Niger Republic"},
+      {"246", "Sao Tome & Principe Isl"}, {"247", "Navassa Island"},
+      {"248", "Turks & Caicos Islands"}, {"249", "Northern Cook Islands"},
+      {"250", "Cook Islands"}, {"251", "Albania"},
+      {"252", "Revillagigedo Islands"}, {"253", "Andaman & Nicobar Island"},
+      {"254", "Mount Athos"}, {"255", "Kerguelen Islands"},
+      {"256", "Prince Edward & Marion Islands"}, {"257", "Rodriguez Island"},
+      {"258", "Tristan Da Cunha & Gough"}, {"259", "Tromelin Island"},
+      {"260", "Baker & Howland Islands"}, {"261", "Chatham Islands"},
+      {"262", "Johnston Island"}, {"263", "Kermadec Islands"},
+      {"264", "Kingman Reef"}, {"265", "Central Kiribati"},
+      {"266", "Eastern Kiribati"}, {"267", "Kure Island"},
+      {"268", "Lord Howe Islands"}, {"269", "Mellish Reef"},
+      {"270", "Minami Torishima Island"}, {"271", "Republic Of Nauru"},
+      {"272", "Niue Island"}, {"273", "Jarvis & Palmyra Islands"},
+      {"274", "Pitcairn Island"}, {"275", "Tokelau Islands"},
+      {"276", "Tuvalu Islands"}, {"277", "Sable Island"},
+      {"278", "Wake Island"}, {"279", "Willis Islets"},
+      {"280", "Aves Island"}, {"281", "Ogasawara Islands"},
+      {"282", "Auckland & Campbell Islands"}, {"283", "St. Kitts & Nevis Island"},
+      {"284", "St. Paul Island"}, {"285", "Fernando De Noronha Islands"},
+      {"286", "Juan Fernandez Islands"}, {"287", "Malpelo Island"},
+      {"288", "San Felix & San Ambrosio"}, {"289", "South Georgia Islands"},
+      {"290", "Trindade & Martim Vaz Islands"}, {"291", "Dhekelia & Akrotiri"},
+      {"292", "Abu-ail & Jabal-al-tair"}, {"293", "Guinea Bissau"},
+      {"294", "Peter 1st Island"}, {"296", "Clipperton Island"},
+      {"297", "Bouvet Island"}, {"298", "Crozet Islands"},
+      {"299", "Desecheo Island"}, {"300", "West Sahara-rio De Oro"},
+      {"301", "Armenia"}, {"302", "Asiatic Russia"},
+      {"303", "Azerbaijan"}, {"304", "Estonia"},
+      {"305", "Franz Josef Land"}, {"306", "Georgia"},
+      {"307", "Kaliningradsk"}, {"308", "Kazakh"},
+      {"309", "Kyrgyzstan"}, {"310", "Latvia"},
+      {"311", "Lithuania"}, {"312", "Moldavia"},
+      {"313", "Tajikistan"}, {"314", "Turkoman"},
+      {"315", "Ukraine"}, {"316", "Uzbek"},
+      {"317", "Belarus"}, {"318", "Survey Military Of Malta"},
+      {"319", "United Nations New York"}, {"320", "Banaba Island"},
+      {"321", "Conway Reef"}, {"322", "Walvis Bay"},
+      {"323", "Yemen Republic"}, {"324", "Penguin Islands"},
+      {"325", "Rotuma Island"}, {"326", "Malyj Vytsotskj"},
+      {"327", "Slovenia"}, {"328", "Croatia"},
+      {"329", "Czech Republic"}, {"330", "Slovak Republic"},
+      {"331", "Bosnia"}, {"332", "North Macedonia"},
+      {"333", "Eritrea"}, {"334", "North Korea"},
+      {"335", "Scarborough Reef"}, {"336", "Pratas Island"},
+      {"337", "Austral Islands"}, {"338", "Marquesas Islands"},
+      {"339", "Temotu"}, {"340", "Palestina"},
+      {"341", "East Timor"}, {"342", "Chesterfields Islands"},
+      {"343", "Ducie Island"}, {"344", "Republic Of Montenegro"},
+      {"345", "Swains Island"}, {"346", "St. Barthelemy Island"},
+      {"347", "Curacao"}, {"348", "Sint Maarten"},
+      {"349", "Saba & Sint-Eustatius"}, {"350", "Bonaire"},
+      {"351", "South Sudan"}, {"352", "Republic of Kosovo"}
+    };
+    return m;
+  }
+
+  QString cb_country_name_from_call (QString const& call)
+  {
+    auto call_base = Radio::base_callsign (call).toUpper ();
+    QRegularExpression cb_re {R"(^([0-9]{3})[A-Z]{2}[0-9]{3}$)"};
+    auto match = cb_re.match (call_base);
+    if (!match.hasMatch ())
+      {
+        return {};
+      }
+    auto prefix = match.captured (1);
+    auto const& map = cb_NNN_to_country ();
+    auto it = map.find (prefix);
+    if (it != map.end ())
+      {
+        return it->second;
+      }
+    return QString {"CB " + prefix};
+  }
 }
 
 struct entity
@@ -507,6 +709,17 @@ AD1CCty::~AD1CCty ()
 auto AD1CCty::lookup (QString const& call) const -> Record
 {
   auto const& exact_search = call.toUpper ();
+
+  // CB 27MHz callsigns NNNLLNNN (e.g. 001AB123): map the first 3 digits to CB country
+  auto cb_country = cb_country_name_from_call (exact_search);
+  if (!cb_country.isEmpty ())
+    {
+      Record r;
+      r.entity_name = cb_country;
+      r.primary_prefix = Radio::base_callsign (exact_search).left (3).toUpper ();
+      return r;
+    }
+
   if (!(exact_search.endsWith ("/MM") || exact_search.endsWith ("/AM")))
     {
       auto search_prefix = Radio::effective_prefix (exact_search);
