@@ -1,0 +1,66 @@
+# Build artifacts
+build/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+*.o
+*.obj
+*.lo
+*.la
+*.al
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+*.out
+*.ilk
+*.pdb
+
+# Qt Creator / Qt project user files
+*.pro.user
+*.pro.user.*
+*.qmake.stash
+*.user
+*.user.*
+*.pro.user
+
+# Visual Studio Code
+.vscode/
+
+# Logs and crash dumps
+*.log
+*.trace
+*.dmp
+*.core
+
+# Temporary files
+*~
+*.tmp
+*.swp
+*.swo
+
+# Generated files
+*.moc
+*.rcc
+*.ui.h
+*.qrc
+
+# CPack / packaging
+*.deb
+*.rpm
+*.tar.gz
+
+# Qt Creator cache
+*.qtc*
+
+# Python
+__pycache__/
+*.pyc
+
+# Mac
+.DS_Store
+
+# Linux
+*~
