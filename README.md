@@ -19,7 +19,7 @@ This document describes the code changes currently present in this fork, compare
 - `widgets/mainwindow.cpp`
 - `main.cpp`
 
-## 1) CB Callsign Support (`NNNLLNNN`)
+## 1) CB Callsign Support (`N{1,3}L{1,2}N{1,3}`)
 
 Files:
 - `Radio.hpp`
@@ -28,11 +28,11 @@ Files:
 Changes:
 - Added `Radio::is_cb_callsign(QString const&)`.
 - Added CB callsign regex:
-  - `^[0-9]{3}[A-Z]{2}[0-9]{3}$`
+  - `^[0-9]{1,3}[A-Z]{1,2}[0-9]{1,3}$`
 - Extended `Radio::is_callsign(...)` so CB calls are treated as valid callsigns.
 
 Impact:
-- Callsigns like `999XZ999` are now accepted by validation logic used by the UI and message processing flow.
+- Callsigns like `1A1`, `26AT101`, `21AT106`, `999ZZ999` are accepted by validation logic used by the UI and message processing flow.
 
 ## 2) 11m/CB Band and 27.265 MHz Frequency
 
@@ -56,7 +56,7 @@ Files:
 - `widgets/displaytext.cpp`
 
 Changes:
-- Added CB country-resolution using first 3 digits (NNN) for CB callsigns `NNNLLNNN`.
+- Added CB country-resolution using first 3 digits (NNN) for CB callsigns with 3-digit numeric prefix (for example `NNNLLNNN`).
 - Added static NNN→country map based on international CB prefix list.
 - Added lookup in `AD1CCty::lookup(...)` before standard DXCC lookup. For CB callsigns it returns a record with `entity_name` country and primary_prefix NNN.
 - Kept fallback lookup behavior unchanged for regular non-CB callsigns.

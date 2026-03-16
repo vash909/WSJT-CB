@@ -17,8 +17,10 @@ namespace Radio
     // valid callsign alphabet
     QRegularExpression callsign_alphabet_re {R"(^[A-Z0-9/]{3,11}$)"};
 
-    // common CB pattern in many regions: NNNLLNNN
-    QRegularExpression cb_callsign_re {R"(^[0-9]{3}[A-Z]{2}[0-9]{3}$)"};
+    // CB callsign family used in this fork:
+    // numeric prefix 1-3 digits, 1-2 letters, numeric suffix 1-3 digits.
+    // Examples: 1A1, 21AT106, 26AT101, 999ZZ999.
+    QRegularExpression cb_callsign_re {R"(^[0-9]{1,3}[A-Z]{1,2}[0-9]{1,3}$)"};
 
     // very loose validation - callsign must contain a letter next to
     // a number
