@@ -1,6 +1,7 @@
 # Build artifacts
 build/
 CMakeFiles/
+dist/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
