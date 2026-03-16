@@ -1,3 +1,8 @@
+> **Disclaimer**
+> This software is provided for educational purposes only.
+> You are solely responsible for ensuring full compliance with all applicable local, national, and international radiocommunication laws and regulations.
+> This project is distributed under the GNU General Public License v3.0 (GPLv3); see `COPYING` for details.
+
 # WSJT-CB: a 27MHz version of wsjt-x by Joe Taylor K1JT
 # mod by 1AT106 / 1XZ001 Vash
 
