@@ -56,13 +56,13 @@ Files:
 - `widgets/displaytext.cpp`
 
 Changes:
-- Added CB country-resolution using first 3 digits (NNN) for CB callsigns with 3-digit numeric prefix (for example `NNNLLNNN`).
+- Added CB country-resolution using the numeric prefix for CB callsigns matching `N{1,3}L{1,2}N{1,3}`.
 - Added static NNN→country map based on international CB prefix list.
-- Added lookup in `AD1CCty::lookup(...)` before standard DXCC lookup. For CB callsigns it returns a record with `entity_name` country and primary_prefix NNN.
+- Added lookup in `AD1CCty::lookup(...)` before standard DXCC lookup. For CB callsigns it normalizes the numeric prefix to a zero-padded `NNN`, then returns a record with `entity_name` country and `primary_prefix` `NNN`.
 - Kept fallback lookup behavior unchanged for regular non-CB callsigns.
 
 Impact:
-- CB calls like `001AB123` now display the CB country (e.g. `Italy`) directly in decoded text, instead of falling back to DXCC prefix logic.
+- CB calls like `001AB123`, `1AT106`, and `26AT101` now display the CB country directly in decoded text, instead of falling back to DXCC prefix logic.
 
 ## 4) Auto-Sequence Fixes for Long CB Callsigns
 

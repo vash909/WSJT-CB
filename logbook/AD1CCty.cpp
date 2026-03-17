@@ -218,13 +218,13 @@ namespace
   QString cb_country_name_from_call (QString const& call)
   {
     auto call_base = Radio::base_callsign (call).toUpper ();
-    QRegularExpression cb_re {R"(^([0-9]{3})[A-Z]{2}[0-9]{3}$)"};
+    QRegularExpression cb_re {R"(^([0-9]{1,3})[A-Z]{1,2}[0-9]{1,3}$)"};
     auto match = cb_re.match (call_base);
     if (!match.hasMatch ())
       {
         return {};
       }
-    auto prefix = match.captured (1);
+    auto prefix = match.captured (1).rightJustified (3, QChar {'0'});
     auto const& map = cb_NNN_to_country ();
     auto it = map.find (prefix);
     if (it != map.end ())
@@ -710,13 +710,20 @@ auto AD1CCty::lookup (QString const& call) const -> Record
 {
   auto const& exact_search = call.toUpper ();
 
-  // CB 27MHz callsigns NNNLLNNN (e.g. 001AB123): map the first 3 digits to CB country
+  // CB 27MHz callsigns N{1,3}L{1,2}N{1,3}: map the numeric prefix to a
+  // zero-padded 3-digit CB country code.
   auto cb_country = cb_country_name_from_call (exact_search);
   if (!cb_country.isEmpty ())
     {
       Record r;
       r.entity_name = cb_country;
-      r.primary_prefix = Radio::base_callsign (exact_search).left (3).toUpper ();
+      auto call_base = Radio::base_callsign (exact_search);
+      auto digit_count = 0;
+      while (digit_count < call_base.size () && call_base[digit_count].isDigit ())
+        {
+          ++digit_count;
+        }
+      r.primary_prefix = call_base.left (digit_count).rightJustified (3, QChar {'0'});
       return r;
     }
 
