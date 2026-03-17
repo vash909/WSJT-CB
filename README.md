@@ -8,6 +8,13 @@
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
+## Important Note: `<...>` with Non-Standard Callsigns (FT8)
+
+When two non-standard/CB callsigns are exchanged in FT8, one callsign may be sent as a hash.
+Because of this, third-party listeners can see decodes like `<...> 26AT016` instead of `30AT084 26AT016`.
+
+This is a protocol/encoding behavior, not an AutoSeq bug.
+If your station has not yet learned the hash-to-callsign mapping (for example because that station has not been decoded in clear text yet), the real callsign may remain hidden until a later decode provides that mapping.
 
 ## Modified Files
 
