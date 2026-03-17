@@ -65,3 +65,6 @@ __pycache__/
 
 # Linux
 *~
+
+#Win
+rebuild.ps1
