@@ -36,10 +36,31 @@ Changes:
 - Added `Radio::is_cb_callsign(QString const&)`.
 - Added CB callsign regex:
   - `^[0-9]{1,3}[A-Z]{1,2}[0-9]{1,3}$`
+  - special-case extension for 4-digit unit numbers only with a 1-digit country prefix
 - Extended `Radio::is_callsign(...)` so CB calls are treated as valid callsigns.
 
 Impact:
-- Callsigns like `1A1`, `26AT101`, `21AT106`, `999ZZ999` are accepted by validation logic used by the UI and message processing flow.
+- Callsigns like `1A1`, `26AT101`, `21AT106`, `999ZZ999`, and `1AT1000` are accepted by validation logic used by the UI and message processing flow.
+
+Examples:
+
+| Callsign | Accepted | Reason |
+| --- | --- | --- |
+| `1A1` | Yes | 1-digit prefix, 1 letter, 1-digit suffix |
+| `1TT1` | Yes | 1-digit prefix, 2 letters, 1-digit suffix |
+| `1TT01` | Yes | 1-digit prefix, 2 letters, 2-digit suffix |
+| `1TT001` | Yes | 1-digit prefix, 2 letters, 3-digit suffix |
+| `1TT1000` | Yes | 1-digit prefix, 2 letters, 4-digit suffix allowed by special case |
+| `1AT1000` | Yes | 1-digit prefix, 2 letters, 4-digit suffix allowed by special case |
+| `11TT1` | Yes | 2-digit prefix, 2 letters, 1-digit suffix |
+| `111TT11` | Yes | 3-digit prefix, 2 letters, 2-digit suffix |
+| `111TT999` | Yes | 3-digit prefix, 2 letters, 3-digit suffix |
+| `26AT715` | Yes | 2-digit prefix, 2 letters, 3-digit suffix |
+| `26AT1000` | No | 4-digit suffix is not allowed with a 2-digit prefix |
+| `111TT1000` | No | 4-digit suffix is not allowed with a 3-digit prefix |
+| `1TT10000` | No | suffix longer than 4 digits is not allowed |
+| `1TT` | No | missing numeric suffix |
+| `AT1000` | No | missing numeric prefix |
 
 ## 2) 11m/CB Band and 27.265 MHz Frequency
 

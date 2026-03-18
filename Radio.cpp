@@ -19,8 +19,11 @@ namespace Radio
 
     // CB callsign family used in this fork:
     // numeric prefix 1-3 digits, 1-2 letters, numeric suffix 1-3 digits.
-    // Examples: 1A1, 21AT106, 26AT101, 999ZZ999.
-    QRegularExpression cb_callsign_re {R"(^[0-9]{1,3}[A-Z]{1,2}[0-9]{1,3}$)"};
+    // Special-case: allow a 4-digit suffix only when the numeric prefix is
+    // exactly 1 digit, e.g. 1AT1000 is valid while 26AT1000 is not.
+    // Examples: 1A1, 21AT106, 26AT101, 999ZZ999, 1AT1000.
+    QRegularExpression cb_callsign_re {
+      R"(^(?:[0-9][A-Z]{1,2}[0-9]{1,4}|[0-9]{2,3}[A-Z]{1,2}[0-9]{1,3})$)"};
 
     // very loose validation - callsign must contain a letter next to
     // a number
