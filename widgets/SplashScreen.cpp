@@ -28,10 +28,8 @@ SplashScreen::SplashScreen ()
   : QSplashScreen {QPixmap {":/splash.png"}, Qt::WindowStaysOnTopHint}
 {
   setLayout (&m_->main_layout_);
-  showMessage ("<h2>" + QString {"WSJT-X v" +
-        QCoreApplication::applicationVersion() + " " +
-        revision ()}.simplified () + "</h2>"
-    "V2.0 has many new features.<br /><br />"
+  showMessage ("<h2>" + product_versioned_name (revision ()) + "</h2>"
+    "This release has many new features.<br /><br />"
     "The release notes have more details.<br /><br />"
     "Send issue reports to https://wsjtx.groups.io, and be sure to save .wav<br />"
     "files where appropriate.<br /><br />"

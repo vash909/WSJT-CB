@@ -60,7 +60,7 @@ if (NOT DEFINED CMAKE_Fortran_COMPILER AND NOT DEFINED ENV{FC})
 endif ()
 
 project (wsjtx
-  VERSION 3.0.0.0
+  VERSION 1.0.0.0
   LANGUAGES C CXX Fortran
   )
 set (PROJECT_DESCRIPTION "WSJT-X: Digital Modes for Weak Signal Communications in Amateur Radio")
@@ -87,13 +87,13 @@ message (STATUS "******************************************************")
 
 include (set_build_type)
 # RC 0 or omitted is a development build, GA is a General Availability release build
-set_build_type (RC 1)
+set_build_type (GA)
 set (wsjtx_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${BUILD_TYPE_REVISION}")
 
 #
 # project information
 #
-set (PROJECT_BUNDLE_NAME "WSJT-X")
+set (PROJECT_BUNDLE_NAME "WSJT-CB")
 set (PROJECT_VENDOR "Joe Taylor, K1JT")
 set (PROJECT_CONTACT "Joe Taylor <k1jt@arrl.net>")
 set (PROJECT_COPYRIGHT "Copyright (C) 2001-2025 by Joe Taylor, K1JT")

@@ -546,7 +546,7 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
         m_config.udp_server_name (), m_config.udp_server_port (),
         m_config.udp_interface_names (), m_config.udp_TTL (),
         this}},
-  m_psk_Reporter {&m_config, QString {"WSJT-X v" + version () + " " + m_revision}.simplified ()},
+  m_psk_Reporter {&m_config, product_versioned_name (m_revision)},
   m_manual {&m_network_manager},
   m_block_udp_status_updates {false},
   m_useDarkStyle {false}
@@ -4104,7 +4104,7 @@ QString MainWindow::userAgent() {
   QString platform = "(" + QSysInfo::prettyProductName()+"; "+QSysInfo::productType() + " " + QSysInfo::productVersion() + "; " +
                      QSysInfo::currentCpuArchitecture() + "; " +
                      QString("rv:%1").arg(QSysInfo::kernelVersion()) + ")";
-  QString userAgent = QString{"WSJT-X/" + version() + "_" + m_revision}.simplified() + " " +platform;
+  QString userAgent = product_user_agent (m_revision) + " " + platform;
   return userAgent;
   }
 

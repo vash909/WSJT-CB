@@ -78,6 +78,23 @@ QString version (bool include_patch)
   return v;
 }
 
+QString product_name ()
+{
+  return "WSJT-CB";
+}
+
+QString product_versioned_name (QString const& revision_string)
+{
+  Q_UNUSED (revision_string);
+  return QString {product_name () + " " + version ()}.simplified ();
+}
+
+QString product_user_agent (QString const& revision_string)
+{
+  Q_UNUSED (revision_string);
+  return QString {product_name () + "/" + version ()}.simplified ();
+}
+
 QString program_title (QString const& revision)
 {
   QString id {QCoreApplication::applicationName () + "   v" + QCoreApplication::applicationVersion ()};
