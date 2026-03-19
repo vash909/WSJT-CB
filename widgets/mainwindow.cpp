@@ -552,6 +552,14 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_useDarkStyle {false}
 {
   ui->setupUi(this);
+  ui->actionBand_Buttons->setVisible (false);
+  ui->actionBand_Buttons->setEnabled (false);
+  ui->actionBand_Buttons->setChecked (false);
+  ui->actionVHF_UHF_Buttons->setVisible (false);
+  ui->actionVHF_UHF_Buttons->setEnabled (false);
+  ui->actionVHF_UHF_Buttons->setChecked (false);
+  hide_band_button_bar ();
+  apply_main_window_chrome ();
   setUnifiedTitleAndToolBarOnMac (true);
   createStatusBar();
   add_child_to_event_filter (this);
@@ -1789,8 +1797,8 @@ void MainWindow::readSettings()
   ui->actionDisable_writing_of_ALL_TXT->setChecked(m_settings->value("disableWritingOfAllTxt", false).toBool());
   ui->actionDisable_event_logging->setChecked(m_settings->value("DisableEventLogging", false).toBool());
   ui->actionUse_Dark_Style->setChecked(m_settings->value("DarkStyle", false).toBool());
-  ui->actionBand_Buttons->setChecked(m_settings->value("BandButtons", true).toBool());
-  ui->actionVHF_UHF_Buttons->setChecked(m_settings->value("VHFUHFButtons", false).toBool());
+  ui->actionBand_Buttons->setChecked(false);
+  ui->actionVHF_UHF_Buttons->setChecked(false);
   ui->tx1->setEnabled(m_settings->value("tx1State", true).toBool());
   ui->actionHighlightB4->setChecked(m_settings->value("HighlightB4", false).toBool());
   ui->actionHighlightToday->setChecked(m_settings->value("HighlightToday", false).toBool());
@@ -2025,12 +2033,14 @@ void MainWindow::set_application_font (QFont const& font)
           qApp->setStyleSheet(ts.readAll() + "* {" + font_as_stylesheet (font) + '}');
           m_useDarkStyle = true;
           m_wideGraph->setDarkStyle(m_useDarkStyle);
+          apply_main_window_chrome ();
           check_button_color();
           ui->tabWidget->setTabShape(QTabWidget::Rounded);
       }
    } else {
       m_useDarkStyle = false;
       m_wideGraph->setDarkStyle(m_useDarkStyle);
+      apply_main_window_chrome ();
       check_button_color();
       ui->tabWidget->setTabShape(QTabWidget::Triangular);
       qApp->setFont (font);
@@ -2098,6 +2108,72 @@ void MainWindow::set_application_font (QFont const& font)
     {
       widget->updateGeometry ();
     }
+}
+
+void MainWindow::hide_band_button_bar ()
+{
+  QList<QWidget *> band_buttons {
+    ui->pb160, ui->pb80, ui->pb60, ui->pb40, ui->pb30, ui->pb20, ui->pb17,
+    ui->pb15, ui->pb12, ui->pb10, ui->pb8, ui->pb6, ui->pb2, ui->pb70,
+    ui->pb50, ui->pb4, ui->pb144, ui->pb220, ui->pb432, ui->pb902, ui->pb23,
+    ui->pb13, ui->pb9, ui->pb5G, ui->pb10G, ui->pb24G
+  };
+
+  for (auto * button : band_buttons) {
+    if (button) button->hide ();
+  }
+}
+
+void MainWindow::apply_main_window_chrome ()
+{
+  auto const is_dark_palette = m_useDarkStyle
+                               || qApp->palette ().color (QPalette::Window).lightness () < 128;
+  auto set_decode_panel = [] (DisplayText * widget, QColor const& base, QColor const& text, QColor const& border, QColor const& selection) {
+    if (!widget) return;
+    auto palette = widget->palette ();
+    palette.setColor (QPalette::Base, base);
+    palette.setColor (QPalette::Text, text);
+    palette.setColor (QPalette::Highlight, selection);
+    palette.setColor (QPalette::HighlightedText, Qt::white);
+    widget->setPalette (palette);
+    widget->viewport ()->setAutoFillBackground (true);
+    widget->viewport ()->setPalette (palette);
+    widget->setStyleSheet (QString {
+      "background-color: %1; color: %2; border: 1px solid %3; border-radius: 10px; padding: 4px;"
+    }.arg (base.name (), text.name (), border.name ()));
+  };
+
+  if (is_dark_palette) {
+    set_decode_panel (ui->decodedTextBrowser, QColor {"#1f252b"}, QColor {"#f4f8fc"}, QColor {"#435363"}, QColor {"#2b7dbf"});
+    set_decode_panel (ui->decodedTextBrowser2, QColor {"#1f252b"}, QColor {"#f4f8fc"}, QColor {"#435363"}, QColor {"#2b7dbf"});
+    setStyleSheet (QString {
+      "#lh_decodes_title_label, #rh_decodes_title_label {"
+      "  color: #f4f8fc; background-color: #34424f; border: 1px solid #4a5c6d;"
+      "  border-radius: 8px; padding: 6px 10px;"
+      "}"
+      "#lh_decodes_headings_label, #rh_decodes_headings_label {"
+      "  color: #cfd9e4; background-color: #2d3945; border: 1px solid #435363;"
+      "  border-radius: 6px; padding: 4px 8px;"
+      "}"
+      "#lower_panel_widget { border-top: 1px solid #435363; }"
+      "#decodes_splitter::handle { background-color: #3a4651; width: 2px; }"
+    });
+  } else {
+    set_decode_panel (ui->decodedTextBrowser, QColor {"#fbfdff"}, QColor {"#111111"}, QColor {"#cad8e4"}, QColor {"#2f80c1"});
+    set_decode_panel (ui->decodedTextBrowser2, QColor {"#fbfdff"}, QColor {"#111111"}, QColor {"#cad8e4"}, QColor {"#2f80c1"});
+    setStyleSheet (QString {
+      "#lh_decodes_title_label, #rh_decodes_title_label {"
+      "  color: #18354d; background-color: #dce9f5; border: 1px solid #bdd0e2;"
+      "  border-radius: 8px; padding: 6px 10px;"
+      "}"
+      "#lh_decodes_headings_label, #rh_decodes_headings_label {"
+      "  color: #466074; background-color: #f4f8fb; border: 1px solid #d3dfe9;"
+      "  border-radius: 6px; padding: 4px 8px;"
+      "}"
+      "#lower_panel_widget { border-top: 1px solid #d5e0ea; }"
+      "#decodes_splitter::handle { background-color: #d3dde7; width: 2px; }"
+    });
+  }
 }
 
 void MainWindow::setDecodedTextFont (QFont const& font)
@@ -15990,12 +16066,14 @@ void MainWindow::on_actionUse_Dark_Style_triggered (bool checked)
             qApp->setStyleSheet(ts.readAll() + "* {" + font_as_stylesheet (font) + '}');
             m_useDarkStyle = true;
             m_wideGraph->setDarkStyle(m_useDarkStyle);
+            apply_main_window_chrome ();
             check_button_color();
             ui->tabWidget->setTabShape(QTabWidget::Rounded);
         }
     } else {
         m_useDarkStyle = false;
         m_wideGraph->setDarkStyle(m_useDarkStyle);
+        apply_main_window_chrome ();
         check_button_color();
         ui->tabWidget->setTabShape(QTabWidget::Triangular);
         qApp->setFont (font);
@@ -16033,15 +16111,16 @@ void MainWindow::on_actionUse_Dark_Style_triggered (bool checked)
 
 void MainWindow:: on_actionBand_Buttons_triggered ()
 {
-  if (ui->actionBand_Buttons->isChecked()) {
-    ui->actionVHF_UHF_Buttons->setVisible(true);
-  } else {
-    ui->actionVHF_UHF_Buttons->setVisible(false);
-  }
+  ui->actionBand_Buttons->setChecked (false);
+  ui->actionVHF_UHF_Buttons->setChecked (false);
+  ui->actionVHF_UHF_Buttons->setVisible (false);
+  hide_band_button_bar ();
 }
 
 void MainWindow:: on_actionVHF_UHF_Buttons_triggered ()
 {
+  ui->actionVHF_UHF_Buttons->setChecked (false);
+  hide_band_button_bar ();
   check_button_color();
 }
 

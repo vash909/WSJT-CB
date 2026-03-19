@@ -493,6 +493,8 @@ private:
 
 private:
   void set_mode (QString const& mode);
+  void apply_main_window_chrome ();
+  void hide_band_button_bar ();
   void astroUpdate ();
   void writeAllTxt(QString message);
   void auto_sequence (DecodedText const& message, unsigned start_tolerance, unsigned stop_tolerance);
