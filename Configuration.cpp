@@ -2530,6 +2530,10 @@ void Configuration::impl::read_settings ()
         }
     }
 
+  // Keep existing user frequency lists, but add any new built-in defaults
+  // introduced by newer versions of the fork.
+  frequencies_.merge_defaults ();
+
   stations_.station_list (settings_->value ("stations").value<StationList::Stations> ());
 
   auto highlight_items = settings_->value ("DecodeHighlighting", QVariant::fromValue (DecodeHighlightingModel::default_items ())).value<DecodeHighlightingModel::HighlightItems> ();

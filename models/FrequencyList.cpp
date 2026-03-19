@@ -39,6 +39,9 @@ namespace
     {
       {27265000, Modes::FT8, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
       {27045000, Modes::FT8, IARURegions::ALL, "CB (2nd)", "", QDateTime(), QDateTime(), false},
+      {27045000, Modes::FT4, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
+      {27045000, Modes::FST4, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
+      {27045000, Modes::Q65, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
     };
 }
 
@@ -243,6 +246,11 @@ int FrequencyList_v2_101::best_working_frequency (QString const& target_band) co
 void FrequencyList_v2_101::reset_to_defaults ()
 {
   m_->frequency_list (default_frequency_list);
+}
+
+void FrequencyList_v2_101::merge_defaults ()
+{
+  frequency_list_merge (default_frequency_list);
 }
 
 QModelIndex FrequencyList_v2_101::add (Item f)

@@ -323,6 +323,14 @@ namespace
     auto second = time.second ();
     return now.msecsTo (now.addSecs (second > 30 ? 60 - second : -second)) - time.msec ();
   }
+
+  bool mode_visible_in_cb_ui (QString const& mode)
+  {
+    return mode == "FT8"
+      || mode == "FT4"
+      || mode == "FST4"
+      || mode == "Q65";
+  }
 }
 
 //--------------------------------------------------- MainWindow constructor
@@ -558,6 +566,27 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   ui->actionVHF_UHF_Buttons->setVisible (false);
   ui->actionVHF_UHF_Buttons->setEnabled (false);
   ui->actionVHF_UHF_Buttons->setChecked (false);
+  ui->msk144Button->setVisible (false);
+  ui->jt65Button->setVisible (false);
+  ui->echoButton->setVisible (false);
+  ui->actionJT4->setVisible (false);
+  ui->actionJT4->setEnabled (false);
+  ui->actionJT9->setVisible (false);
+  ui->actionJT9->setEnabled (false);
+  ui->actionJT65->setVisible (false);
+  ui->actionJT65->setEnabled (false);
+  ui->actionMSK144->setVisible (false);
+  ui->actionMSK144->setEnabled (false);
+  ui->actionFST4W->setVisible (false);
+  ui->actionFST4W->setEnabled (false);
+  ui->actionWSPR->setVisible (false);
+  ui->actionWSPR->setEnabled (false);
+  ui->actionEcho->setVisible (false);
+  ui->actionEcho->setEnabled (false);
+  ui->actionEcho_Graph->setVisible (false);
+  ui->actionEcho_Graph->setEnabled (false);
+  ui->actionFreqCal->setVisible (false);
+  ui->actionFreqCal->setEnabled (false);
   hide_band_button_bar ();
   apply_main_window_chrome ();
   setUnifiedTitleAndToolBarOnMac (true);
@@ -15247,18 +15276,12 @@ void MainWindow::on_pbBestSP_clicked()
 
 void MainWindow::set_mode (QString const& mode)
 {
-    if ("FT4" == mode) on_actionFT4_triggered ();
-    else if ("FST4" == mode) on_actionFST4_triggered ();
-    else if ("FST4W" == mode) on_actionFST4W_triggered ();
-    else if ("FT8" == mode) on_actionFT8_triggered ();
-    else if ("JT4" == mode) on_actionJT4_triggered ();
-    else if ("JT9" == mode) on_actionJT9_triggered ();
-    else if ("JT65" == mode) on_actionJT65_triggered ();
-    else if ("Q65" == mode) on_actionQ65_triggered ();
-    else if ("FreqCal" == mode) on_actionFreqCal_triggered ();
-    else if ("MSK144" == mode) on_actionMSK144_triggered ();
-    else if ("WSPR" == mode) on_actionWSPR_triggered ();
-    else if ("Echo" == mode) on_actionEcho_triggered ();
+    auto const selected_mode = mode_visible_in_cb_ui (mode) ? mode : QString {"FT8"};
+    if ("FT4" == selected_mode) on_actionFT4_triggered ();
+    else if ("FST4" == selected_mode) on_actionFST4_triggered ();
+    else if ("FT8" == selected_mode) on_actionFT8_triggered ();
+    else if ("Q65" == selected_mode) on_actionQ65_triggered ();
+    else on_actionFT8_triggered ();
 }
 
 void MainWindow::configActiveStations()

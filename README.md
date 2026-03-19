@@ -62,7 +62,7 @@ Examples:
 | `1TT` | No | missing numeric suffix |
 | `AT1000` | No | missing numeric prefix |
 
-## 2) 11m/CB Band and 27.265 MHz Frequency
+## 2) 11m/CB Band, UI Modes, and Default Frequencies
 
 Files:
 - `models/Bands.cpp`
@@ -71,11 +71,31 @@ Files:
 Changes:
 - Added ADIF-style band entry:
   - `11m` from `26.965 MHz` to `27.405 MHz`.
-- Added default FT8 working frequency:
-  - `27.265 MHz` (`27265000` Hz), label `CB`, enabled as preferred.
+- Limited the main UI to CB-safe operating modes:
+  - `FT8`
+  - `FT4`
+  - `FST4`
+  - `Q65`
+- Hidden from the main UI:
+  - `JT4`
+  - `JT9`
+  - `JT65`
+  - `MSK144`
+  - `FST4W`
+  - `WSPR`
+  - `Echo`
+  - `FreqCal`
+- Added/kept default CB working frequencies:
+  - `FT8`: `27.265 MHz` (`27265000` Hz), label `CB`, preferred
+  - `FT8`: `27.045 MHz` (`27045000` Hz), label `CB (2nd)`
+  - `FT4`: `27.045 MHz` (`27045000` Hz), label `CB`
+  - `FST4`: `27.045 MHz` (`27045000` Hz), label `CB`
+  - `Q65`: `27.045 MHz` (`27045000` Hz), label `CB`
 
 Impact:
 - The fork no longer treats 27.265 MHz as out-of-band for normal operation in this added 11m segment.
+- FT8 keeps the dual-frequency choice on CB, while the other exposed CB modes default to `27.045 MHz`.
+- Modes without reliable CB callsign support are no longer user-selectable from the main UI, reducing accidental use of unsupported workflows.
 
 ## 3) CB NNN Country Lookup in Decoded Display
 

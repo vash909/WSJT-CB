@@ -136,6 +136,7 @@ public:
 
   // Reset
   Q_SLOT void reset_to_defaults ();
+  Q_SLOT void merge_defaults ();
 
   // Model API
   QModelIndex add (Item);
