@@ -59,6 +59,7 @@ Makefile
 # Python
 __pycache__/
 *.pyc
+scripts/check_callsign.py
 
 # Mac
 .DS_Store
