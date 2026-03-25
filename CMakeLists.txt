@@ -801,32 +801,6 @@ set (wsjtx_UISRCS
   widgets/qsymonitor.ui
   )
 
-set (UDP_library_CXXSRCS
-  Radio.cpp
-  RadioMetaType.cpp
-  Network/NetworkMessage.cpp
-  UDPExamples/MessageServer.cpp
-  )
-
-set (UDP_library_HEADERS
-  Radio.hpp
-  UDPExamples/MessageServer.hpp
-  ${PROJECT_BINARY_DIR}/udp_export.h
-  )
-
-set (message_aggregator_CXXSRCS
-  UDPExamples/MessageAggregator.cpp
-  UDPExamples/MessageAggregatorMainWindow.cpp
-  UDPExamples/DecodesModel.cpp
-  UDPExamples/BeaconsModel.cpp
-  UDPExamples/ClientWidget.cpp
-  validators/MaidenheadLocatorValidator.cpp
-  )
-
-set (message_aggregator_STYLESHEETS
-  UDPExamples/qss/default.qss
-  )
-
 set (qcp_CXXSRCS
   qcustomplot-source/qcustomplot.cpp
   )
@@ -1559,9 +1533,6 @@ generate_version_info (jt9_VERSION_RESOURCES
   FILE_DESCRIPTION "jt9 - WSJT-X slow mode decoder"
   )
 
-add_executable (record_time_signal Audio/tools/record_time_signal.cpp)
-target_link_libraries (record_time_signal wsjt_cxx wsjt_qtmm wsjt_qt)
-
 add_executable (jt9 ${jt9_FSRCS} ${jt9_VERSION_RESOURCES})
 if (${OPENMP_FOUND} OR APPLE)
   if (APPLE)
@@ -1602,9 +1573,7 @@ endif (${OPENMP_FOUND} OR APPLE)
 
 if (WIN32)
   find_package (Portaudio REQUIRED)
-  add_subdirectory (map65)
 endif ()
-  add_subdirectory (qmap)
 
 # build the main application
 generate_version_info (wsjtx_VERSION_RESOURCES
@@ -1660,79 +1629,6 @@ else ()
 endif ()
 target_link_libraries (wsjtx Qt5::SerialPort wsjt_cxx wsjt_qt wsjt_qtmm ${FFTW3_LIBRARIES} ${LIBM_LIBRARIES})
 
-# make a library for WSJT-X UDP servers
-# add_library (wsjtx_udp SHARED ${UDP_library_CXXSRCS})
-add_library (wsjtx_udp-static STATIC ${UDP_library_CXXSRCS})
-#target_include_directories (wsjtx_udp
-#  INTERFACE
-#  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/wsjtx>
-#  )
-target_include_directories (wsjtx_udp-static
-  INTERFACE
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/wsjtx>
-  )
-#set_target_properties (wsjtx_udp PROPERTIES
-#  PUBLIC_HEADER "${UDP_library_HEADERS}"
-#  )
-set_target_properties (wsjtx_udp-static PROPERTIES
-  OUTPUT_NAME wsjtx_udp
-  )
-target_compile_definitions (wsjtx_udp-static PUBLIC UDP_STATIC_DEFINE)
-target_link_libraries (wsjtx_udp-static Qt5::Network Qt5::Gui)
-generate_export_header (wsjtx_udp-static BASE_NAME udp)
-
-generate_version_info (udp_daemon_VERSION_RESOURCES
-  NAME udp_daemon
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Example WSJT-X UDP Message Protocol daemon"
-  )
-add_executable (udp_daemon UDPExamples/UDPDaemon.cpp ${udp_daemon_VERSION_RESOURCES})
-target_link_libraries (udp_daemon wsjtx_udp-static)
-
-generate_version_info (wsjtx_app_version_VERSION_RESOURCES
-  NAME wsjtx_app_version
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Display WSJT-X Application Version on console"
-  )
-add_executable (wsjtx_app_version AppVersion/AppVersion.cpp ${wsjtx_app_version_VERSION_RESOURCES})
-target_link_libraries (wsjtx_app_version wsjt_qt)
-
-generate_version_info (message_aggregator_VERSION_RESOURCES
-  NAME message_aggregator
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Example WSJT-X UDP Message Protocol application"
-  )
-add_resources (message_aggregator_RESOURCES /qss ${message_aggregator_STYLESHEETS})
-configure_file (UDPExamples/message_aggregator.qrc.in message_aggregator.qrc @ONLY)
-qt5_add_resources (message_aggregator_RESOURCES_RCC
-  ${CMAKE_CURRENT_BINARY_DIR}/message_aggregator.qrc
-  contrib/QDarkStyleSheet/qdarkstyle/style.qrc
-  )
-add_executable (message_aggregator
-  ${message_aggregator_CXXSRCS}
-  ${message_aggregator_RESOURCES_RCC}
-  ${message_aggregator_VERSION_RESOURCES}
-  )
-target_link_libraries (message_aggregator wsjt_qt Qt5::Widgets wsjtx_udp-static)
-
-if (WSJT_CREATE_WINMAIN)
-  set_target_properties (message_aggregator PROPERTIES WIN32_EXECUTABLE ON)
-endif (WSJT_CREATE_WINMAIN)
-
-if (UNIX)
-  if (NOT WSJT_SKIP_MANPAGES)
-    add_subdirectory (manpages)
-    add_dependencies (wsjtx manpages)
-  endif (NOT WSJT_SKIP_MANPAGES)
-  if (NOT APPLE)
-    add_subdirectory (debian)
-    add_dependencies (wsjtx debian)
-  endif (NOT APPLE)
-endif (UNIX)
-
 #
 # installation
 #
@@ -1757,11 +1653,6 @@ install (TARGETS wsjtx
 # install (EXPORT udp-static NAMESPACE wsjtx::
 #   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wsjtx
 #   )
-
-install (TARGETS udp_daemon message_aggregator wsjtx_app_version
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-  BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-  )
 
 install (TARGETS jt9 wsprd fmtave fcal fmeasure
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
@@ -1904,7 +1795,7 @@ if (NOT WIN32 AND NOT APPLE)
   # install a desktop file so wsjtx appears in the application start
   # menu with an icon
   install (
-    FILES wsjtx.desktop message_aggregator.desktop
+    FILES wsjtx.desktop
     DESTINATION share/applications
     #COMPONENT runtime
     )
