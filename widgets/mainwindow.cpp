@@ -289,8 +289,8 @@ struct {
   int ndecodes;          //Number of QMAP decodes available (so far)
   int ncand;             //Number of QMAP candidates considered for decoding
   int nQDecoderDone;     //QMAP decoder is finished (0 or 1)
-  int nWDecoderBusy;     //WSJT-X decoder is busy (0 or 1)
-  int nWTransmitting;    //WSJT-X is transmitting (0 or 1)
+  int nWDecoderBusy;     //WSJT-CB decoder is busy (0 or 1)
+  int nWTransmitting;    //WSJT-CB is transmitting (0 or 1)
   int kHzRequested;      //Integer kHz dial frequency requested from QMAP
   char result[50][72];   //Decodes as character*72 arrays
 } qmapcom;
@@ -1161,7 +1161,7 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   proc_jt9.start(QDir::toNativeSeparators (m_appDir) + QDir::separator () +
           "jt9", jt9_args, QIODevice::ReadWrite | QIODevice::Unbuffered);
 
-  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_wisdom.dat"))};
+  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_wisdom.dat"))};
   fftwf_import_wisdom_from_filename (fname.toLocal8Bit ());
 
   m_ntx = 6;
@@ -1426,7 +1426,7 @@ MainWindow::~MainWindow()
   if(m_QSYMessageCreatorWidget) m_QSYMessageCreatorWidget.reset ();
   if(m_QSYMessageWidget) m_QSYMessageWidget.reset ();
   if(m_qsymonitorWidget) m_qsymonitorWidget.reset ();
-  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_wisdom.dat"))};
+  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_wisdom.dat"))};
   fftwf_export_wisdom_to_filename (fname.toLocal8Bit ());
   m_audioThread.quit ();
   m_audioThread.wait ();
@@ -1659,7 +1659,7 @@ void MainWindow::writeSettings()
 void MainWindow::update_tx5(const QString &qsy_text)
 {
   if (m_hisCall=="") {
-    QMessageBox::warning(this, "WSJT-X","There must be a callsign in the\n DX Call Box to send QSY Request");
+    QMessageBox::warning(this, "WSJT-CB","There must be a callsign in the\n DX Call Box to send QSY Request");
   } else {
     QString text = qsy_text;
     ui->tx6->setText(text.replace("$DX",m_hisCall));
@@ -4241,7 +4241,7 @@ void MainWindow::statusChanged()
           ui->DX_Call_Button->click ();
   });
   statusUpdate ();
-  QFile f {m_config.temp_dir ().absoluteFilePath ("wsjtx_status.txt")};
+  QFile f {m_config.temp_dir ().absoluteFilePath ("wsjtcb_status.txt")};
   if(f.open(QFile::WriteOnly | QIODevice::Text)) {
     QTextStream out(&f);
     QString tmpGrid = m_hisGrid;
@@ -4741,10 +4741,10 @@ void MainWindow::on_actionSolve_FreqCal_triggered()
 
 void MainWindow::on_actionCopyright_Notice_triggered()
 {
-  auto const& message = tr("If you make fair use of any part of WSJT-X under terms of the GNU "
+  auto const& message = tr("If you make fair use of any part of WSJT-CB under terms of the GNU "
                            "General Public License, you must display the following copyright "
                            "notice prominently in your derivative work:\n\n"
-                           "\"The algorithms, source code, look-and-feel of WSJT-X and related "
+                           "\"The algorithms, source code, look-and-feel of WSJT-CB and related "
                            "programs, and protocol specifications for the modes FSK441, FST4, FT8, "
                            "JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) "
                            "2001-2025 by one or more of the following authors: Joseph Taylor, "
@@ -5173,7 +5173,7 @@ void MainWindow::on_actionKeyboard_shortcuts_triggered()
   <tr><td><b>Esc      </b></td><td>Stop Tx, abort QSO, clear next-call queue</td></tr>
   <tr><td><b>F1       </b></td><td>Online User's Guide (Alt: transmit Tx6)</td></tr>
   <tr><td><b>Shift+F1  </b></td><td>Copyright Notice</td></tr>
-  <tr><td><b>Ctrl+F1  </b></td><td>About WSJT-X</td></tr>
+  <tr><td><b>Ctrl+F1  </b></td><td>About WSJT-CB</td></tr>
   <tr><td><b>F2       </b></td><td>Open settings window (Alt: transmit Tx2)</td></tr>
   <tr><td><b>F3       </b></td><td>Display keyboard shortcuts (Alt: transmit Tx3)</td></tr>
   <tr><td><b>F4       </b></td><td>Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)</td></tr>
@@ -5808,7 +5808,7 @@ void MainWindow::refreshPileupList()
 
 void MainWindow::read_log()
 {
-  static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+  static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
   f.open(QIODevice::ReadOnly);
   if(f.isOpen()) {
     QTextStream in(&f);
@@ -7713,7 +7713,7 @@ void MainWindow::guiUpdate()
       if(onAirFreq!=m_onAirFreq0) {
         m_onAirFreq0=onAirFreq;
         auto const& message = tr ("Please choose another Tx frequency."
-                                  " WSJT-X will not knowingly transmit another"
+                                  " WSJT-CB will not knowingly transmit another"
                                   " mode in the WSPR sub-band on 30m.");
         QTimer::singleShot (0, [=] { // don't block guiUpdate
             MessageBox::warning_message (this, tr ("WSPR Guard Band"), message);
@@ -7732,7 +7732,7 @@ void MainWindow::guiUpdate()
           if (m_tune) stop_tuning();
           auto const& message = tr ("Please choose another dial frequency.\n"
                                     "Must be 3Khz away from %1.\n"
-                                    "WSJT-X will not operate in Fox mode\n"
+                                    "WSJT-CB will not operate in Fox mode\n"
                                     "overlapping the standard FT8 sub-bands.").arg(ft8Freq[i]);
           QTimer::singleShot (0, [=] {               // don't block guiUpdate
             MessageBox::warning_message (this, tr ("Fox Mode warning"), message);
@@ -7749,7 +7749,7 @@ void MainWindow::guiUpdate()
           if (m_auto) auto_tx_mode (false);
           if (m_tune) stop_tuning();
           auto const& message = tr ("Please choose another dial frequency.\n"
-                                    "WSJT-X will not operate in Fox mode\n"
+                                    "WSJT-CB will not operate in Fox mode\n"
                                     "overlapping the WSPR sub-bands.").arg(ft8Freq[i]);
           QTimer::singleShot (0, [=] {               // don't block guiUpdate
             MessageBox::warning_message (this, tr ("Fox Mode warning"), message);
@@ -11988,12 +11988,12 @@ void MainWindow::on_actionExport_Cabrillo_log_triggered()
 }
 
 
-void MainWindow::on_actionErase_wsjtx_log_adi_triggered()
+void MainWindow::on_actionErase_wsjtcb_log_adi_triggered()
 {
   int ret = MessageBox::query_message (this, tr ("Confirm Erase"),
-                                       tr ("Are you sure you want to erase file wsjtx_log.adi?"));
+                                       tr ("Are you sure you want to erase file wsjtcb_log.adi?"));
   if(ret==MessageBox::Yes) {
-    QFile f {m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_log.adi")};
+    QFile f {m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_log.adi")};
     f.remove();
   }
 }
@@ -15985,36 +15985,36 @@ void MainWindow::bandHopping()
 void MainWindow::on_actionDefault_event_logging_triggered()
 {
 #if defined(Q_OS_WIN)
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #else
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #endif
 }
 
 void MainWindow::on_actionDiagnostic_mode_triggered()
 {
 #if defined(Q_OS_WIN)
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;
-      mb.setText("Cannot write wsjtx_log_config.ini file");
+      mb.setText("Cannot write wsjtcb_log_config.ini file");
       mb.exec();
       return;
     }
     QString instance = "";
     QString path = QStandardPaths::writableLocation (QStandardPaths::DataLocation);
     QStringList tw;
-    if (path.contains("/WSJT-X")) tw=path.split("/WSJT-X");
+    if (path.contains("/WSJT-CB")) tw=path.split("/WSJT-CB");
     if (tw.size () > 0 && tw[1].remove(" - ") != "") instance = tw[1].remove(" - ") + "/";
     QString EventConfig = (
             "\[Sinks.SYSLOG]\n"
             "Destination=TextFile\n"
             "Asynchronous=true\n"
             "AutoFlush=true\n"
-            "FileName=\"${DesktopLocation}/logs/" + instance + "wsjtx_syslog.log\"\n"
+            "FileName=\"${DesktopLocation}/logs/" + instance + "wsjtcb_syslog.log\"\n"
             "Append=true\n"
             "Format=\"[%Channel%][%TimeStamp(format=\\\"%Y-%m-%d %H:%M:%S.%f\\\")%][%Uptime(format=\\\"%O:%M:%S.%f\\\")%][%Severity%] %Message%\"\n"
             "Filter=\"%Channel% matches \\\"SYSLOG\\\" | %Severity% >= info\"\n"
@@ -16023,7 +16023,7 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
             "Destination=TextFile\n"
             "Asynchronous=true\n"
             "AutoFlush=true\n"
-            "FileName=\"${DesktopLocation}/logs/" + instance + "WSJT-X_RigControl.log\"\n"
+            "FileName=\"${DesktopLocation}/logs/" + instance + "WSJT-CB_RigControl.log\"\n"
             "Append=true\n"
             "Format=\"[%TimeStamp(format=\\\"%Y-%m-%d %H:%M:%S.%f\\\")%][%Uptime(format=\\\"%O:%M:%S.%f\\\")%][%Channel%:%Severity%] %Message%\"\n"
             "Filter=\"%Channel% matches \\\"RIGCTRL\\\" | %Severity% >= info\""
@@ -16035,12 +16035,12 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
             "                                     DIAGNOSTIC MODE\n"
             "\n"
             "You have switched to diagnostic mode. It allows you to collect data to\n"
-            "troubleshoot problems with WSJT-X, or its communication with your rig.\n"
+            "troubleshoot problems with WSJT-CB, or its communication with your rig.\n"
             "\n"
-            "The diagnostic mode is active after closing and restarting WSJT-X,\n"
+            "The diagnostic mode is active after closing and restarting WSJT-CB,\n"
             "and is then automatically deactivated when the program is next closed.\n"
             "In the diagnostic mode a new \"logs\" folder appears on your screen, and\n"
-            "in it two files are created: \"wsjtx_syslog.log\" and \"WSJT-X_RigControl.log\".\n"
+            "in it two files are created: \"wsjtcb_syslog.log\" and \"WSJT-CB_RigControl.log\".\n"
             "Open these files with a text editor and look for error messages,\n"
             "or send these files to the development team for further analysis.\n"
             "\n"
@@ -16054,13 +16054,13 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
 void MainWindow::on_actionDisable_event_logging_triggered()
 {
 #if defined(Q_OS_WIN)
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;
-      mb.setText("Cannot write wsjtx_log_config.ini file");
+      mb.setText("Cannot write wsjtcb_log_config.ini file");
       mb.exec();
       return;
     }
@@ -16071,7 +16071,7 @@ void MainWindow::on_actionDisable_event_logging_triggered()
     QTextStream out(&f);
     out << EventConfig;
     f.close();
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_syslog.log"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_syslog.log"));
 }
 
 void MainWindow::on_actionUse_Dark_Style_triggered (bool checked)
@@ -17108,7 +17108,7 @@ void MainWindow::on_pb24G_clicked()
 
 void MainWindow::read_txLog()
 {
-    static QFile logfile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+    static QFile logfile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
     QTextStream logstream(&logfile);
     if(logfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         while (!logstream.atEnd()) {
@@ -17124,7 +17124,7 @@ void MainWindow::on_actionErase_Tx_Log_triggered()
   int ret = MessageBox::query_message (this, tr ("Confirm Erase"),
           tr ("Are you sure you want to erase the Tx Log?"));
   if(ret==MessageBox::Yes) {
-    static QFile logFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+    static QFile logFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
     logFile.remove();
     txLog = "";
   }

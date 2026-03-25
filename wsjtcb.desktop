@@ -1,9 +1,9 @@
 [Desktop Entry]
 Version=1.0
-Name=wsjtx
+Name=WSJT-CB
 Comment=Amateur Radio Weak Signal Operating
-Exec=wsjtx
-Icon=wsjtx_icon
+Exec=wsjtcb
+Icon=wsjtcb_icon
 Terminal=false
 X-MultipleArgs=false
 Type=Application

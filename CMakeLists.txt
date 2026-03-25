@@ -51,10 +51,10 @@ if (NOT DEFINED CMAKE_Fortran_COMPILER AND NOT DEFINED ENV{FC})
     NAMES gfortran ifx ifort flang-new flang f95 f90)
   if (WSJT_FORTRAN_COMPILER)
     set (CMAKE_Fortran_COMPILER "${WSJT_FORTRAN_COMPILER}" CACHE FILEPATH
-      "Fortran compiler used to build WSJT-X")
+      "Fortran compiler used to build WSJT-CB")
   else ()
     message (FATAL_ERROR
-      "WSJT-X requires a Fortran compiler. Install one (for example: gfortran) "
+      "WSJT-CB requires a Fortran compiler. Install one (for example: gfortran) "
       "or configure with FC=/path/to/compiler.")
   endif ()
 endif ()
@@ -63,9 +63,12 @@ project (wsjtx
   VERSION 1.0.0.0
   LANGUAGES C CXX Fortran
   )
-set (PROJECT_DESCRIPTION "WSJT-X: Digital Modes for Weak Signal Communications in Amateur Radio")
+set (PROJECT_DESCRIPTION "WSJT-CB: Digital Modes for Weak Signal Communications in CB Radio")
 set (CMAKE_PROJECT_DESCRIPTION ${PROJECT_DESCRIPTION})
 set (CMAKE_AUTOUIC ON)
+set (PROJECT_BUNDLE_NAME "WSJT-CB")
+set (PROJECT_EXECUTABLE_NAME "wsjtcb")
+set (PROJECT_GUI_IDENTIFIER "org.k1jt.wsjtcb")
 
 #
 # Local CMake modules and support files
@@ -93,7 +96,6 @@ set (wsjtx_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 #
 # project information
 #
-set (PROJECT_BUNDLE_NAME "WSJT-CB")
 set (PROJECT_VENDOR "Joe Taylor, K1JT")
 set (PROJECT_CONTACT "Joe Taylor <k1jt@arrl.net>")
 set (PROJECT_COPYRIGHT "Copyright (C) 2001-2025 by Joe Taylor, K1JT")
@@ -860,7 +862,7 @@ set (PALETTE_FILES
 )
 
 if (APPLE)
-  set (WSJTX_ICON_FILE ${CMAKE_PROJECT_NAME}.icns)
+  set (WSJTX_ICON_FILE ${PROJECT_EXECUTABLE_NAME}.icns)
   set (ICONSRCS
     icons/Darwin/${CMAKE_PROJECT_NAME}.iconset/icon_16x16.png
     icons/Darwin/${CMAKE_PROJECT_NAME}.iconset/icon_16x16@2x.png
@@ -1530,7 +1532,7 @@ generate_version_info (jt9_VERSION_RESOURCES
   NAME jt9
   BUNDLE ${PROJECT_BUNDLE_NAME}
   ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "jt9 - WSJT-X slow mode decoder"
+  FILE_DESCRIPTION "jt9 - WSJT-CB slow mode decoder"
   )
 
 add_executable (jt9 ${jt9_FSRCS} ${jt9_VERSION_RESOURCES})
@@ -1577,7 +1579,7 @@ endif ()
 
 # build the main application
 generate_version_info (wsjtx_VERSION_RESOURCES
-  NAME wsjtx
+  NAME ${PROJECT_EXECUTABLE_NAME}
   BUNDLE ${PROJECT_BUNDLE_NAME}
   ICON ${WSJTX_ICON_FILE}
   )
@@ -1595,6 +1597,7 @@ if (WSJT_CREATE_WINMAIN)
 endif (WSJT_CREATE_WINMAIN)
 
 set_target_properties (wsjtx PROPERTIES
+  OUTPUT_NAME ${PROJECT_EXECUTABLE_NAME}
   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Darwin/Info.plist.in"
   MACOSX_BUNDLE_INFO_STRING "${PROJECT_DESCRIPTION}"
   MACOSX_BUNDLE_ICON_FILE "${WSJTX_ICON_FILE}"
@@ -1602,9 +1605,9 @@ set_target_properties (wsjtx PROPERTIES
   MACOSX_BUNDLE_SHORT_VERSION_STRING "v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
   MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${SCS_VERSION_STR}"
   MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_BUNDLE_NAME}"
-  MACOSX_BUNDLE_BUNDLE_EXECUTABLE_NAME "${PROJECT_NAME}"
+  MACOSX_BUNDLE_BUNDLE_EXECUTABLE_NAME "${PROJECT_EXECUTABLE_NAME}"
   MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}"
-  MACOSX_BUNDLE_GUI_IDENTIFIER "org.k1jt.wsjtx"
+  MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_GUI_IDENTIFIER}"
   )
 
 target_include_directories (wsjtx PRIVATE ${FFTW3_INCLUDE_DIRS})
@@ -1671,21 +1674,21 @@ install (PROGRAMS
   ${RIGCTL_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctl-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctl-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (PROGRAMS
   ${RIGCTLD_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctld-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctld-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (PROGRAMS
   ${RIGCTLCOM_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctlcom-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctlcom-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (FILES
@@ -1706,7 +1709,7 @@ install (FILES
   sat.dat
   contrib/Ephemeris/JPLEPH
   eclipse.txt
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_EXECUTABLE_NAME}
   #COMPONENT runtime
   )
 
@@ -1792,16 +1795,17 @@ configure_file (
 
 
 if (NOT WIN32 AND NOT APPLE)
-  # install a desktop file so wsjtx appears in the application start
+  # install a desktop file so wsjtcb appears in the application start
   # menu with an icon
   install (
-    FILES wsjtx.desktop
+    FILES wsjtcb.desktop
     DESTINATION share/applications
     #COMPONENT runtime
     )
   install (
     FILES icons/Unix/wsjtx_icon.png
     DESTINATION share/pixmaps
+    RENAME wsjtcb_icon.png
     #COMPONENT runtime
     )
 endif (NOT WIN32 AND NOT APPLE)

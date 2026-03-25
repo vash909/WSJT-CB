@@ -224,7 +224,7 @@ typedef multi_index_container<
 
 namespace
 {
-  auto const logFileName = "wsjtx_log.adi";
+  auto const logFileName = "wsjtcb_log.adi";
 
   // Exception class suitable for using with QtConcurrent across
   // thread boundaries
@@ -461,7 +461,7 @@ bool WorkedBefore::add (QString const& call
                   "ADIF Export\n"
                   "<adif_ver:5>3.1.1\n"
                   "<created_timestamp:15>%0\n"
-                  "<programid:6>WSJT-X\n"
+                  "<programid:7>WSJT-CB\n"
                   "<programversion:%1>%2\n"
                   "<eoh>"
                     }.arg (ts).arg (ver.size ()).arg (ver)

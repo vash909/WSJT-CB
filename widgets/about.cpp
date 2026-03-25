@@ -15,7 +15,7 @@ CAboutDlg::CAboutDlg(QWidget *parent) :
 
   ui->labelTxt->setText ("<h2>" + product_versioned_name (revision ()) + "</h2>"
 
-    "WSJT-X implements a number of digital modes designed for <br />"
+    "WSJT-CB implements a number of digital modes designed for <br />"
     "weak-signal Amateur Radio communication.  <br /><br />"
     "&copy; 2001-2025 by Joe Taylor, K1JT, Bill Somerville, G4WJS, <br />"
     "Steve Franke, K9AN, Nico Palermo, IV3NWV, <br />"
@@ -26,7 +26,7 @@ CAboutDlg::CAboutDlg(QWidget *parent) :
     "K3WYC, KA1GT, KA6MAL, KA9Q, KB1ZMX, KD6EKQ, KG4IYS, KI7MT,<br />"
     "KK1D, ND0B, PY1ZRJ, PY2SDR, VE1SKY, VK3ACF, VK4BDJ,<br />"
     "VK7MO, VR2UPU, W3DJS, W4TI, W4TV, and W9MDB.<br /><br />"
-    "WSJT-X is licensed under the terms of Version 3 <br />"
+    "WSJT-CB is licensed under the terms of Version 3 <br />"
     "of the GNU General Public License (GPL) <br /><br />"
     "<a href=" TO_STRING__ (PROJECT_HOMEPAGE) ">"
     "<img src=\":/icon_128x128.png\" /></a>"

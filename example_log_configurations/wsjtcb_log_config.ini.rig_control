@@ -2,8 +2,8 @@
 Destination=TextFile
 Asynchronous=true
 AutoFlush=false
-FileName="${AppLocalDataLocation}/wsjtx_syslog.log"
-TargetFileName="${AppLocalDataLocation}/logs/wsjtx_syslog_%Y-%m.log"
+FileName="${AppLocalDataLocation}/wsjtcb_syslog.log"
+TargetFileName="${AppLocalDataLocation}/logs/wsjtcb_syslog_%Y-%m.log"
 RotationTimePoint="01 00:00:00"
 Append=true
 EnableFinalRotation=false
@@ -19,7 +19,7 @@ Filter="%Severity% >= info"
 Destination=TextFile
 Asynchronous=true
 AutoFlush=true
-FileName="${DesktopLocation}/WSJT-X_RigControl.log"
+FileName="${DesktopLocation}/WSJT-CB_RigControl.log"
 Append=true
 Format="[%TimeStamp(format=\"%Y-%m-%d %H:%M:%S.%f\")%][%Uptime(format=\"%O:%M:%S.%f\")%][%Channel%:%Severity%] %Message%"
 Filter="%Channel% matches \"RIGCTRL\" | %Severity% >= info"

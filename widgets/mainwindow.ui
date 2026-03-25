@@ -4702,7 +4702,7 @@ QPushButton[state=&quot;ok&quot;] {
     <addaction name="separator"/>
     <addaction name="actionDelete_all_wav_files_in_SaveDir"/>
     <addaction name="actionErase_ALL_TXT"/>
-    <addaction name="actionErase_wsjtx_log_adi"/>
+    <addaction name="actionErase_wsjtcb_log_adi"/>
     <addaction name="actionErase_Tx_Log"/>
     <addaction name="actionErase_Ignore_List"/>
     <addaction name="actionErase_WSPR_hashtable"/>
@@ -4964,7 +4964,7 @@ QPushButton[state=&quot;ok&quot;] {
   </action>
   <action name="actionAbout">
    <property name="text">
-    <string>About WSJT-X</string>
+    <string>About WSJT-CB</string>
    </property>
    <property name="menuRole">
     <enum>QAction::AboutRole</enum>
@@ -5103,14 +5103,14 @@ QPushButton[state=&quot;ok&quot;] {
     <string>Erase ALL.TXT</string>
    </property>
   </action>
-  <action name="actionErase_wsjtx_log_adi">
+  <action name="actionErase_wsjtcb_log_adi">
    <property name="text">
-    <string>Erase wsjtx_log.adi</string>
+    <string>Erase wsjtcb_log.adi</string>
    </property>
   </action>
   <action name="actionErase_Tx_Log">
    <property name="text">
-    <string>Erase wsjtx.log</string>
+    <string>Erase wsjtcb.log</string>
    </property>
   </action>
   <action name="actionErase_Ignore_List">
@@ -5446,7 +5446,7 @@ QPushButton[state=&quot;ok&quot;] {
   </action>
   <action name="actionQSG_X250_M3">
    <property name="text">
-    <string>Quick-Start Guide to WSJT-X 2.5.0 and MAP65 3.0</string>
+    <string>Quick-Start Guide to WSJT-CB 2.5.0 and MAP65 3.0</string>
    </property>
   </action>
   <action name="actionDon_t_split_ALL_TXT">
@@ -5545,23 +5545,23 @@ QPushButton[state=&quot;ok&quot;] {
   </action>
   <action name="actionQuick_Start_Guide_to_WSJT_X_2_7_and_QMAP">
    <property name="text">
-    <string>Quick-Start Guide to WSJT-X 2.7 and QMAP</string>
+    <string>Quick-Start Guide to WSJT-CB 2.7 and QMAP</string>
    </property>
   </action>
   <action name="actionWSJT_X_improved_Home_Page">
    <property name="text">
-    <string>WSJT-X_improved Home Page</string>
+    <string>WSJT-CB Home Page</string>
    </property>
    <property name="whatsThis">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-x_improved home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the WSJT-CB home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionThe_additional_features_of_wsjt_x_improved">
    <property name="text">
-    <string>The additional features of wsjt-x_improved</string>
+    <string>The additional features of WSJT-CB</string>
    </property>
    <property name="whatsThis">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-x_improved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of WSJT-CB.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionRecommended_Audio_Settings">

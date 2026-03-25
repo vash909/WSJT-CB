@@ -1,5 +1,5 @@
 #
-# Example WSJT-X logging configuration for sending records to the
+# Example WSJT-CB logging configuration for sending records to the
 # attached Windows debugger (e.g. gdb)
 #
 

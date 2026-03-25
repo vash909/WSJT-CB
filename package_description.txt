@@ -1,10 +1,10 @@
-WSJT-X  is a  computer program  designed to  facilitate basic  amateur
+WSJT-CB  is a  computer program  designed to  facilitate basic  amateur
 radio communication using very weak signals. The first four letters in
 the program name stand for  `(W)eak (S)ignal communication by K1(JT),`
-while the suffix `-X` indicates that WSJT-X started as an extended and
+while the suffix `-X` indicates that WSJT-CB started as an extended and
 experimental branch of the program WSJT.
 .
-WSJT-X Version  2.5 offers eleven  different protocols or  modes: FT4,
+WSJT-CB Version  2.5 offers eleven  different protocols or  modes: FT4,
 FT8, JT4,  JT9, JT65, Q65,  FST4, MSK144,  WSPR, FST4W, and  Echo. The
 first seven  are designed for  making reliable QSOs  under weak-signal
 conditions.  They use  nearly identical  message structure  and source
@@ -37,7 +37,7 @@ the preferred slow QSO mode.
 .
 Note that even  though their T/R sequences are short,  FT4 and FT8 are
 classified as  slow modes because  their message frames are  sent only
-once per  transmission. All  fast modes in  WSJT-X send  their message
+once per  transmission. All  fast modes in  WSJT-CB send  their message
 frames repeatedly,  as many  times as  will fit  into the  Tx sequence
 length.
 .
@@ -71,11 +71,11 @@ reports can be automatically uploaded to the WSPRnet.org web service.
 Echo mode allows  you to detect and measure your  own station's echoes
 from the moon, even if they are far below the audible threshold.
 .
-WSJT-X provides spectral displays for  receiver passbands as wide as 5
+WSJT-CB provides spectral displays for  receiver passbands as wide as 5
 kHz,  flexible  rig control  for  nearly  all  modern radios  used  by
 amateurs, and a wide variety of special aids such as automatic Doppler
 tracking for EME QSOs and Echo testing.  The program runs equally well
 on Windows,  Macintosh, and  Linux systems, and  installation packages
 are available for all three platforms.
 .
-Be sure to read the online WSJT-X User's Guide.
+Be sure to read the online WSJT-CB User's Guide.
