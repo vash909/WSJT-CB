@@ -16,7 +16,11 @@ if (APPLE OR WIN32)
     )
 
   # if a system Qt is used (e.g. installed in /usr/lib/), it will not be included in the installation
-  set (fixup_exe "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${CMAKE_PROJECT_NAME}${CMAKE_EXECUTABLE_SUFFIX}")
+  set (fixup_exe_name "${CMAKE_PROJECT_NAME}")
+  if (DEFINED PROJECT_EXECUTABLE_NAME AND NOT "${PROJECT_EXECUTABLE_NAME}" STREQUAL "")
+    set (fixup_exe_name "${PROJECT_EXECUTABLE_NAME}")
+  endif ()
+  set (fixup_exe "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_BINDIR}/${fixup_exe_name}${CMAKE_EXECUTABLE_SUFFIX}")
 
   #get_filename_component (hamlib_lib_dir ${Hamlib_LIBRARIES} PATH)
 
