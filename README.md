@@ -58,9 +58,17 @@ Examples:
 | `26AT715` | Yes | 2-digit prefix, 2 letters, 3-digit suffix |
 | `26AT1000` | No | 4-digit suffix is not allowed with a 2-digit prefix |
 | `111TT1000` | No | 4-digit suffix is not allowed with a 3-digit prefix |
+| `99Z9999` | No | 4-digit suffix is not allowed with a 2-digit prefix |
 | `1TT10000` | No | suffix longer than 4 digits is not allowed |
 | `1TT` | No | missing numeric suffix |
+| `1AT` | No | missing numeric suffix |
 | `AT1000` | No | missing numeric prefix |
+| `AAA` | No | letters only; numeric prefix and suffix are both missing |
+| `123` | No | digits only; the alphabetic middle part is missing |
+| `12A` | No | missing numeric suffix |
+| `12ABC1` | No | 3-letter middle part is not allowed; only 1 or 2 letters are accepted |
+| `ABC123` | No | missing numeric prefix |
+| `1/AT100` | No | slash-separated compound format does not match the CB regex |
 
 ## 2) 11m/CB Band, UI Modes, and Default Frequencies
 
