@@ -50,7 +50,7 @@ SplashScreen::SplashScreen ()
     "<span>Check user guide and release notes.</span><br /><br />"
     "<span>Send issue reports to info@xzgroup.net or via GitHub</span><br />"
     "<span>An huge thank you to the supporters!</span><br /><br />"
-    "<span style=\"color:#ffd7d7; font-weight:900;\">1AT771, Justin Land, 1AT023, 30MK44, 26AT043 and others.</span><br />"
+    "<span style=\"color:#ffd7d7; font-weight:900;\">1AT771, Justin Land, 1AT023, 30MK44, 26AT043, 1AT485 and others.</span><br />"
     "<img src=\":/icon_128x128.png\" />"
     "<img src=\":/gpl-v3-logo.png\" height=\"80\" />"
     "</div>", Qt::AlignCenter);

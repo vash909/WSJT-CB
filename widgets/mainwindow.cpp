@@ -378,7 +378,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_mslastTX {0},	  //ft8md
   m_nlasttx {0},		//ft8md
   m_lapmyc {0},		  //ft8md
-  m_reverse_Doppler {"1" == env.value ("WSJT_REVERSE_DOPPLER", "0")},
   m_tRemaining {0.},
   m_TRperiod {60.0},
   m_DTtol {3.0},
@@ -1420,7 +1419,6 @@ void MainWindow::on_the_minute ()
 //--------------------------------------------------- MainWindow destructor
 MainWindow::~MainWindow()
 {
-  if(m_astroWidget) m_astroWidget.reset ();
   if(m_QSYMessageCreatorWidget) m_QSYMessageCreatorWidget.reset ();
   if(m_QSYMessageWidget) m_QSYMessageWidget.reset ();
   if(m_qsymonitorWidget) m_qsymonitorWidget.reset ();
@@ -1468,7 +1466,6 @@ void MainWindow::writeSettings()
   m_settings->setValue("TxFirst",m_txFirst);
   m_settings->setValue("DXcall",ui->dxCallEntry->text());
   m_settings->setValue("DXgrid",ui->dxGridEntry->text());
-  m_settings->setValue("AstroDisplayed", m_astroWidget && m_astroWidget->isVisible());
   m_settings->setValue("MsgAvgDisplayed", m_msgAvgWidget && m_msgAvgWidget->isVisible ());
   m_settings->setValue("FoxLogDisplayed", m_foxLogWindow && m_foxLogWindow->isVisible ());
   m_settings->setValue("ContestLogDisplayed", m_contestLogWindow && m_contestLogWindow->isVisible ());
@@ -1707,7 +1704,6 @@ void MainWindow::readSettings()
   ui->dxGridEntry->setText (m_settings->value ("DXgrid", QString {}).toString ());
   m_path = m_settings->value("MRUdir", m_config.save_directory ().absolutePath ()).toString ();
   m_txFirst = m_settings->value("TxFirst",false).toBool();
-  auto displayAstro = m_settings->value ("AstroDisplayed", false).toBool ();
   auto displayMsgAvg = m_settings->value ("MsgAvgDisplayed", false).toBool ();
   auto displayFoxLog = m_settings->value ("FoxLogDisplayed", false).toBool ();
   auto displayContestLog = m_settings->value ("ContestLogDisplayed", false).toBool ();
@@ -1732,7 +1728,6 @@ void MainWindow::readSettings()
   m_settings->endGroup();
 
   // do this outside of settings group because it uses groups internally
-  ui->actionAstronomical_data->setChecked (displayAstro);
   ui->actionEnable_QSY_Popups->setChecked (enableQSYpopups);
 
   // do this in the General group because we save the parameters from various places
@@ -2440,7 +2435,6 @@ void MainWindow::dataSink(qint64 frames)
     if(m_mode=="Echo") {
       float dBerr=0.0;
       int nfrit=0;
-      if(m_astroWidget) nfrit=m_astroWidget->nfRIT();
       int nauto=0;
       if(m_auto) nauto=1;
       int nqual=0;
@@ -2451,7 +2445,6 @@ void MainWindow::dataSink(qint64 frames)
       float width=m_fSpread;
       echocom_.nclearave=m_nclearave;
       int nDop=m_fAudioShift;
-      if(m_astroWidget && m_astroWidget->DopplerMethod()==2) nDop=0;   //Using CFOM
       int nDopTotal=m_fDop;
       int navg=ui->sbEchoAvg->value();
       int ndf=0;
@@ -4518,7 +4511,6 @@ void MainWindow::closeEvent(QCloseEvent * e)
   m_valid = false;              // suppresses subprocess errors
   m_config.transceiver_offline ();
   writeSettings ();
-  if(m_astroWidget) m_astroWidget.reset ();
   if(m_QSYMessageCreatorWidget) {
     QCloseEvent closeEvent;
     QApplication::sendEvent(m_QSYMessageCreatorWidget.data(), &closeEvent);
@@ -4823,31 +4815,6 @@ void MainWindow::trim_view (bool checked)
   ui->verticalLayout_7->layout()->setSpacing(spacing);
   ui->verticalLayout_8->layout()->setSpacing(spacing);
   ui->tab->layout()->setSpacing(spacing);
-}
-
-void MainWindow::on_actionAstronomical_data_toggled (bool checked)
-{
-  if (checked)
-    {
-      m_astroWidget.reset (new Astro {m_settings, &m_config});
-
-      // hook up termination signal
-      connect (this, &MainWindow::finished, m_astroWidget.data (), &Astro::close);
-      connect (m_astroWidget.data (), &Astro::tracking_update, [this] {
-          m_astroCorrection = {};
-          setRig ();
-          setXIT (ui->TxFreqSpinBox->value ());
-          displayDialFrequency ();
-        });
-      m_astroWidget->showNormal();
-      m_astroWidget->raise ();
-      m_astroWidget->activateWindow ();
-      m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-    }
-  else
-    {
-      m_astroWidget.reset ();
-    }
 }
 
 void MainWindow::on_actionQSYMessage_Creator_triggered()
@@ -8318,9 +8285,6 @@ void MainWindow::guiUpdate()
         progressBar.setValue(0);
       }
     }
-
-    astroUpdate ();
-
     if(m_transmitting) {
       char s[42];
       if(SpecOp::FOX==m_specOp and ui->tabWidget->currentIndex()==1) {
@@ -10103,11 +10067,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)         // mouse wheel events
       dial_frequency = dial_frequency - 1000;
       ui->labDialFreq->setText (Radio::pretty_frequency_MHz_string (dial_frequency));
     }
-  if (m_astroWidget && m_astroWidget->doppler_tracking() && m_astroWidget->DopplerMethod()!=0) {
-    setRig(dial_frequency - m_astroCorrection.rx);
-  } else {
-    setRig(dial_frequency);
-  }
+  setRig(dial_frequency);
   setXIT (ui->TxFreqSpinBox->value ());
   ui->labDialFreq->clearFocus();
   }
@@ -11311,8 +11271,6 @@ void MainWindow::on_actionJT65_triggered()
 //    ui->cbAutoSeq->setChecked(false);
 //    ui->cbAutoSeq->setVisible(false);
 //  }
-  if (m_config.decode_at_52s() && m_config.auto_astro() && !ui->actionAstronomical_data->isChecked())
-    ui->actionAstronomical_data->setChecked (true);
   ui->txFirstCheckBox->setEnabled(true);
   statusChanged();
 }
@@ -11392,8 +11350,6 @@ void MainWindow::on_actionQ65_triggered()
         ui->txb1->setEnabled(true);
     }
   }
-  if (m_config.decode_at_52s() && m_config.auto_astro() && !ui->actionAstronomical_data->isChecked())
-    ui->actionAstronomical_data->setChecked (true);
   ui->txFirstCheckBox->setEnabled(true);
   statusChanged();
 }
@@ -11562,9 +11518,6 @@ void MainWindow::on_actionEcho_triggered()
   ui->TxFreqSpinBox->setValue(1500);
   ui->TxFreqSpinBox->setEnabled (false);
   if(!m_echoGraph->isVisible()) m_echoGraph->show();
-  if (!ui->actionAstronomical_data->isChecked ()) {
-    ui->actionAstronomical_data->setChecked (true);
-  }
   m_bFastMode=false;
   m_bFast9=false;
   WSPR_config(true);
@@ -11661,10 +11614,6 @@ void MainWindow::switch_mode (Mode mode)
     ui->rh_decodes_widget->setVisible (false);     // UR disable for AL + widescreen versions
     ui->lh_decodes_title_label->setVisible(false);
   }
-  QTimer::singleShot (500, [=] {
-    if (!(m_mode=="Echo" or ((m_mode=="Q65" or m_mode=="JT65") && m_config.decode_at_52s()))
-        && ui->actionAstronomical_data->isChecked () && m_config.auto_astro()) ui->actionAstronomical_data->setChecked (false);
-  });
   check_button_color();
 }
 
@@ -12312,8 +12261,7 @@ void MainWindow::setXIT(int n, Frequency base)
         // All conditions are met, reset the transceiver Tx dial
         // frequency
         m_freqTxNominal = base + m_XIT;
-        if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-        m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+        m_config.transceiver_tx_frequency (m_freqTxNominal);
       }
   }
   if (SpecOp::FOX==m_specOp && m_config.superFox()
@@ -12323,8 +12271,7 @@ void MainWindow::setXIT(int n, Frequency base)
         // the transceiver Tx dial frequency must be consistent with
         // zero m_XIT for SuperFox
         m_freqTxNominal = base;
-        if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-        m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+        m_config.transceiver_tx_frequency (m_freqTxNominal);
       }
 
   //Now set the audio Tx freq
@@ -12443,7 +12390,7 @@ void MainWindow::handle_transceiver_update (Transceiver::TransceiverState const&
       m_splitMode = s.split ();
       if (!s.ptt ())
         {
-          m_freqNominal = s.frequency () - m_astroCorrection.rx;
+          m_freqNominal = s.frequency ();
           if (old_freqNominal != m_freqNominal)
             {
               m_freqTxNominal = m_freqNominal;
@@ -12470,12 +12417,9 @@ void MainWindow::handle_transceiver_update (Transceiver::TransceiverState const&
             m_wideGraph->setDialFreq(m_freqNominal / 1.e6);
           }
       } else {
-        m_freqTxNominal = s.split () ? s.tx_frequency () - m_astroCorrection.tx : s.frequency ();
+        m_freqTxNominal = s.split () ? s.tx_frequency () : s.frequency ();
       }
-      if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
   }
-  // ensure frequency display is correct
-  if (m_astroWidget && old_state.ptt () != s.ptt ()) setRig ();
 
   displayDialFrequency ();
   update_dynamic_property (ui->readFreq, "state", "ok");
@@ -12751,11 +12695,6 @@ void MainWindow::transmit (double snr)
 
   if(m_mode=="Echo") {
     m_fDither=0.;
-#if QT_VERSION >= QT_VERSION_CHECK (5, 15, 0)
-    if(m_astroWidget && m_astroWidget->bDither()) m_fDither = QRandomGenerator::global()->bounded(20.0) - 10.0; //Dither by +/- 10 Hz
-#else
-    if(m_astroWidget && m_astroWidget->bDither()) m_fDither = 20.0*(double(qrand())/RAND_MAX) - 10.0; //Dither by +/- 10 Hz
-#endif
 
     unsigned int numEchoSymbols=6;
     double framesPerSymbol=4096;
@@ -13686,78 +13625,6 @@ void MainWindow::WSPR_scheduling ()
   }
 }
 
-void MainWindow::astroUpdate ()
-{
-  if (m_astroWidget) {
-    // no Doppler correction while CTRL pressed allows manual tuning
-    if (Qt::ControlModifier & QApplication::queryKeyboardModifiers ()) return;
-    if (m_tci && (ui->bandComboBox->currentText()=="OOB")) {
-      qDebug() << "TCI Mode and OOB so MainWindow::setRig returning at top\n";
-      return;
-    }
-
-    auto correction = m_astroWidget->astroUpdate(QDateTime::currentDateTimeUtc (),
-         m_config.my_grid(), m_hisGrid,m_freqNominal,"Echo" == m_mode,
-         m_transmitting,m_auto,!m_config.tx_QSY_allowed (),m_TRperiod);
-    m_fDop=correction.dop;
-    m_fSpread=correction.width;
-    m_tEcho=correction.techo;
-
-    if (m_transmitting && !m_config.tx_QSY_allowed ()) return;  // No Tx Doppler correction if rig can't do it
-    if (!m_astroWidget->doppler_tracking() or m_astroWidget->DopplerMethod()==0) {
-      // We are not using RF Doppler correction
-      m_fAudioShift=m_fDop;
-      return;
-    } else if (m_astroWidget->DopplerMethod()==10) {  // else if added for enableShift fx
-      // We are not using RF Doppler correction
-      m_fAudioShift=m_fDop;
-    }
-
-    if ((m_monitoring || m_transmitting)
-        && m_freqNominal >= 21000000          // No Doppler correction below 15m
-        && m_config.split_mode ())            // Doppler correcion needs split mode
-      {
-        // adjust for rig resolution
-        if (m_config.transceiver_resolution () > 2)
-          {
-            correction.rx = (correction.rx + 50) / 100 * 100;
-            correction.tx = (correction.tx + 50) / 100 * 100;
-          }
-        else if (m_config.transceiver_resolution () > 1)
-          {
-            correction.rx = (correction.rx + 10) / 20 * 20;
-            correction.tx = (correction.tx + 10) / 20 * 20;
-          }
-        else if (m_config.transceiver_resolution () > 0)
-          {
-            correction.rx = (correction.rx + 5) / 10 * 10;
-            correction.tx = (correction.tx + 5) / 10 * 10;
-          }
-        else if (m_config.transceiver_resolution () < -2)
-          {
-            correction.rx = correction.rx / 100 * 100;
-            correction.tx = correction.tx / 100 * 100;
-          }
-        else if (m_config.transceiver_resolution () < -1)
-          {
-            correction.rx = correction.rx / 20 * 20;
-            correction.tx = correction.tx / 20 * 20;
-          }
-        else if (m_config.transceiver_resolution () < 0)
-          {
-            correction.rx = correction.rx / 10 * 10;
-            correction.tx = correction.tx / 10 * 10;
-          }
-        m_astroCorrection = correction;
-        if (m_reverse_Doppler) m_astroCorrection.reverse ();
-      } else {
-        m_astroCorrection = {};
-      }
-    if(!(m_tci && inSettings)) setRig ();
-    m_fAudioShift=m_fDop - correction.rx;
-  }
-}
-
 void MainWindow::setRig (Frequency f)
 {
   if (f)
@@ -13765,7 +13632,6 @@ void MainWindow::setRig (Frequency f)
       m_freqNominal = f;
       genCQMsg ();
       m_freqTxNominal = m_freqNominal;
-      if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
     }
   if (m_mode == "FreqCal"
       && m_frequency_list_fcal_iter != m_config.frequencies ()->end ()) {
@@ -13776,11 +13642,11 @@ void MainWindow::setRig (Frequency f)
     {
       if (m_transmitting && m_config.split_mode () && !(m_config.superFox() && m_specOp==SpecOp::FOX))
         {
-          m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+          m_config.transceiver_tx_frequency (m_freqTxNominal);
         }
       else
         {
-          m_config.transceiver_frequency (m_freqNominal + m_astroCorrection.rx);
+          m_config.transceiver_frequency (m_freqNominal);
         }
     }
 }

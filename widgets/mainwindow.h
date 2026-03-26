@@ -43,7 +43,6 @@
 #include "Network/PSKReporter.hpp"
 #include "Network/Cloudlog.hpp"
 #include "logbook/logbook.h"
-#include "astro.h"
 #include "widgets/QSYMessageCreator.h"
 #include "widgets/QSYMessage.h"
 #include "widgets/qsymonitor.h"
@@ -375,7 +374,6 @@ private slots:
   void handle_transceiver_update (Transceiver::TransceiverState const&);
   void handle_transceiver_failure (QString const& reason);
   void handle_leavingSettings();
-  void on_actionAstronomical_data_toggled (bool);
   void on_actionQSYMessage_Creator_triggered();
   void on_actionQSY_Monitor_triggered();
   void alertQSYmessage();
@@ -495,7 +493,6 @@ private:
   void set_mode (QString const& mode);
   void apply_main_window_chrome ();
   void hide_band_button_bar ();
-  void astroUpdate ();
   void writeAllTxt(QString message);
   void auto_sequence (DecodedText const& message, unsigned start_tolerance, unsigned stop_tolerance);
   void trim_view (bool b);
@@ -533,7 +530,6 @@ private:
   QScopedPointer<EchoGraph> m_echoGraph;
   QScopedPointer<FastGraph> m_fastGraph;
   QScopedPointer<LogQSO> m_logDlg;
-  QScopedPointer<Astro> m_astroWidget;
   QScopedPointer<QSYMessageCreator> m_QSYMessageCreatorWidget;
   QScopedPointer<QSYMessage> m_QSYMessageWidget;
   QScopedPointer<QSYMonitor> m_qsymonitorWidget;
@@ -565,7 +561,6 @@ private:
   qint64  m_msErase;
   qint64  m_secBandChanged;
   qint64  m_msDecStarted; //ft8md
-  qint64  m_freqMoon;
   qint64  m_fullFoxCallTime;
   qint64  m_msEchoTxStart=0;
 
@@ -577,15 +572,12 @@ private:
   quint64  m_mslastTX;   //ft8md
   qint32  m_nlasttx;     //ft8md
   qint32  m_lapmyc;      //ft8md
-  Astro::Correction m_astroCorrection;
-  bool m_reverse_Doppler;
-
   double  m_tRemaining;
   double  m_TRperiod;
-  double  m_fSpread;
+  double  m_fSpread=0.;
   double  m_s6;
-  double  m_fDither;
-  double  m_fAudioShift;
+  double  m_fDither=0.;
+  double  m_fAudioShift=0.;
 
   float   m_DTtol;
   float   m_t0;

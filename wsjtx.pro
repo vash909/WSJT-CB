@@ -135,7 +135,7 @@ INCLUDEPATH += C:\JTSDK\hamlib3\include
 INCLUDEPATH += C:\JTSDK\qt5\5.2.1\mingw48_32\include\QtSerialPort
 
 LIBS += -L$${HAMLIB_DIR}/lib -lhamlib
-LIBS += -L./lib -lastro -ljt9
+LIBS += -L./lib -ljt9
 LIBS += -L$${FFTW3_DIR} -lfftw3f-3
 LIBS += -lws2_32
 LIBS += $$system($$F90 -print-file-name=libgfortran.a)

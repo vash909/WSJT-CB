@@ -305,7 +305,6 @@ set (wsjtx_CXXSRCS
   widgets/fastgraph.cpp
   widgets/fastplot.cpp
   widgets/about.cpp
-  widgets/astro.cpp
   widgets/messageaveraging.cpp
   widgets/activeStations.cpp
   widgets/colorhighlighting.cpp
@@ -400,9 +399,6 @@ set (wsjt_FSRCS
   lib/ana64.f90
   lib/ana932.f90
   lib/analytic.f90
-  lib/astro.f90
-  lib/astrosub.f90
-  lib/astro0.f90
   lib/avecho.f90
   lib/averms.f90
   lib/azdist.f90
@@ -787,7 +783,6 @@ set (wsprd_CSRCS
 set (wsjtx_UISRCS
   widgets/mainwindow.ui
   widgets/about.ui
-  widgets/astro.ui
   widgets/colorhighlighting.ui
   widgets/echograph.ui
   widgets/fastgraph.ui

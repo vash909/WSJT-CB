@@ -80,53 +80,6 @@ band can be added by right clicking in the table and selecting
 
 image::Add_station_info.png[align="center",alt="Station information"]
 
-- On the *View* menu, select *Astronomical data* to display a window
-with important information for tracking the Moon and performing
-automatic Doppler control.  The right-hand portion of the window
-becomes visible when you check *Doppler tracking*.
-
-image::Astronomical_data.png[align="center",alt="Astronomical data"]
-
-Five different types of Doppler tracking are provided:
-
-- Select *Full Doppler to DX Grid* if you know your QSO partner's locator
-and he/she will not be using any Doppler control.
-
-- Select *Own Echo* to enable EME Doppler tracking of your receive
-frequency to your own echo frequency. Your Tx frequency will remain fixed
-and is set to the Sked frequency.  This mode can be used when announcing 
-your CQ call on a specific frequency and listening on your own echo
-frequency.  It can also be used for echo testing with Echo mode.
-
-- Select *Constant frequency on Moon (CFOM)* to correct for your own one-way
-Doppler shift to or from the Moon.  If your QSO partner does the same
-thing, both stations will have the required Doppler compensation.
-Moreover, anyone else using this option will hear both of you
-without the need for manual frequency changes.
-
-- Select *On Dx Echo* when your QSO partner announces his/her transmit
-frequency and that they are listening on their own echo
-frequency. When clicked, this Doppler method will set your rig
-frequency on receive to correct for the mutual Doppler shift. On
-transmit, your rig frequency will be set so that your QSO partner will
-receive you on the same frequency as they receive their own echo.
-Sked frequency in this case is set to that announced by your QSO
-partner.
-
-- Select *Call DX* after tuning the radio manually to find a station,
-with the Doppler mode initially set to *None*. You may be tuning the band
-looking for random stations, or to a frequency where a station has been
-seen on an SDR display.  It is usually necessary to hold down the Ctrl key
-while tuning the radio. From the moment *Call DX* is pressed, your 
-transmit frequency is set so that your echo will fall on the same 
-frequency you (and the DX station) are listening. 
-
-NOTE: All the above Doppler methods assume that RIT in the receiver is
-set to zero.
-
-- See <<ASTRODATA,Astronomical Data>> for details on the quantities
-displayed in this window.
-
 === JT4
 
 JT4 is designed especially for EME on the microwave bands, 2.3 GHz and
@@ -349,9 +302,7 @@ later, computes its spectrum, and displays results. The program takes
 care of necessary T/R switching and frequency adjustments for Doppler
 compensation. To make such measurements, be sure to check *Enable VHF
 and submode features* on the *File | Settings | General* tab.  Set
-*Split Operation* to *Rig* or *Fake It* on the *Settings | Radio* tab,
-*Doppler tracking* and *Own Echo* or *Constant frequency on Moon* on
-the *Astronomical Data* window.
+*Split Operation* to *Rig* or *Fake It* on the *Settings | Radio* tab.
 
 .Fixed Tone Echoes
 
