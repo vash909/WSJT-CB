@@ -1,0 +1,6 @@
+WSJT-CB is a CB-oriented fork of WSJT-X for weak-signal digital operation
+around the 27 MHz / 11 m band.
+
+This fork adds CB callsign validation, 11 m band support, CB-focused default
+frequencies, and related UI/auto-sequencing adjustments while preserving the
+core WSJT-X architecture.
