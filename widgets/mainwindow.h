@@ -226,6 +226,7 @@ private slots:
   void on_actionQSG_X250_M3_triggered();
   void on_actionQuick_Start_Guide_to_WSJT_X_2_7_and_QMAP_triggered();
   void on_actionWSJT_X_improved_Home_Page_triggered();
+  void on_actionTelegram_Group_triggered();
   void on_actionThe_additional_features_of_wsjt_x_improved_triggered();
   void on_actionRecommended_Audio_Settings_triggered();
   void on_actionRig_Control_Errors_triggered();

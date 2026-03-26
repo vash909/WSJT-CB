@@ -4877,32 +4877,12 @@ QPushButton[state=&quot;ok&quot;] {
     <addaction name="actionDisable_event_logging"/>
    </widget>
    <widget class="QMenu" name="menuHelp">
-    <property name="title">
-     <string>Help</string>
-    </property>
-    <addaction name="actionRelease_Notes"/>
-    <addaction name="actionOnline_User_Guide"/>
-    <addaction name="actionLocal_User_Guide"/>
-    <addaction name="actionFT8_DXpedition_Mode_User_Guide"/>
-    <addaction name="actionSuperFox_User_Guide"/>
-    <addaction name="actionQSG_FST4"/>
-    <addaction name="actionQSG_Q65"/>
-    <addaction name="actionQSG_X250_M3"/>
-    <addaction name="actionQuick_Start_Guide_to_WSJT_X_2_7_and_QMAP"/>
-    <addaction name="download_samples_action"/>
-    <addaction name="separator"/>
-    <addaction name="actionWSJT_X_improved_Home_Page"/>
-    <addaction name="actionThe_additional_features_of_wsjt_x_improved"/>
-    <addaction name="actionRecommended_Audio_Settings"/>
-    <addaction name="actionRig_Control_Errors"/>
-    <addaction name="separator"/>
-    <addaction name="actionKeyboard_shortcuts"/>
-    <addaction name="actionSpecial_mouse_commands"/>
-    <addaction name="actionShort_list_of_add_on_prefixes_and_suffixes"/>
-    <addaction name="separator"/>
-    <addaction name="actionCopyright_Notice"/>
-    <addaction name="separator"/>
+   <property name="title">
+    <string>Help</string>
+   </property>
     <addaction name="actionAbout"/>
+    <addaction name="actionWSJT_X_improved_Home_Page"/>
+    <addaction name="actionTelegram_Group"/>
    </widget>
    <widget class="QMenu" name="menuMode">
     <property name="title">
@@ -5554,6 +5534,14 @@ QPushButton[state=&quot;ok&quot;] {
    </property>
    <property name="whatsThis">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the WSJT-CB home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="actionTelegram_Group">
+   <property name="text">
+    <string>WSJT-CB Telegram Group</string>
+   </property>
+   <property name="whatsThis">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Open the WSJT-CB Telegram group.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
   <action name="actionThe_additional_features_of_wsjt_x_improved">

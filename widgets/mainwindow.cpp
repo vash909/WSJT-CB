@@ -4632,7 +4632,12 @@ void MainWindow::on_actionQuick_Start_Guide_to_WSJT_X_2_7_and_QMAP_triggered()
 
 void MainWindow::on_actionWSJT_X_improved_Home_Page_triggered()
 {
-  QDesktopServices::openUrl (QUrl {"https://wsjt-x-improved.sourceforge.io/"});
+  QDesktopServices::openUrl (QUrl {"https://xzgroup.net/wsjt-cb.html"});
+}
+
+void MainWindow::on_actionTelegram_Group_triggered()
+{
+  QDesktopServices::openUrl (QUrl {"https://t.me/wsjtcb"});
 }
 
 void MainWindow::on_actionThe_additional_features_of_wsjt_x_improved_triggered()
