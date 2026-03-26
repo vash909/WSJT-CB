@@ -429,6 +429,7 @@ QString DisplayText::appendWorkedB4 (QString message, QString call, QString cons
           countryName.replace ("Central ", "C. ");
           countryName.replace (" and ", " & ");
           countryName.replace ("Republic", "Rep.");
+          countryName.replace ("United States Of America", "U.S.A.");
           countryName.replace ("United States of America", "U.S.A.");
           countryName.replace ("United States", "U.S.A.");
           countryName.replace ("Fed. Rep. of ", "");
@@ -589,6 +590,7 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
               countryName.replace ("Central ", "C. ");
               countryName.replace (" and ", " & ");
               countryName.replace ("Republic", "Rep.");
+              countryName.replace ("United States Of America", "U.S.A.");
               countryName.replace ("United States of America", "U.S.A.");
               countryName.replace ("United States", "U.S.A.");
               countryName.replace ("Fed. Rep. of ", "");

@@ -2821,6 +2821,7 @@ void MainWindow::fastSink(qint64 frames)
             countryName.replace ("Central ", "C. ");
             countryName.replace (" and ", " & ");
             countryName.replace ("Republic", "Rep.");
+            countryName.replace ("United States Of America", "U.S.A.");
             countryName.replace ("United States of America", "U.S.A.");
             countryName.replace ("United States", "U.S.A.");
             countryName.replace ("Fed. Rep. of ", "");
@@ -2970,6 +2971,7 @@ void MainWindow::fastSink(qint64 frames)
             countryName.replace ("Central ", "C. ");
             countryName.replace (" and ", " & ");
             countryName.replace ("Republic", "Rep.");
+            countryName.replace ("United States Of America", "U.S.A.");
             countryName.replace ("United States of America", "U.S.A.");
             countryName.replace ("United States", "U.S.A.");
             countryName.replace ("Fed. Rep. of ", "");
@@ -3365,6 +3367,7 @@ void MainWindow::fastSink(qint64 frames)
           countryName.replace ("Central ", "C. ");
           countryName.replace (" and ", " & ");
           countryName.replace ("Republic", "Rep.");
+          countryName.replace ("United States Of America", "U.S.A.");
           countryName.replace ("United States of America", "U.S.A.");
           countryName.replace ("United States", "U.S.A.");
           countryName.replace ("Fed. Rep. of ", "");
@@ -6521,6 +6524,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
                       countryName.replace ("Central ", "C. ");
                       countryName.replace (" and ", " & ");
                       countryName.replace ("Republic", "Rep.");
+                      countryName.replace ("United States Of America", "U.S.A.");
                       countryName.replace ("United States of America", "U.S.A.");
                       countryName.replace ("United States", "U.S.A.");
                       countryName.replace ("Fed. Rep. of ", "");
@@ -6670,6 +6674,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
                       countryName.replace ("Central ", "C. ");
                       countryName.replace (" and ", " & ");
                       countryName.replace ("Republic", "Rep.");
+                      countryName.replace ("United States Of America", "U.S.A.");
                       countryName.replace ("United States of America", "U.S.A.");
                       countryName.replace ("United States", "U.S.A.");
                       countryName.replace ("Fed. Rep. of ", "");
@@ -6913,6 +6918,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
               countryName.replace ("Central ", "C. ");
               countryName.replace (" and ", " & ");
               countryName.replace ("Republic", "Rep.");
+              countryName.replace ("United States Of America", "U.S.A.");
               countryName.replace ("United States of America", "U.S.A.");
               countryName.replace ("United States", "U.S.A.");
               countryName.replace ("Fed. Rep. of ", "");

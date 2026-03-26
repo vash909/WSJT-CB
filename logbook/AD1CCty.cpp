@@ -36,7 +36,7 @@ namespace
   std::map<QString, QString> const& cb_NNN_to_country ()
   {
     static std::map<QString, QString> const m {
-      {"001", "Italy"}, {"002", "United States Of America"},
+      {"001", "Italy"}, {"002", "U.S.A."},
       {"003", "Brazil"}, {"004", "Argentina"},
       {"005", "Venezuela"}, {"006", "Colombia"},
       {"008", "Peru"}, {"009", "Canada"},
