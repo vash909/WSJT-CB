@@ -47,6 +47,7 @@ Makefile
 *.rcc
 *.ui.h
 *.qrc
+INSTALL
 
 # CPack / packaging
 *.deb
