@@ -671,7 +671,6 @@ set (wsjt_FSRCS
   lib/ft8var/genft8sdvar.f90
   lib/ft8var/jt65_mod2var.f90
   lib/ft8var/jt65_mod5.f90
-  lib/ft8var/jt65_mod9.f90
   lib/ft8var/msgparservar.f90
   lib/ft8var/osd174_91var.f90
   lib/ft8var/packjt77sdvar.f90
@@ -825,7 +824,7 @@ set (all_C_and_CXXSRCS
 
 set (TOP_LEVEL_RESOURCES
   icons/Darwin/wsjtx.iconset/icon_128x128.png
-  contrib/gpl-v3-logo.svg
+  contrib/gpl-v3-logo.png
   artwork/splash.png
   )
 
@@ -1710,12 +1709,6 @@ install (FILES
   contrib/Ephemeris/JPLEPH
   eclipse.txt
   DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_EXECUTABLE_NAME}
-  #COMPONENT runtime
-  )
-
-install (FILES
-  ALLCALL7.TXT
-  DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
   )
 

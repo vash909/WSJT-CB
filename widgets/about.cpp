@@ -31,7 +31,7 @@ CAboutDlg::CAboutDlg(QWidget *parent) :
     "<a href=" TO_STRING__ (PROJECT_HOMEPAGE) ">"
     "<img src=\":/icon_128x128.png\" /></a>"
     "<a href=\"https://www.gnu.org/licenses/gpl-3.0.txt\">"
-    "<img src=\":/gpl-v3-logo.svg\" height=\"80\" /><br />"
+    "<img src=\":/gpl-v3-logo.png\" height=\"80\" /><br />"
     "https://www.gnu.org/licenses/gpl-3.0.txt</a>");
 }
 

@@ -280,7 +280,6 @@ bool rigFailed = false;
 bool programStart = true;
 QString txLog;
 QString ignoreList;
-QString ALLCALL7 = "";
 QString m_hisCall0 = "";
 QString earlyDecodes = "";  //ft8md
 
@@ -1329,7 +1328,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   check_button_color();
   read_txLog();
   read_ignoreList();
-  read_ALLCALL7();
   if (ui->actionRemove_after_30days->isChecked ()) {
     remove_old_files(m_config.save_directory().absolutePath(), 30); // remove saved audio files after 30 days
   }
@@ -6289,52 +6287,6 @@ void MainWindow::readFromStdout()                             //readFromStdout
         {
           uploadWSPRSpots (true, line_read);
         }
-
-      // Check validity of callsigns if "Reduce false decodes" is checked   // EXPERIMENTAL FOR NOW
-      if (m_mode=="FT8" && !m_multithreadFT8 && ui->actionReduce_false_decodes->isChecked() && decodedtext.snr() < -20) {
-        bool notInALLCALL7 = false;
-        QString deCall;
-        QString deGrid;
-        decodedtext.deCallAndGrid(/*out*/deCall,deGrid);
-        QStringList word;
-        word=decodedtext.string().mid(24).replace("<","").replace(">","").replace("/P","").replace("/R","").replace("/QRP","").replace("/5W","").split(" ",SkipEmptyParts);
-
-        // check file ALLCALL7.TXT
-        if (deCall!="TNX" && deCall!="73" && deCall!="GL" && deCall!="HNY" && deCall!="TU" && !deCall.left(4).contains("/")
-            && !decodedtext.string().contains("<...>") && !ALLCALL7.contains(deCall)) {
-          notInALLCALL7 = true;
-//          ui->decodedTextBrowser->insertText("deCall not in ALLCALL7.TXT");
-        }
-        if (!ALLCALL7.contains(word[0]) && !(decodedtext.string().contains(" CQ ") or decodedtext.string().contains("TNX")
-            or decodedtext.string().contains("...") or decodedtext.string().contains("HNY") or decodedtext.string().contains("QSY")
-            or decodedtext.string().contains("73 ") or decodedtext.string().contains("GL ") or decodedtext.string().contains("PSE")
-            or decodedtext.string().contains("/") or decodedtext.string().contains("<...>"))) {
-          notInALLCALL7 = true;
-//          ui->decodedTextBrowser->insertText("word0 not in ALLCALL7.TXT");
-        }
-
-        // check syntax of the two callsigns before we hide such messages
-        if (notInALLCALL7) {
-          deCall=deCall.replace("<","").replace(">","").replace("/P","").replace("/R","").replace("/QRP","").replace("/5W","");
-          if (deCall!="TNX" && deCall!="73" && deCall!="GL" && deCall!="HNY" &&
-              !(deCall.left(3).contains(QRegularExpression {"\\w\\d\\w"}) or
-                deCall.left(3).contains(QRegularExpression {"\\d\\w\\d"}) or
-                deCall.left(3).contains(QRegularExpression {"\\w\\w\\d"}) or
-                deCall.left(4).contains("/") or decodedtext.string().contains("<...>"))) {
-//            ui->decodedTextBrowser->insertText("deCall has false syntax");
-            filtered = true;
-          }
-          if (word[0]!="CQ" && word[0]!="TNX" && word[0]!="73 " && word[0]!="HNY" && word[0]!="QSY" && word[0]!="PSE" &&
-              !(word[0].left(3).contains(QRegularExpression {"\\w\\d\\w"}) or
-                word[0].left(3).contains(QRegularExpression {"\\d\\w\\d"}) or
-                word[0].left(3).contains(QRegularExpression {"\\w\\w\\d"}) or
-                decodedtext.string().contains("/")or decodedtext.string().contains("<...>"))) {
-//            ui->decodedTextBrowser->insertText("word0 has false syntax");
-            filtered = true;
-          }
-        }
-        notInALLCALL7 = false;
-      }
 
       if(m_mode=="FT8" and SpecOp::FOX == m_specOp and
          (decodedtext.string().contains("R+") or decodedtext.string().contains("R-"))) {
@@ -17178,19 +17130,6 @@ void MainWindow::on_actionErase_Ignore_List_triggered()
     static QFile ignoreFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("ignore.list")};
     ignoreFile.remove();
     ignoreList = "";
-  }
-}
-
-void MainWindow::read_ALLCALL7()
-{
-  static QFile AllCall7File {"ALLCALL7.TXT"};
-  QTextStream AllCall7Stream(&AllCall7File);
-  if(AllCall7File.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    while (!AllCall7Stream.atEnd()) {
-      ALLCALL7 = AllCall7Stream.readAll();
-    }
-      AllCall7Stream.flush();
-      AllCall7File.close();
   }
 }
 

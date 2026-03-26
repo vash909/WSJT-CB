@@ -1,18 +1,10 @@
 subroutine chkflscallvar(call_a,call_b,falsedec)
 
   character*12 call_a,call_b
-  logical(1) falsedec,lfound
+  logical(1) falsedec
 
-  if(call_a(1:2).eq.'<.') return
-  falsedec=.true.; lfound=.false.
-!print *,"11","'"//call_a//"'","'"//call_b//"'"
-  if(call_a.eq.'MYCALL      ' .or. call_a.eq.'CQ          ') then
-    call searchcallsvar(call_b,"            ",lfound); if(lfound) falsedec=.false.
-  else if(call_b(1:1).eq.'<') then
-    call searchcallsvar(call_a,"            ",lfound); if(lfound) falsedec=.false.
-  else
-    call searchcallsvar(call_a,call_b,lfound); if(lfound) falsedec=.false.
-  endif
+  if(len_trim(call_a).lt.0 .or. len_trim(call_b).lt.0) falsedec=.true.
+  falsedec=.false.
 
   return
 end subroutine chkflscallvar

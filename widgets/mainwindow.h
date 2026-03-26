@@ -293,7 +293,6 @@ private slots:
   void read_ignoreList();
   void addCallsignToignoreList();
   void on_actionErase_Ignore_List_triggered();
-  void read_ALLCALL7();
   void remove_old_files(const QString &directoryPath, int daysOld);
   void on_actionJT9_triggered();
   void on_actionJT65_triggered();
