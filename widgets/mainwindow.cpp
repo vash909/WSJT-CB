@@ -8893,9 +8893,18 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
       && Radio::is_cb_callsign (w.at (0))
       && (w.at (0) == m_baseCall || w.at (0) == m_config.my_callsign ())) {
     cb_free_text_for_us = true;
-    // For CB free-text reports parser may return partial pseudo-calls
-    // (e.g. "R" from "R+13"), so force the known DX peer.
-    if (hiscall.isEmpty () || !Radio::is_cb_callsign (hiscall)) {
+    // For CB free-text reports/finals like "MYCALL RR73" or "MYCALL 73",
+    // the parser may return an empty/partial pseudo-call or even our own
+    // callsign as "hiscall". In those cases, keep using the selected DX peer.
+    auto const& dx_peer = ui->dxCallEntry->text ();
+    auto const his_base = Radio::base_callsign (hiscall);
+    if (hiscall.isEmpty ()
+        || !Radio::is_cb_callsign (hiscall)
+        || his_base == m_baseCall
+        || his_base == Radio::base_callsign (m_config.my_callsign ())) {
+      hiscall = dx_peer;
+    }
+    if (hisgrid.isEmpty () && Radio::base_callsign (dx_peer) == Radio::base_callsign (hiscall)) {
       hiscall = ui->dxCallEntry->text ();
     }
   }
@@ -9342,8 +9351,11 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
     }
     // his base call different or his call more qualified
     // i.e. compound version of same base call
-    if (!((s2.contains(" " + m_config.my_callsign() + " ") && s2.mid(22).contains(" 73")) && (ui->respondComboBox->currentText()=="CQ: Max dB"
-           or ui->respondComboBox->currentText()=="CQ: Max dB"))) ui->dxCallEntry->setText (hiscall);
+    if (!(cb_free_text_for_us && Radio::base_callsign (hiscall) == m_baseCall)
+        && !((s2.contains(" " + m_config.my_callsign() + " ") && s2.mid(22).contains(" 73")) && (ui->respondComboBox->currentText()=="CQ: Max dB"
+           or ui->respondComboBox->currentText()=="CQ: Max dB"))) {
+      ui->dxCallEntry->setText (hiscall);
+    }
   }
   if (hisgrid.contains (grid_regexp)) {
     if(ui->dxGridEntry->text().mid(0,4) != hisgrid) ui->dxGridEntry->setText(hisgrid);
