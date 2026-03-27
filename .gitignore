@@ -18,6 +18,8 @@ Makefile
 *.out
 *.ilk
 *.pdb
+/installer-output
+
 
 # Qt Creator / Qt project user files
 *.pro.user
