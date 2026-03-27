@@ -535,6 +535,16 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
   QColor fg;
   bool CQcall = false;
   auto is_73 = decodedText.messageWords().filter (QRegularExpression {"^(73|RR73)$"}).size();
+  bool final_for_us = false;
+  if (myCall.size () && is_73)
+    {
+      QString final_regexp {"[ <]" + myCall + "[ >]"};
+      if (Radio::is_compound_callsign (myCall))
+        {
+          final_regexp = "(?:" + final_regexp + "|[ <]" + Radio::base_callsign (myCall) + "[ >])";
+        }
+      final_for_us = (decodedText.clean_string () + " ").contains (QRegularExpression {final_regexp});
+    }
   if (decodedText.string ().contains (" CQ ")) {
     if (m_config->alert_CQ()) {
       if (!muted) play_CQ = true;
@@ -543,7 +553,7 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
   if (decodedText.string ().contains (" CQ ")
       || decodedText.string ().contains (" CQDX ")
       || decodedText.string ().contains (" QRZ ")
-      || (is_73 && (m_config->highlight_73 ())))
+      || (is_73 && m_config->highlight_73 () && final_for_us))
     {
       CQcall = true;
     }
@@ -582,7 +592,7 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
       message = message.left (ap_pos).trimmed ();
     }
   m_CQPriority="";
-  if (CQcall || (is_73 && m_config->highlight_73()) || (mode == "FT4" && m_config->highlight_73() && m_config->NCCC_Sprint()
+  if (CQcall || (is_73 && m_config->highlight_73() && final_for_us) || (mode == "FT4" && m_config->highlight_73() && m_config->NCCC_Sprint()
       && (SpecOp::NA_VHF == m_config->special_op_id()) && decodedText.string().contains(" R ")))
     {
       if (displayDXCCEntity)
