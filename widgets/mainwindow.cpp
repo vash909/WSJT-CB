@@ -8079,6 +8079,20 @@ void MainWindow::guiUpdate()
         }
       }
     }
+    else if ((m_currentMessageType < 6 || 7 == m_currentMessageType)
+             && msg_parts.length() >= 2
+             && Radio::is_cb_callsign (m_config.my_callsign ())
+             && Radio::is_cb_callsign (ui->dxCallEntry->text ())
+             && Radio::base_callsign (msg_parts[0]) == Radio::base_callsign (ui->dxCallEntry->text ()))
+    {
+      auto const report_token = msg_parts[1].toUpper ();
+      auto const report_match = QRegularExpression {R"(^(R?[+-][0-9]{2})$)"}.match (report_token);
+      if (report_match.hasMatch ())
+      {
+        m_rptSent = report_token.startsWith ("R") ? report_token.mid (1) : report_token;
+        m_qsoStart = t2;
+      }
+    }
     m_restart=false;
 //----------------------------------------------------------------------
   } else {
@@ -9023,6 +9037,10 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
 
     if (cb_text_for_us) {
       auto const& cb_token = w.at (1).toUpper ();
+      auto const cb_report_match = QRegularExpression {R"(^(R?[+-][0-9]{2})$)"}.match (cb_token);
+      if (cb_report_match.hasMatch ()) {
+        m_rptRcvd = cb_token.startsWith ("R") ? cb_token.mid (1) : cb_token;
+      }
       if (cb_token.startsWith ("R+") || cb_token.startsWith ("R-")) {
         setTxMsg (4);
         m_QSOProgress = ROGERS;
