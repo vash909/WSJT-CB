@@ -1719,7 +1719,7 @@ namespace
 #if CMAKE_BUILD
     if (QDir::isRelativePath (CMAKE_INSTALL_DATADIR))
       {
-	return QApplication::applicationDirPath () + app_root + CMAKE_INSTALL_DATADIR + QChar {'/'} + CMAKE_PROJECT_NAME;
+	return QApplication::applicationDirPath () + app_root + CMAKE_INSTALL_DATADIR + QChar {'/'} + PROJECT_EXECUTABLE_NAME;
       }
     return CMAKE_INSTALL_DATADIR;
 #else
