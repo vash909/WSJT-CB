@@ -1685,26 +1685,8 @@ install (PROGRAMS
   RENAME rigctlcom-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
-set (wsjtcb_doc_files
-  COPYING
-  AUTHORS
-  BUGS
-  )
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/README.md")
-  list (APPEND wsjtcb_doc_files README.md)
-endif ()
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/THANKS")
-  list (APPEND wsjtcb_doc_files THANKS)
-endif ()
-
-if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/NEWS")
-  list (APPEND wsjtcb_doc_files NEWS)
-endif ()
-
 install (FILES
-  ${wsjtcb_doc_files}
+  COPYING
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   #COMPONENT runtime
   )
