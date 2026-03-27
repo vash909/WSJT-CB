@@ -25,6 +25,7 @@
 #include "Network/LotWUsers.hpp"
 #include "models/DecodeHighlightingModel.hpp"
 #include "logbook/logbook.h"
+#include "Radio.hpp"
 #include "Logger.hpp"
 
 #include "qt_helpers.hpp"
@@ -306,6 +307,7 @@ QString DisplayText::appendWorkedB4 (QString message, QString call, QString cons
   if(!call.contains(QRegExp("[0-9]|[A-Z]"))) return message;
 
   auto const& looked_up = logBook.countries ()->lookup (call);
+  auto const is_cb_call = Radio::is_cb_callsign (Radio::base_callsign (call).trimmed ());
   logBook.match (call, currentMode, grid, looked_up, callB4, countryB4, gridB4, continentB4, CQZoneB4, ITUZoneB4);
   logBook.match (call, currentMode, grid, looked_up, callB4onBand, countryB4onBand, gridB4onBand,
                  continentB4onBand, CQZoneB4onBand, ITUZoneB4onBand, currentBand);
@@ -393,27 +395,23 @@ QString DisplayText::appendWorkedB4 (QString message, QString call, QString cons
   types.push_back (Highlight::CQ);
   auto top_highlight = set_colours (m_config, bg, fg, types);
 
-  switch (top_highlight)
+  auto append_country_or_prefix = [&]
     {
-    case Highlight::Continent:
-    case Highlight::ContinentBand:
-      extra += AD1CCty::continent (looked_up.continent);
-      break;
-    case Highlight::CQZone:
-    case Highlight::CQZoneBand:
-      extra += QString {"CQ Zone %1"}.arg (looked_up.CQ_zone);
-      break;
-    case Highlight::ITUZone:
-    case Highlight::ITUZoneBand:
-      extra += QString {"ITU Zone %1"}.arg (looked_up.ITU_zone);
-      break;
-    default:
-      if (m_bPrincipalPrefix)
+      if (is_cb_call)
         {
-          extra += looked_up.primary_prefix;
+          if (!looked_up.entity_name.trimmed ().isEmpty ())
+            {
+              extra += looked_up.entity_name;
+            }
         }
       else
         {
+          if (m_bPrincipalPrefix)
+            {
+              extra += looked_up.primary_prefix;
+              return;
+            }
+
           auto countryName = looked_up.entity_name;
 
           // do some obvious abbreviations
@@ -451,6 +449,45 @@ QString DisplayText::appendWorkedB4 (QString message, QString call, QString cons
 
           extra += countryName;
         }
+    };
+
+  switch (top_highlight)
+    {
+    case Highlight::Continent:
+    case Highlight::ContinentBand:
+      if (looked_up.continent != AD1CCty::Continent::UN)
+        {
+          extra += AD1CCty::continent (looked_up.continent);
+        }
+      else
+        {
+          append_country_or_prefix ();
+        }
+      break;
+    case Highlight::CQZone:
+    case Highlight::CQZoneBand:
+      if (looked_up.CQ_zone > 0)
+        {
+          extra += QString {"CQ Zone %1"}.arg (looked_up.CQ_zone);
+        }
+      else
+        {
+          append_country_or_prefix ();
+        }
+      break;
+    case Highlight::ITUZone:
+    case Highlight::ITUZoneBand:
+      if (looked_up.ITU_zone > 0)
+        {
+          extra += QString {"ITU Zone %1"}.arg (looked_up.ITU_zone);
+        }
+      else
+        {
+          append_country_or_prefix ();
+        }
+      break;
+    default:
+      append_country_or_prefix ();
     }
     m_CQPriority=DecodeHighlightingModel::highlight_name(top_highlight);
 
@@ -572,9 +609,14 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
       if (m_config->show_country_names())
         {
           auto const& looked_up = logBook.countries ()->lookup (dxCall);
+          auto const is_cb_call = Radio::is_cb_callsign (Radio::base_callsign (dxCall).trimmed ());
           auto countryName = looked_up.entity_name;
 
-          if (m_bPrincipalPrefix) {
+          if (is_cb_call) {
+              if (!countryName.trimmed ().isEmpty ()) {
+                  extra += countryName;
+              }
+          } else if (m_bPrincipalPrefix) {
               extra += looked_up.primary_prefix;
           } else {
               // do some obvious abbreviations

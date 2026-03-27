@@ -231,7 +231,7 @@ namespace
       {
         return it->second;
       }
-    return QString {"CB " + prefix};
+    return {};
   }
 }
 
