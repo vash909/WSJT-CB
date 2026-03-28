@@ -280,7 +280,6 @@ bool rigFailed = false;
 bool programStart = true;
 QString txLog;
 QString ignoreList;
-QString ALLCALL7 = "";
 QString m_hisCall0 = "";
 QString earlyDecodes = "";  //ft8md
 
@@ -289,8 +288,8 @@ struct {
   int ndecodes;          //Number of QMAP decodes available (so far)
   int ncand;             //Number of QMAP candidates considered for decoding
   int nQDecoderDone;     //QMAP decoder is finished (0 or 1)
-  int nWDecoderBusy;     //WSJT-X decoder is busy (0 or 1)
-  int nWTransmitting;    //WSJT-X is transmitting (0 or 1)
+  int nWDecoderBusy;     //WSJT-CB decoder is busy (0 or 1)
+  int nWTransmitting;    //WSJT-CB is transmitting (0 or 1)
   int kHzRequested;      //Integer kHz dial frequency requested from QMAP
   char result[50][72];   //Decodes as character*72 arrays
 } qmapcom;
@@ -379,7 +378,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_mslastTX {0},	  //ft8md
   m_nlasttx {0},		//ft8md
   m_lapmyc {0},		  //ft8md
-  m_reverse_Doppler {"1" == env.value ("WSJT_REVERSE_DOPPLER", "0")},
   m_tRemaining {0.},
   m_TRperiod {60.0},
   m_DTtol {3.0},
@@ -1161,7 +1159,7 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   proc_jt9.start(QDir::toNativeSeparators (m_appDir) + QDir::separator () +
           "jt9", jt9_args, QIODevice::ReadWrite | QIODevice::Unbuffered);
 
-  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_wisdom.dat"))};
+  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_wisdom.dat"))};
   fftwf_import_wisdom_from_filename (fname.toLocal8Bit ());
 
   m_ntx = 6;
@@ -1329,7 +1327,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   check_button_color();
   read_txLog();
   read_ignoreList();
-  read_ALLCALL7();
   if (ui->actionRemove_after_30days->isChecked ()) {
     remove_old_files(m_config.save_directory().absolutePath(), 30); // remove saved audio files after 30 days
   }
@@ -1422,11 +1419,10 @@ void MainWindow::on_the_minute ()
 //--------------------------------------------------- MainWindow destructor
 MainWindow::~MainWindow()
 {
-  if(m_astroWidget) m_astroWidget.reset ();
   if(m_QSYMessageCreatorWidget) m_QSYMessageCreatorWidget.reset ();
   if(m_QSYMessageWidget) m_QSYMessageWidget.reset ();
   if(m_qsymonitorWidget) m_qsymonitorWidget.reset ();
-  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_wisdom.dat"))};
+  auto fname {QDir::toNativeSeparators(m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_wisdom.dat"))};
   fftwf_export_wisdom_to_filename (fname.toLocal8Bit ());
   m_audioThread.quit ();
   m_audioThread.wait ();
@@ -1470,7 +1466,6 @@ void MainWindow::writeSettings()
   m_settings->setValue("TxFirst",m_txFirst);
   m_settings->setValue("DXcall",ui->dxCallEntry->text());
   m_settings->setValue("DXgrid",ui->dxGridEntry->text());
-  m_settings->setValue("AstroDisplayed", m_astroWidget && m_astroWidget->isVisible());
   m_settings->setValue("MsgAvgDisplayed", m_msgAvgWidget && m_msgAvgWidget->isVisible ());
   m_settings->setValue("FoxLogDisplayed", m_foxLogWindow && m_foxLogWindow->isVisible ());
   m_settings->setValue("ContestLogDisplayed", m_contestLogWindow && m_contestLogWindow->isVisible ());
@@ -1659,7 +1654,7 @@ void MainWindow::writeSettings()
 void MainWindow::update_tx5(const QString &qsy_text)
 {
   if (m_hisCall=="") {
-    QMessageBox::warning(this, "WSJT-X","There must be a callsign in the\n DX Call Box to send QSY Request");
+    QMessageBox::warning(this, "WSJT-CB","There must be a callsign in the\n DX Call Box to send QSY Request");
   } else {
     QString text = qsy_text;
     ui->tx6->setText(text.replace("$DX",m_hisCall));
@@ -1709,7 +1704,6 @@ void MainWindow::readSettings()
   ui->dxGridEntry->setText (m_settings->value ("DXgrid", QString {}).toString ());
   m_path = m_settings->value("MRUdir", m_config.save_directory ().absolutePath ()).toString ();
   m_txFirst = m_settings->value("TxFirst",false).toBool();
-  auto displayAstro = m_settings->value ("AstroDisplayed", false).toBool ();
   auto displayMsgAvg = m_settings->value ("MsgAvgDisplayed", false).toBool ();
   auto displayFoxLog = m_settings->value ("FoxLogDisplayed", false).toBool ();
   auto displayContestLog = m_settings->value ("ContestLogDisplayed", false).toBool ();
@@ -1734,7 +1728,6 @@ void MainWindow::readSettings()
   m_settings->endGroup();
 
   // do this outside of settings group because it uses groups internally
-  ui->actionAstronomical_data->setChecked (displayAstro);
   ui->actionEnable_QSY_Popups->setChecked (enableQSYpopups);
 
   // do this in the General group because we save the parameters from various places
@@ -2442,7 +2435,6 @@ void MainWindow::dataSink(qint64 frames)
     if(m_mode=="Echo") {
       float dBerr=0.0;
       int nfrit=0;
-      if(m_astroWidget) nfrit=m_astroWidget->nfRIT();
       int nauto=0;
       if(m_auto) nauto=1;
       int nqual=0;
@@ -2453,7 +2445,6 @@ void MainWindow::dataSink(qint64 frames)
       float width=m_fSpread;
       echocom_.nclearave=m_nclearave;
       int nDop=m_fAudioShift;
-      if(m_astroWidget && m_astroWidget->DopplerMethod()==2) nDop=0;   //Using CFOM
       int nDopTotal=m_fDop;
       int navg=ui->sbEchoAvg->value();
       int ndf=0;
@@ -2830,6 +2821,7 @@ void MainWindow::fastSink(qint64 frames)
             countryName.replace ("Central ", "C. ");
             countryName.replace (" and ", " & ");
             countryName.replace ("Republic", "Rep.");
+            countryName.replace ("United States Of America", "U.S.A.");
             countryName.replace ("United States of America", "U.S.A.");
             countryName.replace ("United States", "U.S.A.");
             countryName.replace ("Fed. Rep. of ", "");
@@ -2979,6 +2971,7 @@ void MainWindow::fastSink(qint64 frames)
             countryName.replace ("Central ", "C. ");
             countryName.replace (" and ", " & ");
             countryName.replace ("Republic", "Rep.");
+            countryName.replace ("United States Of America", "U.S.A.");
             countryName.replace ("United States of America", "U.S.A.");
             countryName.replace ("United States", "U.S.A.");
             countryName.replace ("Fed. Rep. of ", "");
@@ -3374,6 +3367,7 @@ void MainWindow::fastSink(qint64 frames)
           countryName.replace ("Central ", "C. ");
           countryName.replace (" and ", " & ");
           countryName.replace ("Republic", "Rep.");
+          countryName.replace ("United States Of America", "U.S.A.");
           countryName.replace ("United States of America", "U.S.A.");
           countryName.replace ("United States", "U.S.A.");
           countryName.replace ("Fed. Rep. of ", "");
@@ -4241,7 +4235,7 @@ void MainWindow::statusChanged()
           ui->DX_Call_Button->click ();
   });
   statusUpdate ();
-  QFile f {m_config.temp_dir ().absoluteFilePath ("wsjtx_status.txt")};
+  QFile f {m_config.temp_dir ().absoluteFilePath ("wsjtcb_status.txt")};
   if(f.open(QFile::WriteOnly | QIODevice::Text)) {
     QTextStream out(&f);
     QString tmpGrid = m_hisGrid;
@@ -4520,7 +4514,6 @@ void MainWindow::closeEvent(QCloseEvent * e)
   m_valid = false;              // suppresses subprocess errors
   m_config.transceiver_offline ();
   writeSettings ();
-  if(m_astroWidget) m_astroWidget.reset ();
   if(m_QSYMessageCreatorWidget) {
     QCloseEvent closeEvent;
     QApplication::sendEvent(m_QSYMessageCreatorWidget.data(), &closeEvent);
@@ -4632,7 +4625,12 @@ void MainWindow::on_actionQuick_Start_Guide_to_WSJT_X_2_7_and_QMAP_triggered()
 
 void MainWindow::on_actionWSJT_X_improved_Home_Page_triggered()
 {
-  QDesktopServices::openUrl (QUrl {"https://wsjt-x-improved.sourceforge.io/"});
+  QDesktopServices::openUrl (QUrl {"https://xzgroup.net/wsjt-cb.html"});
+}
+
+void MainWindow::on_actionTelegram_Group_triggered()
+{
+  QDesktopServices::openUrl (QUrl {"https://t.me/wsjtcb"});
 }
 
 void MainWindow::on_actionThe_additional_features_of_wsjt_x_improved_triggered()
@@ -4741,10 +4739,10 @@ void MainWindow::on_actionSolve_FreqCal_triggered()
 
 void MainWindow::on_actionCopyright_Notice_triggered()
 {
-  auto const& message = tr("If you make fair use of any part of WSJT-X under terms of the GNU "
+  auto const& message = tr("If you make fair use of any part of WSJT-CB under terms of the GNU "
                            "General Public License, you must display the following copyright "
                            "notice prominently in your derivative work:\n\n"
-                           "\"The algorithms, source code, look-and-feel of WSJT-X and related "
+                           "\"The algorithms, source code, look-and-feel of WSJT-CB and related "
                            "programs, and protocol specifications for the modes FSK441, FST4, FT8, "
                            "JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) "
                            "2001-2025 by one or more of the following authors: Joseph Taylor, "
@@ -4820,31 +4818,6 @@ void MainWindow::trim_view (bool checked)
   ui->verticalLayout_7->layout()->setSpacing(spacing);
   ui->verticalLayout_8->layout()->setSpacing(spacing);
   ui->tab->layout()->setSpacing(spacing);
-}
-
-void MainWindow::on_actionAstronomical_data_toggled (bool checked)
-{
-  if (checked)
-    {
-      m_astroWidget.reset (new Astro {m_settings, &m_config});
-
-      // hook up termination signal
-      connect (this, &MainWindow::finished, m_astroWidget.data (), &Astro::close);
-      connect (m_astroWidget.data (), &Astro::tracking_update, [this] {
-          m_astroCorrection = {};
-          setRig ();
-          setXIT (ui->TxFreqSpinBox->value ());
-          displayDialFrequency ();
-        });
-      m_astroWidget->showNormal();
-      m_astroWidget->raise ();
-      m_astroWidget->activateWindow ();
-      m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-    }
-  else
-    {
-      m_astroWidget.reset ();
-    }
 }
 
 void MainWindow::on_actionQSYMessage_Creator_triggered()
@@ -5173,7 +5146,7 @@ void MainWindow::on_actionKeyboard_shortcuts_triggered()
   <tr><td><b>Esc      </b></td><td>Stop Tx, abort QSO, clear next-call queue</td></tr>
   <tr><td><b>F1       </b></td><td>Online User's Guide (Alt: transmit Tx6)</td></tr>
   <tr><td><b>Shift+F1  </b></td><td>Copyright Notice</td></tr>
-  <tr><td><b>Ctrl+F1  </b></td><td>About WSJT-X</td></tr>
+  <tr><td><b>Ctrl+F1  </b></td><td>About WSJT-CB</td></tr>
   <tr><td><b>F2       </b></td><td>Open settings window (Alt: transmit Tx2)</td></tr>
   <tr><td><b>F3       </b></td><td>Display keyboard shortcuts (Alt: transmit Tx3)</td></tr>
   <tr><td><b>F4       </b></td><td>Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)</td></tr>
@@ -5808,7 +5781,7 @@ void MainWindow::refreshPileupList()
 
 void MainWindow::read_log()
 {
-  static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+  static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
   f.open(QIODevice::ReadOnly);
   if(f.isOpen()) {
     QTextStream in(&f);
@@ -6285,52 +6258,6 @@ void MainWindow::readFromStdout()                             //readFromStdout
           uploadWSPRSpots (true, line_read);
         }
 
-      // Check validity of callsigns if "Reduce false decodes" is checked   // EXPERIMENTAL FOR NOW
-      if (m_mode=="FT8" && !m_multithreadFT8 && ui->actionReduce_false_decodes->isChecked() && decodedtext.snr() < -20) {
-        bool notInALLCALL7 = false;
-        QString deCall;
-        QString deGrid;
-        decodedtext.deCallAndGrid(/*out*/deCall,deGrid);
-        QStringList word;
-        word=decodedtext.string().mid(24).replace("<","").replace(">","").replace("/P","").replace("/R","").replace("/QRP","").replace("/5W","").split(" ",SkipEmptyParts);
-
-        // check file ALLCALL7.TXT
-        if (deCall!="TNX" && deCall!="73" && deCall!="GL" && deCall!="HNY" && deCall!="TU" && !deCall.left(4).contains("/")
-            && !decodedtext.string().contains("<...>") && !ALLCALL7.contains(deCall)) {
-          notInALLCALL7 = true;
-//          ui->decodedTextBrowser->insertText("deCall not in ALLCALL7.TXT");
-        }
-        if (!ALLCALL7.contains(word[0]) && !(decodedtext.string().contains(" CQ ") or decodedtext.string().contains("TNX")
-            or decodedtext.string().contains("...") or decodedtext.string().contains("HNY") or decodedtext.string().contains("QSY")
-            or decodedtext.string().contains("73 ") or decodedtext.string().contains("GL ") or decodedtext.string().contains("PSE")
-            or decodedtext.string().contains("/") or decodedtext.string().contains("<...>"))) {
-          notInALLCALL7 = true;
-//          ui->decodedTextBrowser->insertText("word0 not in ALLCALL7.TXT");
-        }
-
-        // check syntax of the two callsigns before we hide such messages
-        if (notInALLCALL7) {
-          deCall=deCall.replace("<","").replace(">","").replace("/P","").replace("/R","").replace("/QRP","").replace("/5W","");
-          if (deCall!="TNX" && deCall!="73" && deCall!="GL" && deCall!="HNY" &&
-              !(deCall.left(3).contains(QRegularExpression {"\\w\\d\\w"}) or
-                deCall.left(3).contains(QRegularExpression {"\\d\\w\\d"}) or
-                deCall.left(3).contains(QRegularExpression {"\\w\\w\\d"}) or
-                deCall.left(4).contains("/") or decodedtext.string().contains("<...>"))) {
-//            ui->decodedTextBrowser->insertText("deCall has false syntax");
-            filtered = true;
-          }
-          if (word[0]!="CQ" && word[0]!="TNX" && word[0]!="73 " && word[0]!="HNY" && word[0]!="QSY" && word[0]!="PSE" &&
-              !(word[0].left(3).contains(QRegularExpression {"\\w\\d\\w"}) or
-                word[0].left(3).contains(QRegularExpression {"\\d\\w\\d"}) or
-                word[0].left(3).contains(QRegularExpression {"\\w\\w\\d"}) or
-                decodedtext.string().contains("/")or decodedtext.string().contains("<...>"))) {
-//            ui->decodedTextBrowser->insertText("word0 has false syntax");
-            filtered = true;
-          }
-        }
-        notInALLCALL7 = false;
-      }
-
       if(m_mode=="FT8" and SpecOp::FOX == m_specOp and
          (decodedtext.string().contains("R+") or decodedtext.string().contains("R-"))) {
         auto for_us  = decodedtext.string().contains(" " + m_config.my_callsign() + " ") or
@@ -6597,6 +6524,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
                       countryName.replace ("Central ", "C. ");
                       countryName.replace (" and ", " & ");
                       countryName.replace ("Republic", "Rep.");
+                      countryName.replace ("United States Of America", "U.S.A.");
                       countryName.replace ("United States of America", "U.S.A.");
                       countryName.replace ("United States", "U.S.A.");
                       countryName.replace ("Fed. Rep. of ", "");
@@ -6746,6 +6674,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
                       countryName.replace ("Central ", "C. ");
                       countryName.replace (" and ", " & ");
                       countryName.replace ("Republic", "Rep.");
+                      countryName.replace ("United States Of America", "U.S.A.");
                       countryName.replace ("United States of America", "U.S.A.");
                       countryName.replace ("United States", "U.S.A.");
                       countryName.replace ("Fed. Rep. of ", "");
@@ -6989,6 +6918,7 @@ void MainWindow::readFromStdout()                             //readFromStdout
               countryName.replace ("Central ", "C. ");
               countryName.replace (" and ", " & ");
               countryName.replace ("Republic", "Rep.");
+              countryName.replace ("United States Of America", "U.S.A.");
               countryName.replace ("United States of America", "U.S.A.");
               countryName.replace ("United States", "U.S.A.");
               countryName.replace ("Fed. Rep. of ", "");
@@ -7713,7 +7643,7 @@ void MainWindow::guiUpdate()
       if(onAirFreq!=m_onAirFreq0) {
         m_onAirFreq0=onAirFreq;
         auto const& message = tr ("Please choose another Tx frequency."
-                                  " WSJT-X will not knowingly transmit another"
+                                  " WSJT-CB will not knowingly transmit another"
                                   " mode in the WSPR sub-band on 30m.");
         QTimer::singleShot (0, [=] { // don't block guiUpdate
             MessageBox::warning_message (this, tr ("WSPR Guard Band"), message);
@@ -7732,7 +7662,7 @@ void MainWindow::guiUpdate()
           if (m_tune) stop_tuning();
           auto const& message = tr ("Please choose another dial frequency.\n"
                                     "Must be 3Khz away from %1.\n"
-                                    "WSJT-X will not operate in Fox mode\n"
+                                    "WSJT-CB will not operate in Fox mode\n"
                                     "overlapping the standard FT8 sub-bands.").arg(ft8Freq[i]);
           QTimer::singleShot (0, [=] {               // don't block guiUpdate
             MessageBox::warning_message (this, tr ("Fox Mode warning"), message);
@@ -7749,7 +7679,7 @@ void MainWindow::guiUpdate()
           if (m_auto) auto_tx_mode (false);
           if (m_tune) stop_tuning();
           auto const& message = tr ("Please choose another dial frequency.\n"
-                                    "WSJT-X will not operate in Fox mode\n"
+                                    "WSJT-CB will not operate in Fox mode\n"
                                     "overlapping the WSPR sub-bands.").arg(ft8Freq[i]);
           QTimer::singleShot (0, [=] {               // don't block guiUpdate
             MessageBox::warning_message (this, tr ("Fox Mode warning"), message);
@@ -8149,6 +8079,20 @@ void MainWindow::guiUpdate()
         }
       }
     }
+    else if ((m_currentMessageType < 6 || 7 == m_currentMessageType)
+             && msg_parts.length() >= 2
+             && Radio::is_cb_callsign (m_config.my_callsign ())
+             && Radio::is_cb_callsign (ui->dxCallEntry->text ())
+             && Radio::base_callsign (msg_parts[0]) == Radio::base_callsign (ui->dxCallEntry->text ()))
+    {
+      auto const report_token = msg_parts[1].toUpper ();
+      auto const report_match = QRegularExpression {R"(^(R?[+-][0-9]{2})$)"}.match (report_token);
+      if (report_match.hasMatch ())
+      {
+        m_rptSent = report_token.startsWith ("R") ? report_token.mid (1) : report_token;
+        m_qsoStart = t2;
+      }
+    }
     m_restart=false;
 //----------------------------------------------------------------------
   } else {
@@ -8361,9 +8305,6 @@ void MainWindow::guiUpdate()
         progressBar.setValue(0);
       }
     }
-
-    astroUpdate ();
-
     if(m_transmitting) {
       char s[42];
       if(SpecOp::FOX==m_specOp and ui->tabWidget->currentIndex()==1) {
@@ -8966,9 +8907,18 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
       && Radio::is_cb_callsign (w.at (0))
       && (w.at (0) == m_baseCall || w.at (0) == m_config.my_callsign ())) {
     cb_free_text_for_us = true;
-    // For CB free-text reports parser may return partial pseudo-calls
-    // (e.g. "R" from "R+13"), so force the known DX peer.
-    if (hiscall.isEmpty () || !Radio::is_cb_callsign (hiscall)) {
+    // For CB free-text reports/finals like "MYCALL RR73" or "MYCALL 73",
+    // the parser may return an empty/partial pseudo-call or even our own
+    // callsign as "hiscall". In those cases, keep using the selected DX peer.
+    auto const& dx_peer = ui->dxCallEntry->text ();
+    auto const his_base = Radio::base_callsign (hiscall);
+    if (hiscall.isEmpty ()
+        || !Radio::is_cb_callsign (hiscall)
+        || his_base == m_baseCall
+        || his_base == Radio::base_callsign (m_config.my_callsign ())) {
+      hiscall = dx_peer;
+    }
+    if (hisgrid.isEmpty () && Radio::base_callsign (dx_peer) == Radio::base_callsign (hiscall)) {
       hiscall = ui->dxCallEntry->text ();
     }
   }
@@ -9087,6 +9037,10 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
 
     if (cb_text_for_us) {
       auto const& cb_token = w.at (1).toUpper ();
+      auto const cb_report_match = QRegularExpression {R"(^(R?[+-][0-9]{2})$)"}.match (cb_token);
+      if (cb_report_match.hasMatch ()) {
+        m_rptRcvd = cb_token.startsWith ("R") ? cb_token.mid (1) : cb_token;
+      }
       if (cb_token.startsWith ("R+") || cb_token.startsWith ("R-")) {
         setTxMsg (4);
         m_QSOProgress = ROGERS;
@@ -9415,8 +9369,11 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
     }
     // his base call different or his call more qualified
     // i.e. compound version of same base call
-    if (!((s2.contains(" " + m_config.my_callsign() + " ") && s2.mid(22).contains(" 73")) && (ui->respondComboBox->currentText()=="CQ: Max dB"
-           or ui->respondComboBox->currentText()=="CQ: Max dB"))) ui->dxCallEntry->setText (hiscall);
+    if (!(cb_free_text_for_us && Radio::base_callsign (hiscall) == m_baseCall)
+        && !((s2.contains(" " + m_config.my_callsign() + " ") && s2.mid(22).contains(" 73")) && (ui->respondComboBox->currentText()=="CQ: Max dB"
+           or ui->respondComboBox->currentText()=="CQ: Max dB"))) {
+      ui->dxCallEntry->setText (hiscall);
+    }
   }
   if (hisgrid.contains (grid_regexp)) {
     if(ui->dxGridEntry->text().mid(0,4) != hisgrid) ui->dxGridEntry->setText(hisgrid);
@@ -10146,11 +10103,7 @@ void MainWindow::wheelEvent(QWheelEvent *event)         // mouse wheel events
       dial_frequency = dial_frequency - 1000;
       ui->labDialFreq->setText (Radio::pretty_frequency_MHz_string (dial_frequency));
     }
-  if (m_astroWidget && m_astroWidget->doppler_tracking() && m_astroWidget->DopplerMethod()!=0) {
-    setRig(dial_frequency - m_astroCorrection.rx);
-  } else {
-    setRig(dial_frequency);
-  }
+  setRig(dial_frequency);
   setXIT (ui->TxFreqSpinBox->value ());
   ui->labDialFreq->clearFocus();
   }
@@ -11354,8 +11307,6 @@ void MainWindow::on_actionJT65_triggered()
 //    ui->cbAutoSeq->setChecked(false);
 //    ui->cbAutoSeq->setVisible(false);
 //  }
-  if (m_config.decode_at_52s() && m_config.auto_astro() && !ui->actionAstronomical_data->isChecked())
-    ui->actionAstronomical_data->setChecked (true);
   ui->txFirstCheckBox->setEnabled(true);
   statusChanged();
 }
@@ -11435,8 +11386,6 @@ void MainWindow::on_actionQ65_triggered()
         ui->txb1->setEnabled(true);
     }
   }
-  if (m_config.decode_at_52s() && m_config.auto_astro() && !ui->actionAstronomical_data->isChecked())
-    ui->actionAstronomical_data->setChecked (true);
   ui->txFirstCheckBox->setEnabled(true);
   statusChanged();
 }
@@ -11605,9 +11554,6 @@ void MainWindow::on_actionEcho_triggered()
   ui->TxFreqSpinBox->setValue(1500);
   ui->TxFreqSpinBox->setEnabled (false);
   if(!m_echoGraph->isVisible()) m_echoGraph->show();
-  if (!ui->actionAstronomical_data->isChecked ()) {
-    ui->actionAstronomical_data->setChecked (true);
-  }
   m_bFastMode=false;
   m_bFast9=false;
   WSPR_config(true);
@@ -11704,10 +11650,6 @@ void MainWindow::switch_mode (Mode mode)
     ui->rh_decodes_widget->setVisible (false);     // UR disable for AL + widescreen versions
     ui->lh_decodes_title_label->setVisible(false);
   }
-  QTimer::singleShot (500, [=] {
-    if (!(m_mode=="Echo" or ((m_mode=="Q65" or m_mode=="JT65") && m_config.decode_at_52s()))
-        && ui->actionAstronomical_data->isChecked () && m_config.auto_astro()) ui->actionAstronomical_data->setChecked (false);
-  });
   check_button_color();
 }
 
@@ -11988,12 +11930,12 @@ void MainWindow::on_actionExport_Cabrillo_log_triggered()
 }
 
 
-void MainWindow::on_actionErase_wsjtx_log_adi_triggered()
+void MainWindow::on_actionErase_wsjtcb_log_adi_triggered()
 {
   int ret = MessageBox::query_message (this, tr ("Confirm Erase"),
-                                       tr ("Are you sure you want to erase file wsjtx_log.adi?"));
+                                       tr ("Are you sure you want to erase file wsjtcb_log.adi?"));
   if(ret==MessageBox::Yes) {
-    QFile f {m_config.writeable_data_dir ().absoluteFilePath ("wsjtx_log.adi")};
+    QFile f {m_config.writeable_data_dir ().absoluteFilePath ("wsjtcb_log.adi")};
     f.remove();
   }
 }
@@ -12355,8 +12297,7 @@ void MainWindow::setXIT(int n, Frequency base)
         // All conditions are met, reset the transceiver Tx dial
         // frequency
         m_freqTxNominal = base + m_XIT;
-        if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-        m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+        m_config.transceiver_tx_frequency (m_freqTxNominal);
       }
   }
   if (SpecOp::FOX==m_specOp && m_config.superFox()
@@ -12366,8 +12307,7 @@ void MainWindow::setXIT(int n, Frequency base)
         // the transceiver Tx dial frequency must be consistent with
         // zero m_XIT for SuperFox
         m_freqTxNominal = base;
-        if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
-        m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+        m_config.transceiver_tx_frequency (m_freqTxNominal);
       }
 
   //Now set the audio Tx freq
@@ -12486,7 +12426,7 @@ void MainWindow::handle_transceiver_update (Transceiver::TransceiverState const&
       m_splitMode = s.split ();
       if (!s.ptt ())
         {
-          m_freqNominal = s.frequency () - m_astroCorrection.rx;
+          m_freqNominal = s.frequency ();
           if (old_freqNominal != m_freqNominal)
             {
               m_freqTxNominal = m_freqNominal;
@@ -12513,12 +12453,9 @@ void MainWindow::handle_transceiver_update (Transceiver::TransceiverState const&
             m_wideGraph->setDialFreq(m_freqNominal / 1.e6);
           }
       } else {
-        m_freqTxNominal = s.split () ? s.tx_frequency () - m_astroCorrection.tx : s.frequency ();
+        m_freqTxNominal = s.split () ? s.tx_frequency () : s.frequency ();
       }
-      if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
   }
-  // ensure frequency display is correct
-  if (m_astroWidget && old_state.ptt () != s.ptt ()) setRig ();
 
   displayDialFrequency ();
   update_dynamic_property (ui->readFreq, "state", "ok");
@@ -12794,11 +12731,6 @@ void MainWindow::transmit (double snr)
 
   if(m_mode=="Echo") {
     m_fDither=0.;
-#if QT_VERSION >= QT_VERSION_CHECK (5, 15, 0)
-    if(m_astroWidget && m_astroWidget->bDither()) m_fDither = QRandomGenerator::global()->bounded(20.0) - 10.0; //Dither by +/- 10 Hz
-#else
-    if(m_astroWidget && m_astroWidget->bDither()) m_fDither = 20.0*(double(qrand())/RAND_MAX) - 10.0; //Dither by +/- 10 Hz
-#endif
 
     unsigned int numEchoSymbols=6;
     double framesPerSymbol=4096;
@@ -13729,78 +13661,6 @@ void MainWindow::WSPR_scheduling ()
   }
 }
 
-void MainWindow::astroUpdate ()
-{
-  if (m_astroWidget) {
-    // no Doppler correction while CTRL pressed allows manual tuning
-    if (Qt::ControlModifier & QApplication::queryKeyboardModifiers ()) return;
-    if (m_tci && (ui->bandComboBox->currentText()=="OOB")) {
-      qDebug() << "TCI Mode and OOB so MainWindow::setRig returning at top\n";
-      return;
-    }
-
-    auto correction = m_astroWidget->astroUpdate(QDateTime::currentDateTimeUtc (),
-         m_config.my_grid(), m_hisGrid,m_freqNominal,"Echo" == m_mode,
-         m_transmitting,m_auto,!m_config.tx_QSY_allowed (),m_TRperiod);
-    m_fDop=correction.dop;
-    m_fSpread=correction.width;
-    m_tEcho=correction.techo;
-
-    if (m_transmitting && !m_config.tx_QSY_allowed ()) return;  // No Tx Doppler correction if rig can't do it
-    if (!m_astroWidget->doppler_tracking() or m_astroWidget->DopplerMethod()==0) {
-      // We are not using RF Doppler correction
-      m_fAudioShift=m_fDop;
-      return;
-    } else if (m_astroWidget->DopplerMethod()==10) {  // else if added for enableShift fx
-      // We are not using RF Doppler correction
-      m_fAudioShift=m_fDop;
-    }
-
-    if ((m_monitoring || m_transmitting)
-        && m_freqNominal >= 21000000          // No Doppler correction below 15m
-        && m_config.split_mode ())            // Doppler correcion needs split mode
-      {
-        // adjust for rig resolution
-        if (m_config.transceiver_resolution () > 2)
-          {
-            correction.rx = (correction.rx + 50) / 100 * 100;
-            correction.tx = (correction.tx + 50) / 100 * 100;
-          }
-        else if (m_config.transceiver_resolution () > 1)
-          {
-            correction.rx = (correction.rx + 10) / 20 * 20;
-            correction.tx = (correction.tx + 10) / 20 * 20;
-          }
-        else if (m_config.transceiver_resolution () > 0)
-          {
-            correction.rx = (correction.rx + 5) / 10 * 10;
-            correction.tx = (correction.tx + 5) / 10 * 10;
-          }
-        else if (m_config.transceiver_resolution () < -2)
-          {
-            correction.rx = correction.rx / 100 * 100;
-            correction.tx = correction.tx / 100 * 100;
-          }
-        else if (m_config.transceiver_resolution () < -1)
-          {
-            correction.rx = correction.rx / 20 * 20;
-            correction.tx = correction.tx / 20 * 20;
-          }
-        else if (m_config.transceiver_resolution () < 0)
-          {
-            correction.rx = correction.rx / 10 * 10;
-            correction.tx = correction.tx / 10 * 10;
-          }
-        m_astroCorrection = correction;
-        if (m_reverse_Doppler) m_astroCorrection.reverse ();
-      } else {
-        m_astroCorrection = {};
-      }
-    if(!(m_tci && inSettings)) setRig ();
-    m_fAudioShift=m_fDop - correction.rx;
-  }
-}
-
 void MainWindow::setRig (Frequency f)
 {
   if (f)
@@ -13808,7 +13668,6 @@ void MainWindow::setRig (Frequency f)
       m_freqNominal = f;
       genCQMsg ();
       m_freqTxNominal = m_freqNominal;
-      if (m_astroWidget) m_astroWidget->nominal_frequency (m_freqNominal, m_freqTxNominal);
     }
   if (m_mode == "FreqCal"
       && m_frequency_list_fcal_iter != m_config.frequencies ()->end ()) {
@@ -13819,11 +13678,11 @@ void MainWindow::setRig (Frequency f)
     {
       if (m_transmitting && m_config.split_mode () && !(m_config.superFox() && m_specOp==SpecOp::FOX))
         {
-          m_config.transceiver_tx_frequency (m_freqTxNominal + m_astroCorrection.tx);
+          m_config.transceiver_tx_frequency (m_freqTxNominal);
         }
       else
         {
-          m_config.transceiver_frequency (m_freqNominal + m_astroCorrection.rx);
+          m_config.transceiver_frequency (m_freqNominal);
         }
     }
 }
@@ -15985,36 +15844,36 @@ void MainWindow::bandHopping()
 void MainWindow::on_actionDefault_event_logging_triggered()
 {
 #if defined(Q_OS_WIN)
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #else
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #endif
 }
 
 void MainWindow::on_actionDiagnostic_mode_triggered()
 {
 #if defined(Q_OS_WIN)
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;
-      mb.setText("Cannot write wsjtx_log_config.ini file");
+      mb.setText("Cannot write wsjtcb_log_config.ini file");
       mb.exec();
       return;
     }
     QString instance = "";
     QString path = QStandardPaths::writableLocation (QStandardPaths::DataLocation);
     QStringList tw;
-    if (path.contains("/WSJT-X")) tw=path.split("/WSJT-X");
+    if (path.contains("/WSJT-CB")) tw=path.split("/WSJT-CB");
     if (tw.size () > 0 && tw[1].remove(" - ") != "") instance = tw[1].remove(" - ") + "/";
     QString EventConfig = (
             "\[Sinks.SYSLOG]\n"
             "Destination=TextFile\n"
             "Asynchronous=true\n"
             "AutoFlush=true\n"
-            "FileName=\"${DesktopLocation}/logs/" + instance + "wsjtx_syslog.log\"\n"
+            "FileName=\"${DesktopLocation}/logs/" + instance + "wsjtcb_syslog.log\"\n"
             "Append=true\n"
             "Format=\"[%Channel%][%TimeStamp(format=\\\"%Y-%m-%d %H:%M:%S.%f\\\")%][%Uptime(format=\\\"%O:%M:%S.%f\\\")%][%Severity%] %Message%\"\n"
             "Filter=\"%Channel% matches \\\"SYSLOG\\\" | %Severity% >= info\"\n"
@@ -16023,7 +15882,7 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
             "Destination=TextFile\n"
             "Asynchronous=true\n"
             "AutoFlush=true\n"
-            "FileName=\"${DesktopLocation}/logs/" + instance + "WSJT-X_RigControl.log\"\n"
+            "FileName=\"${DesktopLocation}/logs/" + instance + "WSJT-CB_RigControl.log\"\n"
             "Append=true\n"
             "Format=\"[%TimeStamp(format=\\\"%Y-%m-%d %H:%M:%S.%f\\\")%][%Uptime(format=\\\"%O:%M:%S.%f\\\")%][%Channel%:%Severity%] %Message%\"\n"
             "Filter=\"%Channel% matches \\\"RIGCTRL\\\" | %Severity% >= info\""
@@ -16035,12 +15894,12 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
             "                                     DIAGNOSTIC MODE\n"
             "\n"
             "You have switched to diagnostic mode. It allows you to collect data to\n"
-            "troubleshoot problems with WSJT-X, or its communication with your rig.\n"
+            "troubleshoot problems with WSJT-CB, or its communication with your rig.\n"
             "\n"
-            "The diagnostic mode is active after closing and restarting WSJT-X,\n"
+            "The diagnostic mode is active after closing and restarting WSJT-CB,\n"
             "and is then automatically deactivated when the program is next closed.\n"
             "In the diagnostic mode a new \"logs\" folder appears on your screen, and\n"
-            "in it two files are created: \"wsjtx_syslog.log\" and \"WSJT-X_RigControl.log\".\n"
+            "in it two files are created: \"wsjtcb_syslog.log\" and \"WSJT-CB_RigControl.log\".\n"
             "Open these files with a text editor and look for error messages,\n"
             "or send these files to the development team for further analysis.\n"
             "\n"
@@ -16054,13 +15913,13 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
 void MainWindow::on_actionDisable_event_logging_triggered()
 {
 #if defined(Q_OS_WIN)
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtx_log_config.ini")};
+    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;
-      mb.setText("Cannot write wsjtx_log_config.ini file");
+      mb.setText("Cannot write wsjtcb_log_config.ini file");
       mb.exec();
       return;
     }
@@ -16071,7 +15930,7 @@ void MainWindow::on_actionDisable_event_logging_triggered()
     QTextStream out(&f);
     out << EventConfig;
     f.close();
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx_syslog.log"));
+    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_syslog.log"));
 }
 
 void MainWindow::on_actionUse_Dark_Style_triggered (bool checked)
@@ -17108,7 +16967,7 @@ void MainWindow::on_pb24G_clicked()
 
 void MainWindow::read_txLog()
 {
-    static QFile logfile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+    static QFile logfile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
     QTextStream logstream(&logfile);
     if(logfile.open(QIODevice::ReadOnly | QIODevice::Text)) {
         while (!logstream.atEnd()) {
@@ -17124,7 +16983,7 @@ void MainWindow::on_actionErase_Tx_Log_triggered()
   int ret = MessageBox::query_message (this, tr ("Confirm Erase"),
           tr ("Are you sure you want to erase the Tx Log?"));
   if(ret==MessageBox::Yes) {
-    static QFile logFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtx.log")};
+    static QFile logFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb.log")};
     logFile.remove();
     txLog = "";
   }
@@ -17173,19 +17032,6 @@ void MainWindow::on_actionErase_Ignore_List_triggered()
     static QFile ignoreFile {QDir {QStandardPaths::writableLocation (QStandardPaths::DataLocation)}.absoluteFilePath ("ignore.list")};
     ignoreFile.remove();
     ignoreList = "";
-  }
-}
-
-void MainWindow::read_ALLCALL7()
-{
-  static QFile AllCall7File {"ALLCALL7.TXT"};
-  QTextStream AllCall7Stream(&AllCall7File);
-  if(AllCall7File.open(QIODevice::ReadOnly | QIODevice::Text)) {
-    while (!AllCall7Stream.atEnd()) {
-      ALLCALL7 = AllCall7Stream.readAll();
-    }
-      AllCall7Stream.flush();
-      AllCall7File.close();
   }
 }
 

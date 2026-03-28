@@ -1,0 +1,72 @@
+name: Build Debian 12 package
+
+on:
+  workflow_dispatch:
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
+
+jobs:
+  build-deb:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            build-essential \
+            cmake \
+            ninja-build \
+            gfortran \
+            dpkg-dev \
+            debhelper \
+            libudev-dev \
+            libboost-log-dev \
+            libboost-thread-dev \
+            libfftw3-dev \
+            libhamlib-dev \
+            libusb-1.0-0-dev \
+            qtbase5-dev \
+            qtmultimedia5-dev \
+            qttools5-dev \
+            qttools5-dev-tools \
+            libqt5serialport5-dev \
+            libqt5websockets5-dev
+
+      - name: Configure
+        run: |
+          cmake -S . -B build -G Ninja \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DWSJT_SKIP_MANPAGES=ON \
+            -DWSJT_GENERATE_DOCS=OFF
+
+      - name: Build
+        run: cmake --build build -j"$(nproc)"
+
+      - name: Package
+        run: |
+          cpack --config build/CPackConfig.cmake -G DEB
+          sha256sum build/*.deb > build/SHA256SUMS.txt
+
+      - name: Upload workflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wsjtcb-debian12
+          path: |
+            build/*.deb
+            build/SHA256SUMS.txt
+
+      - name: Attach assets to GitHub release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/*.deb
+            build/SHA256SUMS.txt

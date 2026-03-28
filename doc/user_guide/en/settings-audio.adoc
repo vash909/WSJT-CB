@@ -35,9 +35,7 @@ can select another location if desired.
 * _AzEl Directory_: A file named `azel.dat` will appear in the
 specified directory.  The file contains information usable by another
 program for automatic tracking of the Sun or Moon, as well as
-calculated Doppler shift for the specified EME path.  The file is
-updated once per second whenever the <<ASTRODATA,Astronomical Data>>
-window is displayed.
+calculated Doppler shift for the specified EME path.
 
 * _Remember power settings by band_: Checking either of these will
 cause _WSJT-X_ to remember the *Pwr* slider setting for that operation

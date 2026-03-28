@@ -51,21 +51,25 @@ if (NOT DEFINED CMAKE_Fortran_COMPILER AND NOT DEFINED ENV{FC})
     NAMES gfortran ifx ifort flang-new flang f95 f90)
   if (WSJT_FORTRAN_COMPILER)
     set (CMAKE_Fortran_COMPILER "${WSJT_FORTRAN_COMPILER}" CACHE FILEPATH
-      "Fortran compiler used to build WSJT-X")
+      "Fortran compiler used to build WSJT-CB")
   else ()
     message (FATAL_ERROR
-      "WSJT-X requires a Fortran compiler. Install one (for example: gfortran) "
+      "WSJT-CB requires a Fortran compiler. Install one (for example: gfortran) "
       "or configure with FC=/path/to/compiler.")
   endif ()
 endif ()
 
 project (wsjtx
-  VERSION 1.0.0.0
+  VERSION 1.1.0.0
   LANGUAGES C CXX Fortran
   )
-set (PROJECT_DESCRIPTION "WSJT-X: Digital Modes for Weak Signal Communications in Amateur Radio")
+set (PROJECT_DESCRIPTION "WSJT-CB: Digital Modes for Weak Signal Communications in CB Radio")
 set (CMAKE_PROJECT_DESCRIPTION ${PROJECT_DESCRIPTION})
 set (CMAKE_AUTOUIC ON)
+set (PROJECT_BUNDLE_NAME "WSJT-CB")
+set (PROJECT_EXECUTABLE_NAME "wsjtcb")
+set (PROJECT_PACKAGE_NAME "wsjtcb")
+set (PROJECT_GUI_IDENTIFIER "org.k1jt.wsjtcb")
 
 #
 # Local CMake modules and support files
@@ -93,7 +97,6 @@ set (wsjtx_VERSION "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_
 #
 # project information
 #
-set (PROJECT_BUNDLE_NAME "WSJT-CB")
 set (PROJECT_VENDOR "Joe Taylor, K1JT")
 set (PROJECT_CONTACT "Joe Taylor <k1jt@arrl.net>")
 set (PROJECT_COPYRIGHT "Copyright (C) 2001-2025 by Joe Taylor, K1JT")
@@ -144,7 +147,7 @@ option (WSJT_GENERATE_DOCS "Generate documentation files." ON)
 option (WSJT_ENABLE_WERROR "Treat C++ warnings as errors." OFF)
 option (WSJT_RIG_NONE_CAN_SPLIT "Allow split operation with \"None\" as rig.")
 option (WSJT_TRACE_UDP "Debugging option that turns on UDP message protocol diagnostics.")
-option (WSJT_BUILD_UTILS "Build simulators and code demonstrators." ON)
+option (WSJT_BUILD_UTILS "Build simulators and code demonstrators." OFF)
 option (WSJT_FOX_OTP "Enable Fox OTP Verification Messages." ON)
 CMAKE_DEPENDENT_OPTION (WSJT_QDEBUG_IN_RELEASE "Leave Qt debugging statements in Release configuration." OFF
   "NOT is_debug_build" OFF)
@@ -303,7 +306,6 @@ set (wsjtx_CXXSRCS
   widgets/fastgraph.cpp
   widgets/fastplot.cpp
   widgets/about.cpp
-  widgets/astro.cpp
   widgets/messageaveraging.cpp
   widgets/activeStations.cpp
   widgets/colorhighlighting.cpp
@@ -398,9 +400,6 @@ set (wsjt_FSRCS
   lib/ana64.f90
   lib/ana932.f90
   lib/analytic.f90
-  lib/astro.f90
-  lib/astrosub.f90
-  lib/astro0.f90
   lib/avecho.f90
   lib/averms.f90
   lib/azdist.f90
@@ -669,7 +668,6 @@ set (wsjt_FSRCS
   lib/ft8var/genft8sdvar.f90
   lib/ft8var/jt65_mod2var.f90
   lib/ft8var/jt65_mod5.f90
-  lib/ft8var/jt65_mod9.f90
   lib/ft8var/msgparservar.f90
   lib/ft8var/osd174_91var.f90
   lib/ft8var/packjt77sdvar.f90
@@ -786,7 +784,6 @@ set (wsprd_CSRCS
 set (wsjtx_UISRCS
   widgets/mainwindow.ui
   widgets/about.ui
-  widgets/astro.ui
   widgets/colorhighlighting.ui
   widgets/echograph.ui
   widgets/fastgraph.ui
@@ -799,32 +796,6 @@ set (wsjtx_UISRCS
   widgets/QSYMessage.ui
   widgets/QSYMessageCreator.ui
   widgets/qsymonitor.ui
-  )
-
-set (UDP_library_CXXSRCS
-  Radio.cpp
-  RadioMetaType.cpp
-  Network/NetworkMessage.cpp
-  UDPExamples/MessageServer.cpp
-  )
-
-set (UDP_library_HEADERS
-  Radio.hpp
-  UDPExamples/MessageServer.hpp
-  ${PROJECT_BINARY_DIR}/udp_export.h
-  )
-
-set (message_aggregator_CXXSRCS
-  UDPExamples/MessageAggregator.cpp
-  UDPExamples/MessageAggregatorMainWindow.cpp
-  UDPExamples/DecodesModel.cpp
-  UDPExamples/BeaconsModel.cpp
-  UDPExamples/ClientWidget.cpp
-  validators/MaidenheadLocatorValidator.cpp
-  )
-
-set (message_aggregator_STYLESHEETS
-  UDPExamples/qss/default.qss
   )
 
 set (qcp_CXXSRCS
@@ -849,7 +820,7 @@ set (all_C_and_CXXSRCS
 
 set (TOP_LEVEL_RESOURCES
   icons/Darwin/wsjtx.iconset/icon_128x128.png
-  contrib/gpl-v3-logo.svg
+  contrib/gpl-v3-logo.png
   artwork/splash.png
   )
 
@@ -886,7 +857,7 @@ set (PALETTE_FILES
 )
 
 if (APPLE)
-  set (WSJTX_ICON_FILE ${CMAKE_PROJECT_NAME}.icns)
+  set (WSJTX_ICON_FILE ${PROJECT_EXECUTABLE_NAME}.icns)
   set (ICONSRCS
     icons/Darwin/${CMAKE_PROJECT_NAME}.iconset/icon_16x16.png
     icons/Darwin/${CMAKE_PROJECT_NAME}.iconset/icon_16x16@2x.png
@@ -1556,11 +1527,8 @@ generate_version_info (jt9_VERSION_RESOURCES
   NAME jt9
   BUNDLE ${PROJECT_BUNDLE_NAME}
   ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "jt9 - WSJT-X slow mode decoder"
+  FILE_DESCRIPTION "jt9 - WSJT-CB slow mode decoder"
   )
-
-add_executable (record_time_signal Audio/tools/record_time_signal.cpp)
-target_link_libraries (record_time_signal wsjt_cxx wsjt_qtmm wsjt_qt)
 
 add_executable (jt9 ${jt9_FSRCS} ${jt9_VERSION_RESOURCES})
 if (${OPENMP_FOUND} OR APPLE)
@@ -1602,13 +1570,11 @@ endif (${OPENMP_FOUND} OR APPLE)
 
 if (WIN32)
   find_package (Portaudio REQUIRED)
-  add_subdirectory (map65)
 endif ()
-  add_subdirectory (qmap)
 
 # build the main application
 generate_version_info (wsjtx_VERSION_RESOURCES
-  NAME wsjtx
+  NAME ${PROJECT_EXECUTABLE_NAME}
   BUNDLE ${PROJECT_BUNDLE_NAME}
   ICON ${WSJTX_ICON_FILE}
   )
@@ -1626,6 +1592,7 @@ if (WSJT_CREATE_WINMAIN)
 endif (WSJT_CREATE_WINMAIN)
 
 set_target_properties (wsjtx PROPERTIES
+  OUTPUT_NAME ${PROJECT_EXECUTABLE_NAME}
   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/Darwin/Info.plist.in"
   MACOSX_BUNDLE_INFO_STRING "${PROJECT_DESCRIPTION}"
   MACOSX_BUNDLE_ICON_FILE "${WSJTX_ICON_FILE}"
@@ -1633,9 +1600,9 @@ set_target_properties (wsjtx PROPERTIES
   MACOSX_BUNDLE_SHORT_VERSION_STRING "v${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}"
   MACOSX_BUNDLE_LONG_VERSION_STRING "Version ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}.${PROJECT_VERSION_PATCH}${SCS_VERSION_STR}"
   MACOSX_BUNDLE_BUNDLE_NAME "${PROJECT_BUNDLE_NAME}"
-  MACOSX_BUNDLE_BUNDLE_EXECUTABLE_NAME "${PROJECT_NAME}"
+  MACOSX_BUNDLE_BUNDLE_EXECUTABLE_NAME "${PROJECT_EXECUTABLE_NAME}"
   MACOSX_BUNDLE_COPYRIGHT "${PROJECT_COPYRIGHT}"
-  MACOSX_BUNDLE_GUI_IDENTIFIER "org.k1jt.wsjtx"
+  MACOSX_BUNDLE_GUI_IDENTIFIER "${PROJECT_GUI_IDENTIFIER}"
   )
 
 target_include_directories (wsjtx PRIVATE ${FFTW3_INCLUDE_DIRS})
@@ -1659,79 +1626,6 @@ else ()
   endif ()
 endif ()
 target_link_libraries (wsjtx Qt5::SerialPort wsjt_cxx wsjt_qt wsjt_qtmm ${FFTW3_LIBRARIES} ${LIBM_LIBRARIES})
-
-# make a library for WSJT-X UDP servers
-# add_library (wsjtx_udp SHARED ${UDP_library_CXXSRCS})
-add_library (wsjtx_udp-static STATIC ${UDP_library_CXXSRCS})
-#target_include_directories (wsjtx_udp
-#  INTERFACE
-#  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/wsjtx>
-#  )
-target_include_directories (wsjtx_udp-static
-  INTERFACE
-  $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/wsjtx>
-  )
-#set_target_properties (wsjtx_udp PROPERTIES
-#  PUBLIC_HEADER "${UDP_library_HEADERS}"
-#  )
-set_target_properties (wsjtx_udp-static PROPERTIES
-  OUTPUT_NAME wsjtx_udp
-  )
-target_compile_definitions (wsjtx_udp-static PUBLIC UDP_STATIC_DEFINE)
-target_link_libraries (wsjtx_udp-static Qt5::Network Qt5::Gui)
-generate_export_header (wsjtx_udp-static BASE_NAME udp)
-
-generate_version_info (udp_daemon_VERSION_RESOURCES
-  NAME udp_daemon
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Example WSJT-X UDP Message Protocol daemon"
-  )
-add_executable (udp_daemon UDPExamples/UDPDaemon.cpp ${udp_daemon_VERSION_RESOURCES})
-target_link_libraries (udp_daemon wsjtx_udp-static)
-
-generate_version_info (wsjtx_app_version_VERSION_RESOURCES
-  NAME wsjtx_app_version
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Display WSJT-X Application Version on console"
-  )
-add_executable (wsjtx_app_version AppVersion/AppVersion.cpp ${wsjtx_app_version_VERSION_RESOURCES})
-target_link_libraries (wsjtx_app_version wsjt_qt)
-
-generate_version_info (message_aggregator_VERSION_RESOURCES
-  NAME message_aggregator
-  BUNDLE ${PROJECT_BUNDLE_NAME}
-  ICON ${WSJTX_ICON_FILE}
-  FILE_DESCRIPTION "Example WSJT-X UDP Message Protocol application"
-  )
-add_resources (message_aggregator_RESOURCES /qss ${message_aggregator_STYLESHEETS})
-configure_file (UDPExamples/message_aggregator.qrc.in message_aggregator.qrc @ONLY)
-qt5_add_resources (message_aggregator_RESOURCES_RCC
-  ${CMAKE_CURRENT_BINARY_DIR}/message_aggregator.qrc
-  contrib/QDarkStyleSheet/qdarkstyle/style.qrc
-  )
-add_executable (message_aggregator
-  ${message_aggregator_CXXSRCS}
-  ${message_aggregator_RESOURCES_RCC}
-  ${message_aggregator_VERSION_RESOURCES}
-  )
-target_link_libraries (message_aggregator wsjt_qt Qt5::Widgets wsjtx_udp-static)
-
-if (WSJT_CREATE_WINMAIN)
-  set_target_properties (message_aggregator PROPERTIES WIN32_EXECUTABLE ON)
-endif (WSJT_CREATE_WINMAIN)
-
-if (UNIX)
-  if (NOT WSJT_SKIP_MANPAGES)
-    add_subdirectory (manpages)
-    add_dependencies (wsjtx manpages)
-  endif (NOT WSJT_SKIP_MANPAGES)
-  if (NOT APPLE)
-    add_subdirectory (debian)
-    add_dependencies (wsjtx debian)
-  endif (NOT APPLE)
-endif (UNIX)
 
 #
 # installation
@@ -1758,11 +1652,6 @@ install (TARGETS wsjtx
 #   DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/wsjtx
 #   )
 
-install (TARGETS udp_daemon message_aggregator wsjtx_app_version
-  RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-  BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-  )
-
 install (TARGETS jt9 wsprd fmtave fcal fmeasure
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
   BUNDLE DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
@@ -1780,30 +1669,25 @@ install (PROGRAMS
   ${RIGCTL_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctl-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctl-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (PROGRAMS
   ${RIGCTLD_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctld-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctld-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (PROGRAMS
   ${RIGCTLCOM_EXE}
   DESTINATION ${CMAKE_INSTALL_BINDIR}
   #COMPONENT runtime
-  RENAME rigctlcom-wsjtx${CMAKE_EXECUTABLE_SUFFIX}
+  RENAME rigctlcom-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
   )
 
 install (FILES
-  README
   COPYING
-  AUTHORS
-  THANKS
-  NEWS
-  BUGS
   DESTINATION ${CMAKE_INSTALL_DOCDIR}
   #COMPONENT runtime
   )
@@ -1815,13 +1699,7 @@ install (FILES
   sat.dat
   contrib/Ephemeris/JPLEPH
   eclipse.txt
-  DESTINATION ${CMAKE_INSTALL_DATADIR}/${CMAKE_PROJECT_NAME}
-  #COMPONENT runtime
-  )
-
-install (FILES
-  ALLCALL7.TXT
-  DESTINATION ${CMAKE_INSTALL_BINDIR}
+  DESTINATION ${CMAKE_INSTALL_DATADIR}/${PROJECT_EXECUTABLE_NAME}
   #COMPONENT runtime
   )
 
@@ -1901,16 +1779,17 @@ configure_file (
 
 
 if (NOT WIN32 AND NOT APPLE)
-  # install a desktop file so wsjtx appears in the application start
+  # install a desktop file so wsjtcb appears in the application start
   # menu with an icon
   install (
-    FILES wsjtx.desktop message_aggregator.desktop
+    FILES wsjtcb.desktop
     DESTINATION share/applications
     #COMPONENT runtime
     )
   install (
     FILES icons/Unix/wsjtx_icon.png
     DESTINATION share/pixmaps
+    RENAME wsjtcb_icon.png
     #COMPONENT runtime
     )
 endif (NOT WIN32 AND NOT APPLE)
@@ -1943,7 +1822,8 @@ endif ()
 #
 set (CPACK_PACKAGE_DESCRIPTION_FILE "${CMAKE_SOURCE_DIR}/package_description.txt")
 set (CPACK_MONOLITHIC_INSTALL 1)
-set (CPACK_PACKAGE_NAME "${CMAKE_PROJECT_NAME}")
+set (CPACK_PACKAGE_NAME "${PROJECT_PACKAGE_NAME}")
+set (CPACK_PACKAGE_DESCRIPTION_SUMMARY "${PROJECT_DESCRIPTION}")
 set (CPACK_PACKAGE_VERSION_MAJOR ${PROJECT_VERSION_MAJOR})
 set (CPACK_PACKAGE_VERSION_MINOR ${PROJECT_VERSION_MINOR})
 set (CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}${BUILD_TYPE_REVISION}")
@@ -1980,6 +1860,7 @@ else ()
 endif ()
 
 set (CPACK_DEBIAN_PACKAGE_HOMEPAGE "${PROJECT_HOMEPAGE}")
+set (CPACK_DEBIAN_PACKAGE_NAME "${PROJECT_PACKAGE_NAME}")
 set (CPACK_DEBIAN_PACKAGE_DEPENDS "libgfortran5 (>=8.3) | libgfortran4 (>=7.3) | libgfortran3 (>=6.3), libfftw3-single3 (>=3.3), libgomp1 (>=6), libqt5serialport5 (>=5.7), libqt5multimedia5-plugins (>=5.7), libqt5widgets5 (>=5.7), libqt5network5 (>=5.7), libqt5printsupport5 (>=5.7), libqt5websockets5 (>=5.7),  libqt5sql5-sqlite (>=5.7), libusb-1.0-0 (>=1.0.21), libboost-log1.62.0 (>=1.62.0) | libboost-log1.65.1 (>=1.65.1) | libboost-log1.67.0 (>=1.67.0) | libboost-log1.71.0 (>=1.71.0) | libboost-log1.74.0 (>=1.74.0)")
 set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
 

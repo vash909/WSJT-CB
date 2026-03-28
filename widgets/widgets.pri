@@ -1,5 +1,5 @@
 SOURCES += \
-  widgets/astro.cpp widgets/LettersSpinBox.cpp \
+  widgets/LettersSpinBox.cpp \
   widgets/logqso.cpp widgets/displaytext.cpp \
   widgets/meterwidget.cpp widgets/signalmeter.cpp \
   widgets/plotter.cpp widgets/widegraph.cpp widgets/about.cpp \
@@ -37,7 +37,7 @@ HEADERS  += \
 
 FORMS    += \
   widgets/mainwindow.ui widgets/about.ui \
-  widgets/widegraph.ui widgets/astro.ui \
+  widgets/widegraph.ui \
   widgets/logqso.ui widgets/messageaveraging.ui \
   widgets/activeStations.ui \
   widgets/echograph.ui widgets/fastgraph.ui \

@@ -2735,7 +2735,7 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
         msg37='DE '//trim(call_b)//' TU'
      endif
 
-! DX Call searching false decodes, search for 1st callsign in ALLCALL7
+! DX Call searching false decodes
 ! 6W6VIV EY8MM 73
 ! 6Y9KOZ EY8MM RR73
      if(iaptype.gt.34 .and. iaptype.lt.40 .and. (xsnr.lt.-21.0 .or. rxdt.lt.-0.5 &

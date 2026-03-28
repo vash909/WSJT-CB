@@ -107,7 +107,7 @@
     </message>
     <message>
         <location filename="../widgets/activeStations.ui" line="207"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-X, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-CB, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -333,8 +333,8 @@
     <name>CAboutDlg</name>
     <message>
         <location filename="../widgets/about.ui" line="9"/>
-        <source>About WSJT-X</source>
-        <translation>О WSJT-X</translation>
+        <source>About WSJT-CB</source>
+        <translation>О WSJT-CB</translation>
     </message>
     <message>
         <location filename="../widgets/about.ui" line="60"/>
@@ -718,8 +718,8 @@ Format:
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3801"/>
-        <source>WSJT-X Decoded Text Font Chooser</source>
-        <translation>Выбор шрифта декодированного текста WSJT-X</translation>
+        <source>WSJT-CB Decoded Text Font Chooser</source>
+        <translation>Выбор шрифта декодированного текста WSJT-CB</translation>
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3838"/>
@@ -2594,7 +2594,7 @@ Error(%2): %3</source>
     <name>MainWindow</name>
     <message>
         <location filename="../widgets/mainwindow.ui" line="20"/>
-        <source>WSJT-X   by K1JT</source>
+        <source>WSJT-CB   by K1JT</source>
         <translation></translation>
     </message>
     <message>
@@ -2986,7 +2986,7 @@ Yellow when too low</source>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4641"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If orange or red there has been a rig control failure, click to reset and read the dial frequency.  S implies split mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если кружок отображается оранжевым или красным цветом - не работает CAT управление.Попробуйте синхронизировать управление трансивером нажав кнопкой мыши на кружке, проверьте корректность подключения трансивера к компьютеру,установки в трансивере, выполните заново настройку CAT в WSJT-X.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если кружок отображается оранжевым или красным цветом - не работает CAT управление.Попробуйте синхронизировать управление трансивером нажав кнопкой мыши на кружке, проверьте корректность подключения трансивера к компьютеру,установки в трансивере, выполните заново настройку CAT в WSJT-CB.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4644"/>
@@ -4584,8 +4584,8 @@ list. The list can be maintained in Settings (F2).</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4967"/>
-        <source>About WSJT-X</source>
-        <translation>О WSJT-X</translation>
+        <source>About WSJT-CB</source>
+        <translation>О WSJT-CB</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4975"/>
@@ -4680,12 +4680,12 @@ list. The list can be maintained in Settings (F2).</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5108"/>
-        <source>Erase wsjtx_log.adi</source>
-        <translation>Стереть  wsjtx_log.adi</translation>
+        <source>Erase wsjtcb_log.adi</source>
+        <translation>Стереть  wsjtcb_log.adi</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5113"/>
-        <source>Erase wsjtx.log</source>
+        <source>Erase wsjtcb.log</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -4755,27 +4755,27 @@ list. The list can be maintained in Settings (F2).</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5548"/>
-        <source>Quick-Start Guide to WSJT-X 2.7 and QMAP</source>
+        <source>Quick-Start Guide to WSJT-CB 2.7 and QMAP</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5553"/>
-        <source>WSJT-X_improved Home Page</source>
+        <source>WSJT-CB Home Page</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5556"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-x_improved home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-cb home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5561"/>
-        <source>The additional features of wsjt-x_improved</source>
+        <source>The additional features of wsjt-cb</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5564"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-x_improved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-cb.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5278,8 +5278,8 @@ list. The list can be maintained in Settings (F2).</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5449"/>
-        <source>Quick-Start Guide to WSJT-X 2.5.0 and MAP65 3.0</source>
-        <translation>Краткое руководство по  WSJT-X 2.5.0 и MAP65 3.0</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.5.0 and MAP65 3.0</source>
+        <translation>Краткое руководство по  WSJT-CB 2.5.0 и MAP65 3.0</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="348"/>
@@ -5538,12 +5538,12 @@ to ensure the signal is clean and not distorted.</source>
         <translation>Файл «fmt.all» будет переименован в «fmt.bak».</translation>
     </message>
     <message>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
-        <translation type="vanished">Если вы добросовестно используете какую-либо часть WSJT-X в соответствии с условиями Стандартной общественной лицензии GNU, вы должны разместить на видном месте следующее уведомление об авторских правах в своей производной работе:
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
+        <translation type="vanished">Если вы добросовестно используете какую-либо часть WSJT-CB в соответствии с условиями Стандартной общественной лицензии GNU, вы должны разместить на видном месте следующее уведомление об авторских правах в своей производной работе:
 
-«Алгоритмы, исходный код, внешний вид WSJT-X и связанных с ним программ, а также спецификации протоколов для режимов FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 защищены авторским правом ( C) 2001–2021 годы одним или несколькими из следующих авторов: Джозеф Тейлор, K1JT; Билл Сомервилль, G4WJS; Стивен Франке, K9AN; Нико Палермо, IV3NWV; Грег Бим, KI7MT; Майкл Блэк, W9MDB; Эдсон Перейра, PY2SDR; Филипп. Karn, KA9Q и другие члены группы разработчиков WSJT».</translation>
+«Алгоритмы, исходный код, внешний вид WSJT-CB и связанных с ним программ, а также спецификации протоколов для режимов FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 защищены авторским правом ( C) 2001–2021 годы одним или несколькими из следующих авторов: Джозеф Тейлор, K1JT; Билл Сомервилль, G4WJS; Стивен Франке, K9AN; Нико Палермо, IV3NWV; Грег Бим, KI7MT; Майкл Блэк, W9MDB; Эдсон Перейра, PY2SDR; Филипп. Karn, KA9Q и другие члены группы разработчиков WSJT».</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="5027"/>
@@ -5570,7 +5570,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -5616,7 +5616,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Остановить передачу, прервать QSO, очистить очередь следующего вызова.&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Онлайн-руководство пользователя. &lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Уведомление об авторских правах.&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;О WSJT-X.&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;О WSJT-CB.&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Открыть окно настроек.&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Показать список &quot;горячих&quot; клавиш.&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Очистить DX позывной/Локатор и TX сообщения.&lt;/td&gt;&lt;/tr&gt;
@@ -5740,8 +5740,8 @@ to ensure the signal is clean and not distorted.</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7598"/>
-        <source>Please choose another Tx frequency. WSJT-X will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
-        <translation>Пожалуйста, выберите другую частоту Tx. WSJT-X не будет сознательно передавать в другом режиме в поддиапазоне WSPR на 30 м.</translation>
+        <source>Please choose another Tx frequency. WSJT-CB will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
+        <translation>Пожалуйста, выберите другую частоту Tx. WSJT-CB не будет сознательно передавать в другом режиме в поддиапазоне WSPR на 30 м.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7602"/>
@@ -5750,9 +5750,9 @@ to ensure the signal is clean and not distorted.</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="4646"/>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -5761,7 +5761,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -5929,7 +5929,7 @@ to ensure the signal is clean and not distorted.</source>
         <location filename="../widgets/mainwindow.cpp" line="7616"/>
         <source>Please choose another dial frequency.
 Must be 3Khz away from %1.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the standard FT8 sub-bands.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -5942,7 +5942,7 @@ overlapping the standard FT8 sub-bands.</source>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7634"/>
         <source>Please choose another dial frequency.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the WSPR sub-bands.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -6106,8 +6106,8 @@ is already in CALL3.TXT, do you wish to replace it?</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11826"/>
-        <source>Are you sure you want to erase file wsjtx_log.adi?</source>
-        <translation>Вы уверены, что хотите стереть файл wsjtx_log.adi?</translation>
+        <source>Are you sure you want to erase file wsjtcb_log.adi?</source>
+        <translation>Вы уверены, что хотите стереть файл wsjtcb_log.adi?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11836"/>
@@ -6441,7 +6441,7 @@ UDP-сервер %2:%3</translation>
     <name>QSYMessage</name>
     <message>
         <location filename="../widgets/QSYMessage.ui" line="26"/>
-        <source>WSJT-X Popup</source>
+        <source>WSJT-CB Popup</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
@@ -8578,8 +8578,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2407"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-X should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Введите номер порта службы UDP-сервера, на который WSJT-X должен отправлять обновления. Если это значение равно нулю, обновления отправляться не будут.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-CB should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Введите номер порта службы UDP-сервера, на который WSJT-CB должен отправлять обновления. Если это значение равно нулю, обновления отправляться не будут.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2417"/>
@@ -8588,8 +8588,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2427"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-X. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;При отправке обновлений на групповой адрес многоадресной рассылки необходимо указать, на какие сетевые интерфейсы их отправлять. Если интерфейс обратной связи поддерживает многоадресную рассылку, то будет выбран как минимум этот интерфейс.&lt;/p&gt;&lt;p&gt;Для большинства пользователей интерфейс обратной связи — это все, что нужно, что позволит нескольким другим приложениям на одном компьютере взаимодействовать с WSJT-X. Если приложения, работающие на других хостах, должны получать обновления статуса, следует использовать подходящий сетевой интерфейс.&lt;/p&gt;&lt;p&gt;В некоторых системах Linux может потребоваться включить многоадресную рассылку на сетевом интерфейсе обратной связи.&lt;/p&gt; &lt;/тело&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-CB. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;При отправке обновлений на групповой адрес многоадресной рассылки необходимо указать, на какие сетевые интерфейсы их отправлять. Если интерфейс обратной связи поддерживает многоадресную рассылку, то будет выбран как минимум этот интерфейс.&lt;/p&gt;&lt;p&gt;Для большинства пользователей интерфейс обратной связи — это все, что нужно, что позволит нескольким другим приложениям на одном компьютере взаимодействовать с WSJT-CB. Если приложения, работающие на других хостах, должны получать обновления статуса, следует использовать подходящий сетевой интерфейс.&lt;/p&gt;&lt;p&gt;В некоторых системах Linux может потребоваться включить многоадресную рассылку на сетевом интерфейсе обратной связи.&lt;/p&gt; &lt;/тело&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2444"/>
@@ -8987,8 +8987,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2307"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-X mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Некоторые программы логов не принимают виды режимов WSJT-X.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-CB mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Некоторые программы логов не принимают виды режимов WSJT-CB.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2310"/>
@@ -9057,8 +9057,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2461"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-X will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если эта функция включена, WSJT-X будет принимать определенные запросы от сервера UDP, который получает декодированные сообщения.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-CB will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если эта функция включена, WSJT-CB будет принимать определенные запросы от сервера UDP, который получает декодированные сообщения.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2464"/>
@@ -9092,9 +9092,9 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2502"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-X will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-CB will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
         <translation>
-&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если этот флажок установлен, WSJT-X будет транслировать зарегистрированный контакт в формате ADIF на настроенное имя хоста и порт. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Если этот флажок установлен, WSJT-CB будет транслировать зарегистрированный контакт в формате ADIF на настроенное имя хоста и порт. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2505"/>
@@ -9118,8 +9118,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2539"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-X should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Введите номер порта, который WSJT-X должен использовать для UDP-трансляций информации журнала ADIF. Для N1MM Logger+ это значение должно быть равно 2333. Если оно равно нулю, обновления не будут транслироваться.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-CB should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Введите номер порта, который WSJT-CB должен использовать для UDP-трансляций информации журнала ADIF. Для N1MM Logger+ это значение должно быть равно 2333. Если оно равно нулю, обновления не будут транслироваться.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2566"/>
@@ -9133,8 +9133,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2575"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-X User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;См. &amp;quot;Калибровка частоты&amp;quot;для получения подробной информации смотрите  в Руководстве пользователя WSJT-X , как определить эти параметры для вашего nhfycbdthf.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-CB User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;См. &amp;quot;Калибровка частоты&amp;quot;для получения подробной информации смотрите  в Руководстве пользователя WSJT-CB , как определить эти параметры для вашего nhfycbdthf.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2578"/>
@@ -9198,18 +9198,18 @@ Right click for insert and delete options.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2795"/>
-        <source>Reset Highlighting to WSJT-X default</source>
+        <source>Reset Highlighting to WSJT-CB default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2802"/>
-        <source>Reset Highlighting to WSJT-X Improved default</source>
+        <source>Reset Highlighting to WSJT-CB Improved default</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2809"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtx_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Нажмите, чтобы снова просмотреть ADIF-файл wsjtx_log.adi на предмет обработанной ранее информации&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtcb_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Нажмите, чтобы снова просмотреть ADIF-файл wsjtcb_log.adi на предмет обработанной ранее информации&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2812"/>

@@ -215,9 +215,9 @@ subroutine multimode_decoder(ss,id2,params,nfsample)
            if(.not.params%nagain) nutc=params%nutc
 
            if(first) then
-              call cwfilter(first) 
-              first=.false. 
-           endif ! + ALLCALL to memory
+              call cwfilter(first)
+              first=.false.
+           endif
            lenabledxcsearch=params%lenabledxcsearch
            lwidedxcsearch=params%lwidedxcsearch
 

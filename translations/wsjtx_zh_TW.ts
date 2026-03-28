@@ -70,8 +70,8 @@
     </message>
     <message>
         <location filename="../widgets/activeStations.ui" line="207"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-X, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;單擊一行呼叫該電台. &lt;/p&gt;&lt;p&gt;使用QMAP時, 單擊將通聯數據和sked頻率傳輸到WSJT-X, 雙擊呼叫該電台.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-CB, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;單擊一行呼叫該電台. &lt;/p&gt;&lt;p&gt;使用QMAP時, 單擊將通聯數據和sked頻率傳輸到WSJT-CB, 雙擊呼叫該電台.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/activeStations.ui" line="92"/>
@@ -321,8 +321,8 @@
     <name>CAboutDlg</name>
     <message>
         <location filename="../widgets/about.ui" line="9"/>
-        <source>About WSJT-X</source>
-        <translation>關於 WSJT-X</translation>
+        <source>About WSJT-CB</source>
+        <translation>關於 WSJT-CB</translation>
     </message>
     <message>
         <location filename="../widgets/about.ui" line="60"/>
@@ -704,8 +704,8 @@ Format:
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3801"/>
-        <source>WSJT-X Decoded Text Font Chooser</source>
-        <translation>WSJT-X 解碼文本字型選擇</translation>
+        <source>WSJT-CB Decoded Text Font Chooser</source>
+        <translation>WSJT-CB 解碼文本字型選擇</translation>
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3838"/>
@@ -2521,7 +2521,7 @@ Error: %2 - %3</source>
     <name>MainWindow</name>
     <message>
         <location filename="../widgets/mainwindow.ui" line="20"/>
-        <source>WSJT-X   by K1JT</source>
+        <source>WSJT-CB   by K1JT</source>
         <translation></translation>
     </message>
     <message>
@@ -4758,8 +4758,8 @@ Double-click to reset to the standard 73 message</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4967"/>
-        <source>About WSJT-X</source>
-        <translation>關於 WSJT-X</translation>
+        <source>About WSJT-CB</source>
+        <translation>關於 WSJT-CB</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4975"/>
@@ -4849,13 +4849,13 @@ Double-click to reset to the standard 73 message</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5108"/>
-        <source>Erase wsjtx_log.adi</source>
-        <translation>刪除通聯日誌 wsjtx_log.adi</translation>
+        <source>Erase wsjtcb_log.adi</source>
+        <translation>刪除通聯日誌 wsjtcb_log.adi</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5113"/>
-        <source>Erase wsjtx.log</source>
-        <translation>刪除 wsjtx.log</translation>
+        <source>Erase wsjtcb.log</source>
+        <translation>刪除 wsjtcb.log</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5118"/>
@@ -4893,8 +4893,8 @@ Double-click to reset to the standard 73 message</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5548"/>
-        <source>Quick-Start Guide to WSJT-X 2.7 and QMAP</source>
-        <translation>WSJT-X 2.7 和 QMAP 快速入門指南</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.7 and QMAP</source>
+        <translation>WSJT-CB 2.7 和 QMAP 快速入門指南</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5535"/>
@@ -4912,8 +4912,8 @@ Double-click to reset to the standard 73 message</source>
         <translation>禁用事件記錄</translation>
     </message>
     <message>
-        <source>Copy main text window to WSJT-X.txt</source>
-        <translation type="vanished">將主文字視窗複製到 WSJT-X.txt</translation>
+        <source>Copy main text window to WSJT-CB.txt</source>
+        <translation type="vanished">將主文字視窗複製到 WSJT-CB.txt</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5508"/>
@@ -4922,23 +4922,23 @@ Double-click to reset to the standard 73 message</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5553"/>
-        <source>WSJT-X_improved Home Page</source>
-        <translation>WSJT-X_改進版主頁</translation>
+        <source>WSJT-CB Home Page</source>
+        <translation>WSJT-CB_改進版主頁</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5561"/>
-        <source>The additional features of wsjt-x_improved</source>
-        <translation>WSJT-X_改進版的附加功能</translation>
+        <source>The additional features of wsjt-cb</source>
+        <translation>WSJT-CB_改進版的附加功能</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5564"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-x_improved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;概述 WSJT-X_改進版的附加功能.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-cb.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;概述 WSJT-CB_改進版的附加功能.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5556"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-x_improved home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;轉到 WSJT-X_改進版主頁.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-cb home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;轉到 WSJT-CB_改進版主頁.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5585"/>
@@ -5248,8 +5248,8 @@ Double-click to reset to the standard 73 message</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5449"/>
-        <source>Quick-Start Guide to WSJT-X 2.5.0 and MAP65 3.0</source>
-        <translation>WSJT-X 2.5.0和MAP65 3.0快速入門指南</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.5.0 and MAP65 3.0</source>
+        <translation>WSJT-CB 2.5.0和MAP65 3.0快速入門指南</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="348"/>
@@ -5532,12 +5532,12 @@ to ensure the signal is clean and not distorted.</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="4646"/>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
-        <translation>如果您根據 GNU 通用公共許可證的條款合理使用 WSJT-X 的任何部分, 您必須在衍生作品的顯著位置顯示以下版權聲明:
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
+        <translation>如果您根據 GNU 通用公共許可證的條款合理使用 WSJT-CB 的任何部分, 您必須在衍生作品的顯著位置顯示以下版權聲明:
 
-&quot;WSJT-X 和相關程式的算法 原始程式碼 外觀和感覺, 以及 FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144模式的協定規範版權所有 (C) 2001-2023由以下一位或多位作者: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; 和WSJT開發組的其他成員.&quot;</translation>
+&quot;WSJT-CB 和相關程式的算法 原始程式碼 外觀和感覺, 以及 FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144模式的協定規範版權所有 (C) 2001-2023由以下一位或多位作者: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; 和WSJT開發組的其他成員.&quot;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="5027"/>
@@ -5564,7 +5564,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -5612,7 +5612,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;停止發送,中止通聯,清除下一個呼叫隊列&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;在線用戶指南  (Alt: 發射 Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;版權聲明&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;關於 WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;關於 WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;打開設置視窗 (Alt: 發射 Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;顯示鍵盤快捷鍵  (Alt: 發射 Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;清除DX呼號, DX網格, 發射信息 1-4 (Alt: 發射 Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -5899,8 +5899,8 @@ to ensure the signal is clean and not distorted.</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7598"/>
-        <source>Please choose another Tx frequency. WSJT-X will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
-        <translation>請選擇其他發送頻率. WSJT-X 不會故意傳輸另一個模式在 WSPR 30米子波段上.</translation>
+        <source>Please choose another Tx frequency. WSJT-CB will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
+        <translation>請選擇其他發送頻率. WSJT-CB 不會故意傳輸另一個模式在 WSPR 30米子波段上.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7602"/>
@@ -5916,11 +5916,11 @@ to ensure the signal is clean and not distorted.</source>
         <location filename="../widgets/mainwindow.cpp" line="7616"/>
         <source>Please choose another dial frequency.
 Must be 3Khz away from %1.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the standard FT8 sub-bands.</source>
         <translation>請選擇其他頻率.
 必須3Khz距離%1.
-WSJT-X 不會運行狐狸模式在
+WSJT-CB 不會運行狐狸模式在
 重疊標準FT8 子頻帶.</translation>
     </message>
     <message>
@@ -5932,10 +5932,10 @@ WSJT-X 不會運行狐狸模式在
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7634"/>
         <source>Please choose another dial frequency.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the WSPR sub-bands.</source>
         <translation>請選擇其他頻率.
-WSJT-X 不會操作在Fox模式下
+WSJT-CB 不會操作在Fox模式下
 與WSPR子帶重疊.</translation>
     </message>
     <message>
@@ -5944,12 +5944,12 @@ WSJT-X 不會操作在Fox模式下
         <translation>最後發送: %1</translation>
     </message>
     <message>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2024 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
-        <translation type="vanished">如果您根據 GNU 通用公共許可證的條款合理使用 WSJT-X 的任何部分, 您必須在衍生作品的顯著位置顯示以下版權聲明:
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2024 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
+        <translation type="vanished">如果您根據 GNU 通用公共許可證的條款合理使用 WSJT-CB 的任何部分, 您必須在衍生作品的顯著位置顯示以下版權聲明:
 
-&quot;WSJT-X 和相關程式的算法 原始程式碼 外觀和感覺, 以及 FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144模式的協定規範版權所有 (C) 2001-2023由以下一位或多位作者: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; 和WSJT開發組的其他成員.&quot; {441,?} {4,?} {8,?} {4,?} {6M?} {9,?} {65,?} {64,?} {65,?} {144 ?} {2001-2024 ?} {1J?} {4W?} {9A?} {3N?} {7M?} {9M?} {2S?} {9Q?} {2Y?} {9A?}</translation>
+&quot;WSJT-CB 和相關程式的算法 原始程式碼 外觀和感覺, 以及 FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144模式的協定規範版權所有 (C) 2001-2023由以下一位或多位作者: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; 和WSJT開發組的其他成員.&quot; {441,?} {4,?} {8,?} {4,?} {6M?} {9,?} {65,?} {64,?} {65,?} {144 ?} {2001-2024 ?} {1J?} {4W?} {9A?} {3N?} {7M?} {9M?} {2S?} {9Q?} {2Y?} {9A?}</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="5074"/>
@@ -5957,7 +5957,7 @@ WSJT-X 不會操作在Fox模式下
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6007,7 +6007,7 @@ WSJT-X 不會操作在Fox模式下
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;停止發送,中止通聯,清除下一個呼叫隊列&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;在線用戶指南  (Alt: 發射 Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;版權聲明&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;關於 WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;關於 WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;打開設置視窗 (Alt: 發射 Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;顯示鍵盤快捷鍵  (Alt: 發射 Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;清除DX呼號, DX網格, 發射信息 1-4 (Alt: 發射 Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6487,8 +6487,8 @@ CALL3.TXT已存在, 要替換檔案嗎?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11826"/>
-        <source>Are you sure you want to erase file wsjtx_log.adi?</source>
-        <translation>是否確定要清除 wsjtx_log.adi 檔案?</translation>
+        <source>Are you sure you want to erase file wsjtcb_log.adi?</source>
+        <translation>是否確定要清除 wsjtcb_log.adi 檔案?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11836"/>
@@ -6826,8 +6826,8 @@ UDP 伺服器 %2:%3</translation>
     <name>QSYMessage</name>
     <message>
         <location filename="../widgets/QSYMessage.ui" line="26"/>
-        <source>WSJT-X Popup</source>
-        <translation>WSJT-X 彈出</translation>
+        <source>WSJT-CB Popup</source>
+        <translation>WSJT-CB 彈出</translation>
     </message>
     <message>
         <location filename="../widgets/QSYMessage.ui" line="44"/>
@@ -8815,8 +8815,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2407"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-X should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;輸入 WSJT-X 應向其發送更新的 UDP 伺服器的服務埠號. 如果這是零將不發送任何更新.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-CB should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;輸入 WSJT-CB 應向其發送更新的 UDP 伺服器的服務埠號. 如果這是零將不發送任何更新.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2417"/>
@@ -8825,8 +8825,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2427"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-X. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;向組播組地址發送更新時需要指定要將其發送到哪個網路介面. 如果環回介面支援組播則至少將選擇該介面.&lt;/p&gt;&lt;p&gt;對於大多數用戶來說迴圈回式介面是所有需要的, 將允許同一台電腦上的多個其他應用程式與 WSJT-X 進行互通. 如果在其他主機上運行的應用程式要接收狀態更新則應使用合適的網路介面.&lt;/p&gt;&lt;p&gt;在某些 Linux 系統上可能需要在環回網路介面上啟用組播.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-CB. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;向組播組地址發送更新時需要指定要將其發送到哪個網路介面. 如果環回介面支援組播則至少將選擇該介面.&lt;/p&gt;&lt;p&gt;對於大多數用戶來說迴圈回式介面是所有需要的, 將允許同一台電腦上的多個其他應用程式與 WSJT-CB 進行互通. 如果在其他主機上運行的應用程式要接收狀態更新則應使用合適的網路介面.&lt;/p&gt;&lt;p&gt;在某些 Linux 系統上可能需要在環回網路介面上啟用組播.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2444"/>
@@ -8840,12 +8840,12 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2795"/>
-        <source>Reset Highlighting to WSJT-X default</source>
+        <source>Reset Highlighting to WSJT-CB default</source>
         <translation>將高亮顯示重置為 wsjt-x 默認值</translation>
     </message>
     <message>
-        <source>Reset Highlighting to wsjt-x_improved default</source>
-        <translation type="vanished">將高亮顯示重置為 wsjt-x_improved 默認值</translation>
+        <source>Reset Highlighting to wsjt-cb default</source>
+        <translation type="vanished">將高亮顯示重置為 wsjt-cb 默認值</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2893"/>
@@ -9224,8 +9224,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2307"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-X mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;某些日誌紀錄程式不接受 WSJT-X 模式名稱.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-CB mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;某些日誌紀錄程式不接受 WSJT-CB 模式名稱.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2310"/>
@@ -9366,8 +9366,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2461"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-X will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;啟用此功能後,WSJT-X 將接受來自接收解碼消息的 UDP 伺服器的某些請求.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-CB will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;啟用此功能後,WSJT-CB 將接受來自接收解碼消息的 UDP 伺服器的某些請求.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2464"/>
@@ -9401,8 +9401,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2502"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-X will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;選擇後, WSJT-X 將以 ADIF 格式將紀錄的聯絡廣播到設定的主機名稱和埠. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-CB will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;選擇後, WSJT-CB 將以 ADIF 格式將紀錄的聯絡廣播到設定的主機名稱和埠. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2505"/>
@@ -9426,8 +9426,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2539"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-X should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;輸入 WSJT-X 應用於 ADIF 日誌資訊的 UDP 廣播的埠號. 對於 N1MM Logger+, 此值應為 2333. 如果為零, 將不會廣播任何資料.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-CB should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;輸入 WSJT-CB 應用於 ADIF 日誌資訊的 UDP 廣播的埠號. 對於 N1MM Logger+, 此值應為 2333. 如果為零, 將不會廣播任何資料.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2566"/>
@@ -9441,8 +9441,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2575"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-X User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;參閱 &amp;quot;頻率校準&amp;quot; 在 WSJT-X 使用者指南中, 有關如何確定無線電的這些參數的詳細資訊.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-CB User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;參閱 &amp;quot;頻率校準&amp;quot; 在 WSJT-CB 使用者指南中, 有關如何確定無線電的這些參數的詳細資訊.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2578"/>
@@ -9503,13 +9503,13 @@ Right click for insert and delete options.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2802"/>
-        <source>Reset Highlighting to WSJT-X Improved default</source>
-        <translation>將高亮顯示重置為 wsjt-x_improved 默認值</translation>
+        <source>Reset Highlighting to WSJT-CB Improved default</source>
+        <translation>將高亮顯示重置為 wsjt-cb 默認值</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2809"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtx_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;按一下再次掃描wsjtx_log.adi ADIF檔,取得歷史資訊&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtcb_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;按一下再次掃描wsjtcb_log.adi ADIF檔,取得歷史資訊&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2812"/>

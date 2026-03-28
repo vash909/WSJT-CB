@@ -900,7 +900,6 @@ private:
   bool showAzimuth_;
   bool align_;
   bool repeat_Tx_;
-  bool auto_astro_;
   bool single_decode_;
   bool twoPass_;
   bool highDPI_;
@@ -1069,7 +1068,6 @@ bool Configuration::showDistance() const {return m_->showDistance_;}
 bool Configuration::showAzimuth() const {return m_->showAzimuth_;}
 bool Configuration::align() const {return m_->align_;}
 bool Configuration::repeat_Tx () const {return m_->repeat_Tx_;}
-bool Configuration::auto_astro () const {return m_->auto_astro_;}
 bool Configuration::single_decode () const {return m_->single_decode_;}
 bool Configuration::twoPass() const {return m_->twoPass_;}
 bool Configuration::highDPI() const {return m_->highDPI_;}
@@ -1721,7 +1719,7 @@ namespace
 #if CMAKE_BUILD
     if (QDir::isRelativePath (CMAKE_INSTALL_DATADIR))
       {
-	return QApplication::applicationDirPath () + app_root + CMAKE_INSTALL_DATADIR + QChar {'/'} + CMAKE_PROJECT_NAME;
+	return QApplication::applicationDirPath () + app_root + CMAKE_INSTALL_DATADIR + QChar {'/'} + PROJECT_EXECUTABLE_NAME;
       }
     return CMAKE_INSTALL_DATADIR;
 #else
@@ -2163,7 +2161,6 @@ void Configuration::impl::initialize_models ()
   ui_->cb_showAzimuth->setChecked(showAzimuth_);
   ui_->cb_Align->setChecked(align_);
   ui_->repeat_Tx_check_box->setChecked(repeat_Tx_);
-  ui_->auto_astro_check_box->setChecked(auto_astro_);
   ui_->single_decode_check_box->setChecked(single_decode_);
   ui_->cbTwoPass->setChecked(twoPass_);
   ui_->cbHighDPI->setChecked(highDPI_);
@@ -2463,7 +2460,7 @@ void Configuration::impl::read_settings ()
 
   monitor_off_at_startup_ = settings_->value ("MonitorOFF", false).toBool ();
   monitor_last_used_ = settings_->value ("MonitorLastUsed", false).toBool ();
-  spot_to_psk_reporter_ = settings_->value ("PSKReporter", false).toBool ();
+  spot_to_psk_reporter_ = settings_->value ("PSKReporter", true).toBool ();
   psk_reporter_tcpip_ = settings_->value ("PSKReporterTCPIP", false).toBool ();
   id_after_73_ = settings_->value ("After73", false).toBool ();
   tx_QSY_allowed_ = settings_->value ("TxQSYAllowed", false).toBool ();
@@ -2603,7 +2600,6 @@ void Configuration::impl::read_settings ()
   showAzimuth_ = settings_->value("showAzimuth", false).toBool();
   align_ = settings_->value("AlignDistanceAzimuth", true).toBool();
   repeat_Tx_ = settings_->value("RepeatTx",false).toBool ();
-  auto_astro_ = settings_->value("AutoAstroWindow",false).toBool ();
   single_decode_ = settings_->value("SingleDecode",false).toBool ();
   twoPass_ = settings_->value("TwoPass",true).toBool ();
   highDPI_ = settings_->value("HighDPI",true).toBool ();
@@ -2868,7 +2864,6 @@ void Configuration::impl::write_settings ()
   settings_->setValue ("showAzimuth", showAzimuth_);
   settings_->setValue ("AlignDistanceAzimuth", align_);
   settings_->setValue ("RepeatTx", repeat_Tx_);
-  settings_->setValue ("AutoAstroWindow", auto_astro_);
   settings_->setValue ("SingleDecode", single_decode_);
   settings_->setValue ("TwoPass", twoPass_);
   settings_->setValue ("HighDPI", highDPI_);
@@ -3450,7 +3445,6 @@ void Configuration::impl::accept ()
   showAzimuth_ = ui_->cb_showAzimuth->isChecked();
   align_ = ui_->cb_Align->isChecked();
   repeat_Tx_ = ui_->repeat_Tx_check_box->isChecked ();
-  auto_astro_ = ui_->auto_astro_check_box->isChecked ();
   single_decode_ = ui_->single_decode_check_box->isChecked ();
   twoPass_ = ui_->cbTwoPass->isChecked ();
   highDPI_ = ui_->cbHighDPI->isChecked ();
@@ -3671,7 +3665,7 @@ void Configuration::impl::on_CTY_download_button_clicked (bool /*clicked*/)
   cty_download.configure(network_manager_,
                          "http://www.country-files.com/bigcty/cty.dat",
                          dataPath.absoluteFilePath("cty.dat"),
-                         "WSJT-X CTY Downloader");
+                         "WSJT-CB CTY Downloader");
 
   // set up LoTW users CSV file fetching
   connect (&cty_download, &FileDownload::complete, this, &Configuration::impl::after_CTY_downloaded, Qt::UniqueConnection);
@@ -3802,7 +3796,7 @@ void Configuration::impl::on_LotW_CSV_fetch_push_button_clicked (bool /*checked*
 void Configuration::impl::on_decoded_text_font_push_button_clicked ()
 {
   next_decoded_text_font_ = QFontDialog::getFont (0, decoded_text_font_ , this
-                                                  , tr ("WSJT-X Decoded Text Font Chooser")
+                                                  , tr ("WSJT-CB Decoded Text Font Chooser")
                                                   , QFontDialog::MonospacedFonts
                                                   );
 }

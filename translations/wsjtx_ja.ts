@@ -105,8 +105,8 @@
     </message>
     <message>
         <location filename="../widgets/activeStations.ui" line="207"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-X, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;クリックしてその局をコール. &lt;/p&gt;&lt;p&gt;QMAPでは、シングルクリックでQSOデータとスケジュール周波数をWSJT-Xへ転送、ダブルクリックでその局をコール.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click on a line to call that station. &lt;/p&gt;&lt;p&gt;When using QMAP, single click to transfer QSO data and sked frequency to WSJT-CB, and double click to call that station.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;クリックしてその局をコール. &lt;/p&gt;&lt;p&gt;QMAPでは、シングルクリックでQSOデータとスケジュール周波数をWSJT-CBへ転送、ダブルクリックでその局をコール.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/activeStations.cpp" line="21"/>
@@ -329,8 +329,8 @@
     <name>CAboutDlg</name>
     <message>
         <location filename="../widgets/about.ui" line="9"/>
-        <source>About WSJT-X</source>
-        <translation>WSJT-Xについて</translation>
+        <source>About WSJT-CB</source>
+        <translation>WSJT-CBについて</translation>
     </message>
     <message>
         <location filename="../widgets/about.ui" line="60"/>
@@ -730,8 +730,8 @@ Format:
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3801"/>
-        <source>WSJT-X Decoded Text Font Chooser</source>
-        <translation>WSJT-Xのデコード出力用フォント選択</translation>
+        <source>WSJT-CB Decoded Text Font Chooser</source>
+        <translation>WSJT-CBのデコード出力用フォント選択</translation>
     </message>
     <message>
         <location filename="../Configuration.cpp" line="3838"/>
@@ -2628,7 +2628,7 @@ Error(%2): %3</source>
     <name>MainWindow</name>
     <message>
         <location filename="../widgets/mainwindow.ui" line="20"/>
-        <source>WSJT-X   by K1JT</source>
+        <source>WSJT-CB   by K1JT</source>
         <translation></translation>
     </message>
     <message>
@@ -2831,8 +2831,8 @@ Error(%2): %3</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5449"/>
-        <source>Quick-Start Guide to WSJT-X 2.5.0 and MAP65 3.0</source>
-        <translation>WSJT-X 2.5.0とMAP65 3.0のクイックスタートガイド</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.5.0 and MAP65 3.0</source>
+        <translation>WSJT-CB 2.5.0とMAP65 3.0のクイックスタートガイド</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4357"/>
@@ -4584,28 +4584,28 @@ ENTERを押してテキストを登録リストに追加.
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5548"/>
-        <source>Quick-Start Guide to WSJT-X 2.7 and QMAP</source>
-        <translation>WSJT-X 2.7 と QMAPのクイックスタートガイド</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.7 and QMAP</source>
+        <translation>WSJT-CB 2.7 と QMAPのクイックスタートガイド</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5553"/>
-        <source>WSJT-X_improved Home Page</source>
-        <translation>WSJT-X_improvedのホームページ</translation>
+        <source>WSJT-CB Home Page</source>
+        <translation>WSJT-CBのホームページ</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5556"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-x_improved home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wsjt-x_improvedのホームページへ.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Go to the wsjt-cb home page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wsjt-cbのホームページへ.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5561"/>
-        <source>The additional features of wsjt-x_improved</source>
-        <translation>wsjt-x_improvedの追加機能</translation>
+        <source>The additional features of wsjt-cb</source>
+        <translation>wsjt-cbの追加機能</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5564"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-x_improved.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wsjt-x_improvedの追加機能の概略.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Overview on the additional features of wsjt-cb.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;wsjt-cbの追加機能の概略.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5569"/>
@@ -4954,8 +4954,8 @@ ENTERを押してテキストを登録リストに追加.
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4967"/>
-        <source>About WSJT-X</source>
-        <translation>WSJT-Xについて</translation>
+        <source>About WSJT-CB</source>
+        <translation>WSJT-CBについて</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="4975"/>
@@ -5049,8 +5049,8 @@ ENTERを押してテキストを登録リストに追加.
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5108"/>
-        <source>Erase wsjtx_log.adi</source>
-        <translation>wsjtx_log.adiを消去</translation>
+        <source>Erase wsjtcb_log.adi</source>
+        <translation>wsjtcb_log.adiを消去</translation>
     </message>
     <message>
         <source>Convert mode to RTTY for logging</source>
@@ -5288,8 +5288,8 @@ ENTERを押してテキストを登録リストに追加.
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5113"/>
-        <source>Erase wsjtx.log</source>
-        <translation>wsjtx.logを消去</translation>
+        <source>Erase wsjtcb.log</source>
+        <translation>wsjtcb.logを消去</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5118"/>
@@ -5441,8 +5441,8 @@ ENTERを押してテキストを登録リストに追加.
         <translation>Cabrilloログをエクスポート...</translation>
     </message>
     <message>
-        <source>Quick-Start Guide to WSJT-X 2.0</source>
-        <translation type="vanished">WSJT-X 2.0クイックスタートガイド</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.0</source>
+        <translation type="vanished">WSJT-CB 2.0クイックスタートガイド</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="5383"/>
@@ -5759,12 +5759,12 @@ to ensure the signal is clean and not distorted.</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="4646"/>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
-        <translation>GNU General Public Licenseに準拠し、WSJT-Xコードのいかなる部分を利用するときは, あなたの二次的著作物には、以下の著作権表示を明確に表示しなければなりません:
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</source>
+        <translation>GNU General Public Licenseに準拠し、WSJT-CBコードのいかなる部分を利用するときは, あなたの二次的著作物には、以下の著作権表示を明確に表示しなければなりません:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</translation>
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2025 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; Uwe Risse, DG2YCB; Brian Moran, N9ADG; and other members of the WSJT Development Group.&quot;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="5074"/>
@@ -5772,7 +5772,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -5822,7 +5822,7 @@ to ensure the signal is clean and not distorted.</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;送信停止、QSO 中止、次のコールキューをクリア&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;オンラインユーザーガイドを開く（Alt: Tx6 送信）&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;著作権表示&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;AWSJT-X について&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;AWSJT-CB について&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;設定ウィンドウを開く（Alt: Tx2 送信）&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;キーボードショートカット一覧を表示（Alt: Tx3 送信）&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;DX Call, DX Grid, Txメッセージ1～4をクリア（Alt: Tx4 送信）&lt;/td&gt;&lt;/tr&gt;
@@ -6096,11 +6096,11 @@ to ensure the signal is clean and not distorted.</source>
         <location filename="../widgets/mainwindow.cpp" line="7616"/>
         <source>Please choose another dial frequency.
 Must be 3Khz away from %1.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the standard FT8 sub-bands.</source>
         <translation>他のダイアル周波数を選んでください.
 %1より3KHz以上離れること.
-WSJT-XのFoxモードは標準FT8サブバンド
+WSJT-CBのFoxモードは標準FT8サブバンド
 と重なることはできません.</translation>
     </message>
     <message>
@@ -6179,12 +6179,12 @@ Check your antenna</source>
         <translation>本当に無視リストを消去してもいいですか?</translation>
     </message>
     <message>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
-        <translation type="vanished">もしあなたがGNU General Public LicenseのもとでWSJT-Xの一部または全部のコードを使う場合、あなたのアプリで以下の著作権に関する文章を明確に表示しなければなりません.
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
+        <translation type="vanished">もしあなたがGNU General Public LicenseのもとでWSJT-CBの一部または全部のコードを使う場合、あなたのアプリで以下の著作権に関する文章を明確に表示しなければなりません.
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</translation>
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="5027"/>
@@ -6211,7 +6211,7 @@ Check your antenna</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6257,7 +6257,7 @@ Check your antenna</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;送信中止 QSO終了, 次の送信をクリア&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;オンラインユーザーガイド (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;著作権表示&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-Xについて&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-CBについて&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;設定ウィンドウを開く (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;キーボードショートカットを表示 (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;DXコール、グリッド、送信メッセージ１～4をクリア (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6304,7 +6304,7 @@ Check your antenna</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6350,7 +6350,7 @@ Check your antenna</source>
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;送信中止 QSO終了, 次の送信をクリア&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;オンラインユーザーガイド (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;著作権表示&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-Xについて&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-CBについて&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;設定ウィンドウを開く (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;キーボードショートカットを表示 (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;DXコール、グリッド、送信メッセージ１～4をクリア (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -6475,8 +6475,8 @@ Check your antenna</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7598"/>
-        <source>Please choose another Tx frequency. WSJT-X will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
-        <translation>他の送信周波数を使ってください. WSJT-Xは30mバンドのWSPRサブバンド中の他のモードを受信せずに送信してしまいます.</translation>
+        <source>Please choose another Tx frequency. WSJT-CB will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
+        <translation>他の送信周波数を使ってください. WSJT-CBは30mバンドのWSPRサブバンド中の他のモードを受信せずに送信してしまいます.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7602"/>
@@ -6484,8 +6484,8 @@ Check your antenna</source>
         <translation>WSPRガードバンド</translation>
     </message>
     <message>
-        <source>Please choose another dial frequency. WSJT-X will not operate in Fox mode in the standard FT8 sub-bands.</source>
-        <translation type="vanished">他のダイヤル周波数を使ってください.&#x3000;WSJT-XはFT8の標準サブバンドでFoxモードを使えません。</translation>
+        <source>Please choose another dial frequency. WSJT-CB will not operate in Fox mode in the standard FT8 sub-bands.</source>
+        <translation type="vanished">他のダイヤル周波数を使ってください.&#x3000;WSJT-CBはFT8の標準サブバンドでFoxモードを使えません。</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7621"/>
@@ -6496,10 +6496,10 @@ Check your antenna</source>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="7634"/>
         <source>Please choose another dial frequency.
-WSJT-X will not operate in Fox mode
+WSJT-CB will not operate in Fox mode
 overlapping the WSPR sub-bands.</source>
         <translation>別のダイヤル周波数を選択してください.
-WSJT-X は、WSPR サブバンドと重なる周波数で
+WSJT-CB は、WSPR サブバンドと重なる周波数で
  Fox モードで動作しません.</translation>
     </message>
     <message>
@@ -6667,8 +6667,8 @@ is already in CALL3.TXT, do you wish to replace it?</source>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11826"/>
-        <source>Are you sure you want to erase file wsjtx_log.adi?</source>
-        <translation>wsjtx_log.adiを消してもよいですか?</translation>
+        <source>Are you sure you want to erase file wsjtcb_log.adi?</source>
+        <translation>wsjtcb_log.adiを消してもよいですか?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="11836"/>
@@ -6947,8 +6947,8 @@ UDPサーバー %2:%3</translation>
     <name>QSYMessage</name>
     <message>
         <location filename="../widgets/QSYMessage.ui" line="26"/>
-        <source>WSJT-X Popup</source>
-        <translation>WSJT-Xポップアップ</translation>
+        <source>WSJT-CB Popup</source>
+        <translation>WSJT-CBポップアップ</translation>
     </message>
     <message>
         <location filename="../widgets/QSYMessage.ui" line="44"/>
@@ -8220,7 +8220,7 @@ Error(%2): %3</source>
     <message>
         <location filename="../Configuration.ui" line="140"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Type 2 compound callsigns are those with prefixes or suffixes not included in the allowed shortlist (See Help-&amp;gt;Add-on prefixes and suffixes).&lt;/p&gt;&lt;p&gt;This option determines which generated messages should contain your full type 2 compound call sign rather than your base callsign. It only applies if you have a type 2 compound callsign.&lt;/p&gt;&lt;p&gt;This option controls the way the messages that are used to answer CQ calls are generated. Generated messages 6 (CQ) and 5 (73) will always contain your full callsign. The JT65 and JT9 protocols allow for some standard messages with your full call at the expense of another piece of information such as the DX call or your locator.&lt;/p&gt;&lt;p&gt;Choosing message 1 omits the DX callsign which may be an issue when replying to CQ calls. Choosing message 3 also omits the DX callsign and many versions of this and other software will not extract the report. Choosing neither means that your full callsign only goes in your message 5 (73) so your QSO partner may log the wrong callsign.&lt;/p&gt;&lt;p&gt;None of these options are perfect, message 3 is usually best but be aware your QSO partner may not log the report you send them.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;タイプ2コールサインは、プリフィックスまたはサフィックスが短縮リストに載っていない場合使われます.&lt;/p&gt;&lt;p&gt;このオプションはあなたがタイプ2複合コールサインを使うとき、どのメッセージでそれを送信するかを決めます. &lt;/p&gt;&lt;p&gt;CQに応答するとき基本コールサインを使うかタイプ2複合コールサインを使うか選択できます. 6 (CQ) と 5 (73) はいつもフルコールサインを含みます. JT65 と JT9 プロトコルはDXコールやロケーターを送らない代わりにフルのタイプ2複合コールサインを送ることができます.&lt;/p&gt;&lt;p&gt;メッセージ1を選ぶと、DXコールが含まれませんのでCQに応答するとき問題になるかもしれません. メッセージ3を選ぶとDXコールを省きますが、WSJT-Xのバージョンによって、あるいは、別のアプリがレポートを受け取れません. どちらも選ばないとフルのコールサインはメッセージ5（73）だけに含まれ、相手が間違ったコールサインをログしかねません.&lt;/p&gt;&lt;p&gt;どのオプションも完璧ではありません, メッセージ3が一番よいと思いますが、相手がレポートを受け取れない可能性があります.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;タイプ2コールサインは、プリフィックスまたはサフィックスが短縮リストに載っていない場合使われます.&lt;/p&gt;&lt;p&gt;このオプションはあなたがタイプ2複合コールサインを使うとき、どのメッセージでそれを送信するかを決めます. &lt;/p&gt;&lt;p&gt;CQに応答するとき基本コールサインを使うかタイプ2複合コールサインを使うか選択できます. 6 (CQ) と 5 (73) はいつもフルコールサインを含みます. JT65 と JT9 プロトコルはDXコールやロケーターを送らない代わりにフルのタイプ2複合コールサインを送ることができます.&lt;/p&gt;&lt;p&gt;メッセージ1を選ぶと、DXコールが含まれませんのでCQに応答するとき問題になるかもしれません. メッセージ3を選ぶとDXコールを省きますが、WSJT-CBのバージョンによって、あるいは、別のアプリがレポートを受け取れません. どちらも選ばないとフルのコールサインはメッセージ5（73）だけに含まれ、相手が間違ったコールサインをログしかねません.&lt;/p&gt;&lt;p&gt;どのオプションも完璧ではありません, メッセージ3が一番よいと思いますが、相手がレポートを受け取れない可能性があります.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="147"/>
@@ -9101,8 +9101,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2407"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-X should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-Xがデータを送るUDPサーバーのポート番号を入力. もし0のときはデータを送らない.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-CB should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-CBがデータを送るUDPサーバーのポート番号を入力. もし0のときはデータを送らない.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2417"/>
@@ -9111,8 +9111,8 @@ transmitting periods.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2427"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-X. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;マルチキャストグループアドレスにデータを送る場合はどのネットワークインターフェイスを使うかを指定する必要があります.&lt;/p&gt;&lt;p&gt;ほとんどのユーザーにはループバックインターフェイスだけ指定すれば問題ありません.そうすれば、同一PC上で走る他のアプリはWSJT-Xとデータをやり取りできます.もしほかのPCで走るアプリがデータを受信しなければならない場合は正しいネットワークインターフェイスを指定しなければなりません.&lt;/p&gt;&lt;p&gt;
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-CB. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;マルチキャストグループアドレスにデータを送る場合はどのネットワークインターフェイスを使うかを指定する必要があります.&lt;/p&gt;&lt;p&gt;ほとんどのユーザーにはループバックインターフェイスだけ指定すれば問題ありません.そうすれば、同一PC上で走る他のアプリはWSJT-CBとデータをやり取りできます.もしほかのPCで走るアプリがデータを受信しなければならない場合は正しいネットワークインターフェイスを指定しなければなりません.&lt;/p&gt;&lt;p&gt;
 いくつかのLinuxシステムではループバックネットワークインターフェイスでマルチキャスト機能をオンにしなければならないかもしれません.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
@@ -9500,8 +9500,8 @@ and DX Grid fields when a 73 or free text message is sent.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2307"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-X mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;いくつかのログプログラムはWSJT-Xのモード名を受け付けません.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-CB mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;いくつかのログプログラムはWSJT-CBのモード名を受け付けません.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2310"/>
@@ -9578,13 +9578,13 @@ for assessing propagation and system performance.</source>
         <translation>UDPサーバーのポート番号:</translation>
     </message>
     <message>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-X should send updates to. If this is zero no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-Xがデータを送る先のUDPポート番号. ゼロの場合はデータを送りません.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-CB should send updates to. If this is zero no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation type="vanished">&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-CBがデータを送る先のUDPポート番号. ゼロの場合はデータを送りません.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2461"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-X will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;オンにすると、WSJT-XはUDPサーバーからのデータを受け付けます.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-CB will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;オンにすると、WSJT-CBはUDPサーバーからのデータを受け付けます.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2464"/>
@@ -9618,8 +9618,8 @@ for assessing propagation and system performance.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2502"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-X will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ここをチェックすると、WSJT-XはADIFフォーマットのログ情報を指定のホストの指定のポートへブロードキャストします. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-CB will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;ここをチェックすると、WSJT-CBはADIFフォーマットのログ情報を指定のホストの指定のポートへブロードキャストします. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2505"/>
@@ -9643,8 +9643,8 @@ for assessing propagation and system performance.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2539"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-X should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-XがADIF情報をブロードキャストする先のUDPポート番号. N1MM Logger+のときは2333. ゼロの場合はブロードキャスト停止.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-CB should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;WSJT-CBがADIF情報をブロードキャストする先のUDPポート番号. N1MM Logger+のときは2333. ゼロの場合はブロードキャスト停止.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2566"/>
@@ -9658,8 +9658,8 @@ for assessing propagation and system performance.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2575"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-X User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;あなたの無線機に合わせたパラメータ設定の詳細については、WSJT-Xユーザーガイドの &amp;quot;Frequency Calibration&amp;quot; セクションを参照のこと.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-CB User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;あなたの無線機に合わせたパラメータ設定の詳細については、WSJT-CBユーザーガイドの &amp;quot;Frequency Calibration&amp;quot; セクションを参照のこと.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2578"/>
@@ -9720,18 +9720,18 @@ Right click for insert and delete options.</source>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2795"/>
-        <source>Reset Highlighting to WSJT-X default</source>
-        <translation>ハイライト設定をWSJT-Xデフォルトへリセット</translation>
+        <source>Reset Highlighting to WSJT-CB default</source>
+        <translation>ハイライト設定をWSJT-CBデフォルトへリセット</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2802"/>
-        <source>Reset Highlighting to WSJT-X Improved default</source>
-        <translation>ハイライト設定をWSJT-X improvedデフォルトへリセット</translation>
+        <source>Reset Highlighting to WSJT-CB Improved default</source>
+        <translation>ハイライト設定をWSJT-CB improvedデフォルトへリセット</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2809"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtx_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>クリックすることでADIFファイル(wsjtx_log.adi)を読み直し、交信済みの情報を得る</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtcb_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>クリックすることでADIFファイル(wsjtcb_log.adi)を読み直し、交信済みの情報を得る</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2812"/>

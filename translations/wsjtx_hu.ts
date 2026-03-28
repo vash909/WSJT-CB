@@ -181,8 +181,8 @@
     <name>CAboutDlg</name>
     <message>
         <location filename="../widgets/about.ui" line="9"/>
-        <source>About WSJT-X</source>
-        <translation>WSJT-X névjegy</translation>
+        <source>About WSJT-CB</source>
+        <translation>WSJT-CB névjegy</translation>
     </message>
     <message>
         <location filename="../widgets/about.ui" line="60"/>
@@ -520,8 +520,8 @@ Formátum:
     </message>
     <message>
         <location filename="../Configuration.cpp" line="2244"/>
-        <source>WSJT-X Decoded Text Font Chooser</source>
-        <translation>WSJT-X dekódolt szöveg betűtípus választó</translation>
+        <source>WSJT-CB Decoded Text Font Chooser</source>
+        <translation>WSJT-CB dekódolt szöveg betűtípus választó</translation>
     </message>
     <message>
         <location filename="../Configuration.cpp" line="2435"/>
@@ -2069,8 +2069,8 @@ Hiba(%2): %3</translation>
     <name>MainWindow</name>
     <message>
         <location filename="../widgets/mainwindow.ui" line="14"/>
-        <source>WSJT-X   by K1JT</source>
-        <translation>WSJT-X   by K1JT</translation>
+        <source>WSJT-CB   by K1JT</source>
+        <translation>WSJT-CB   by K1JT</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="44"/>
@@ -2460,12 +2460,12 @@ Sárga, ha túl alacsony</translation>
     <message>
         <location filename="../widgets/mainwindow.ui" line="603"/>
         <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;If orange or red there has been a rig control failure, click to reset and read the dial frequency.  S implies split mode.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha a kör narancssárga vagy piros, a CAT vezérlés nem működik. Próbálja meg a körre kattintva resetelni, szinkronizálni az adó-vevő vezérlését, ellenőrizze, hogy az adó-vevő megfelelően van-e csatlakoztatva a számítógéphez, ellenőrizze az adó-vevő beállításait, konfigurálja újra a CAT-ot a WSJT-X-ben. A körben levő S osztott (Split) módot jelent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha a kör narancssárga vagy piros, a CAT vezérlés nem működik. Próbálja meg a körre kattintva resetelni, szinkronizálni az adó-vevő vezérlését, ellenőrizze, hogy az adó-vevő megfelelően van-e csatlakoztatva a számítógéphez, ellenőrizze az adó-vevő beállításait, konfigurálja újra a CAT-ot a WSJT-CB-ben. A körben levő S osztott (Split) módot jelent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="606"/>
         <source>If orange or red there has been a rig control failure, click to reset and read the dial frequency. S implies split mode.</source>
-        <translation>Ha a kör narancssárga vagy piros, a CAT vezérlés nem működik. Próbálja meg a körre kattintva szinkronizálni az adó-vevő vezérlését, ellenőrizze, hogy az adó-vevő megfelelően van-e csatlakoztatva a számítógéphez, ellenőrizze az adó-vevő beállításait, konfigurálja újra a CAT-ot a WSJT-X-ben.</translation>
+        <translation>Ha a kör narancssárga vagy piros, a CAT vezérlés nem működik. Próbálja meg a körre kattintva szinkronizálni az adó-vevő vezérlését, ellenőrizze, hogy az adó-vevő megfelelően van-e csatlakoztatva a számítógéphez, ellenőrizze az adó-vevő beállításait, konfigurálja újra a CAT-ot a WSJT-CB-ben.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="635"/>
@@ -3323,8 +3323,8 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="2965"/>
-        <source>About WSJT-X</source>
-        <translation>WSJT-X névjegy</translation>
+        <source>About WSJT-CB</source>
+        <translation>WSJT-CB névjegy</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="2973"/>
@@ -3413,8 +3413,8 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="3098"/>
-        <source>Erase wsjtx_log.adi</source>
-        <translation>A wsjtx_log.adi,  Napló fájl törlése !</translation>
+        <source>Erase wsjtcb_log.adi</source>
+        <translation>A wsjtcb_log.adi,  Napló fájl törlése !</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="3153"/>
@@ -3654,8 +3654,8 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.ui" line="3429"/>
-        <source>Quick-Start Guide to WSJT-X 2.5.0 and MAP65 3.0</source>
-        <translation>WSJT-X 2.5.0, és MAP65 3.0 Gyors útmutató</translation>
+        <source>Quick-Start Guide to WSJT-CB 2.5.0 and MAP65 3.0</source>
+        <translation>WSJT-CB 2.5.0, és MAP65 3.0 Gyors útmutató</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="258"/>
@@ -3883,12 +3883,12 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="2577"/>
-        <source>If you make fair use of any part of WSJT-X under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
+        <source>If you make fair use of any part of WSJT-CB under terms of the GNU General Public License, you must display the following copyright notice prominently in your derivative work:
 
-&quot;The algorithms, source code, look-and-feel of WSJT-X and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
-        <translation>Ha a WSJT-X bármely részét a GNU General Public License feltételei szerint jogszerűen felhasználja, akkor a következő szerzői jogi megjegyzést kell jól láthatóan feltüntetnie az Ön létrehozott művében:
+&quot;The algorithms, source code, look-and-feel of WSJT-CB and related programs, and protocol specifications for the modes FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 are Copyright (C) 2001-2021 by one or more of the following authors: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; and other members of the WSJT Development Group.&quot;</source>
+        <translation>Ha a WSJT-CB bármely részét a GNU General Public License feltételei szerint jogszerűen felhasználja, akkor a következő szerzői jogi megjegyzést kell jól láthatóan feltüntetnie az Ön létrehozott művében:
 
-&quot;A WSJT-X és a kapcsolódó programok algoritmusai, forráskódja, megjelenése és működése, valamint az FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 üzemmódok protokollspecifikációi az alábbi szerzők egy vagy többjének szerzői joga (C) 2001-2021: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; és a WSJT fejlesztőcsoport többi tagja.&quot;</translation>
+&quot;A WSJT-CB és a kapcsolódó programok algoritmusai, forráskódja, megjelenése és működése, valamint az FSK441, FST4, FT8, JT4, JT6M, JT9, JT65, JTMS, QRA64, Q65, MSK144 üzemmódok protokollspecifikációi az alábbi szerzők egy vagy többjének szerzői joga (C) 2001-2021: Joseph Taylor, K1JT; Bill Somerville, G4WJS; Steven Franke, K9AN; Nico Palermo, IV3NWV; Greg Beam, KI7MT; Michael Black, W9MDB; Edson Pereira, PY2SDR; Philip Karn, KA9Q; és a WSJT fejlesztőcsoport többi tagja.&quot;</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="2868"/>
@@ -3916,7 +3916,7 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Stop Tx, abort QSO, clear next-call queue&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online User&apos;s Guide (Alt: transmit Tx6)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Copyright Notice&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-X&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;About WSJT-CB&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Open settings window (Alt: transmit Tx2)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Display keyboard shortcuts (Alt: transmit Tx3)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Clear DX Call, DX Grid, Tx messages 1-4 (Alt: transmit Tx4)&lt;/td&gt;&lt;/tr&gt;
@@ -3963,7 +3963,7 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Esc      &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Tx leállítása, QSO megszakítása, következő hívás törlése&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F1       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Online felhasználói kézikönyv (Vagy: Tx6 adása)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;Shift+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Szerzői jogi nyilatkozat&lt;/td&gt;&lt;/tr&gt;
-  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-X névjegy&lt;/td&gt;&lt;/tr&gt;
+  &lt;tr&gt;&lt;td&gt;&lt;b&gt;Ctrl+F1  &lt;/b&gt;&lt;/td&gt;&lt;td&gt;WSJT-CB névjegy&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F2       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Beállítások ablak megnyitása (Vagy: Tx2 adása)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F3       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;Billentyűparancsok megjelenítése (Vagy: Tx3 adása)&lt;/td&gt;&lt;/tr&gt;
   &lt;tr&gt;&lt;td&gt;&lt;b&gt;F4       &lt;/b&gt;&lt;/td&gt;&lt;td&gt;DX Hívójel, DX QRA, Tx 1-4 üzenetek törlése (Vagy: Tx4 adása)&lt;/td&gt;&lt;/tr&gt;
@@ -4088,8 +4088,8 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="3858"/>
-        <source>Please choose another Tx frequency. WSJT-X will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
-        <translation>Kérjük, válasszon másik Tx frekvenciát. A WSJT-X szándélosan nem fog más üzemmódban adni a WSPR alsávban a 30m-en.</translation>
+        <source>Please choose another Tx frequency. WSJT-CB will not knowingly transmit another mode in the WSPR sub-band on 30m.</source>
+        <translation>Kérjük, válasszon másik Tx frekvenciát. A WSJT-CB szándélosan nem fog más üzemmódban adni a WSPR alsávban a 30m-en.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="3862"/>
@@ -4098,8 +4098,8 @@ meghatározott listához. A listát a Beállításokban (F2) lehet karbantartani
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="3875"/>
-        <source>Please choose another dial frequency. WSJT-X will not operate in Fox mode in the standard FT8 sub-bands.</source>
-        <translation>Kérjük, válasszon másik rádióskála frekvenciát. A WSJT-X nem működik Fox módban a szabványos FT8 al-sávokban.</translation>
+        <source>Please choose another dial frequency. WSJT-CB will not operate in Fox mode in the standard FT8 sub-bands.</source>
+        <translation>Kérjük, válasszon másik rádióskála frekvenciát. A WSJT-CB nem működik Fox módban a szabványos FT8 al-sávokban.</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="3879"/>
@@ -4232,8 +4232,8 @@ már szerepel a CALL3.TXT ben, szeretné ezt kicserélni?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="6863"/>
-        <source>Are you sure you want to erase file wsjtx_log.adi?</source>
-        <translation>Biztos, hogy törölni akarja a wsjtx_log.adi fájlt?</translation>
+        <source>Are you sure you want to erase file wsjtcb_log.adi?</source>
+        <translation>Biztos, hogy törölni akarja a wsjtcb_log.adi fájlt?</translation>
     </message>
     <message>
         <location filename="../widgets/mainwindow.cpp" line="6873"/>
@@ -5751,8 +5751,8 @@ különben az adási periódusok alatt keletkező rendszerhangokat is adni fogja
     </message>
     <message>
         <location filename="../Configuration.ui" line="1888"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-X should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adja meg annak az UDP-szervernek a portszámát, amelyre a WSJT-X-nek frissítéseket kell küldenie. Ha ez nulla, nem fog küldeni frissítéseket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the service port number of the UDP server that WSJT-CB should send updates to. If this is zero no updates will be sent.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adja meg annak az UDP-szervernek a portszámát, amelyre a WSJT-CB-nek frissítéseket kell küldenie. Ha ez nulla, nem fog küldeni frissítéseket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1898"/>
@@ -5761,8 +5761,8 @@ különben az adási periódusok alatt keletkező rendszerhangokat is adni fogja
     </message>
     <message>
         <location filename="../Configuration.ui" line="1908"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-X. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amikor frissítéseket küldünk egy multicast csoportcímre, meg kell adni, hogy melyik hálózati interfész(ek)re küldjük a frissítéseket. Ha a loop-back interfész (visszacsatolási felület) multicast-képes, akkor az legyen kiválasztva.&lt;/p&gt;&lt;p&gt;A legtöbb felhasználó számára csak a visszacsatolási felületre van szükség, amely lehetővé teszi, hogy ugyanazon a gépen több más alkalmazás is együttműködjön a WSJT-X-el. Ha a más gépeken futó alkalmazásoknak állapotfrissítéseket kell kapniuk, akkor egy megfelelő hálózati interfészt kell használni.&lt;/p&gt;&lt;p&gt;Némely Linux rendszereken szükség lehet a multicast engedélyezésére a loop-back hálózati interfészen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When sending updates to a multicast group address it is necessary to specify which network interface(s) to send them to. If the loop-back interface is multicast capable then at least that one will be selected.&lt;/p&gt;&lt;p&gt;For most users the loop-back interface is all that is needed, that will allow multiple other applications on the same machine to interoperate with WSJT-CB. If applications running on other hosts are to receive status updates then a suitable network interface should be used.&lt;/p&gt;&lt;p&gt;On some Linux systems it may be necessary to enable multicast on the loop-back network interface.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Amikor frissítéseket küldünk egy multicast csoportcímre, meg kell adni, hogy melyik hálózati interfész(ek)re küldjük a frissítéseket. Ha a loop-back interfész (visszacsatolási felület) multicast-képes, akkor az legyen kiválasztva.&lt;/p&gt;&lt;p&gt;A legtöbb felhasználó számára csak a visszacsatolási felületre van szükség, amely lehetővé teszi, hogy ugyanazon a gépen több más alkalmazás is együttműködjön a WSJT-CB-el. Ha a más gépeken futó alkalmazásoknak állapotfrissítéseket kell kapniuk, akkor egy megfelelő hálózati interfészt kell használni.&lt;/p&gt;&lt;p&gt;Némely Linux rendszereken szükség lehet a multicast engedélyezésére a loop-back hálózati interfészen.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1915"/>
@@ -6004,8 +6004,8 @@ amikor egy 73 vagy szabad szöveges üzenet elküldésre kerül.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1781"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-X mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Egyes naplózó programok nem fogadják el a WSJT-X üzemmódneveket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Some logging programs will not accept WSJT-CB mode names.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Egyes naplózó programok nem fogadják el a WSJT-CB üzemmódneveket.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1784"/>
@@ -6059,8 +6059,8 @@ amikor egy 73 vagy szabad szöveges üzenet elküldésre kerül.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1942"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-X will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha ez engedélyezve van, a WSJT-X elfogad bizonyos viszontkéréseket a dekódoló üzeneteket fogadó UDP-szervertől.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;With this enabled WSJT-CB will accept certain requests back from a UDP server that receives decode messages.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha ez engedélyezve van, a WSJT-CB elfogad bizonyos viszontkéréseket a dekódoló üzeneteket fogadó UDP-szervertől.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1945"/>
@@ -6094,8 +6094,8 @@ amikor egy 73 vagy szabad szöveges üzenet elküldésre kerül.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1983"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-X will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha be van jelölve, a WSJT-X a naplózott QSO-t ADIF formátumban továbbítja a megadott hostnévre és portra. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;When checked, WSJT-CB will broadcast a logged contact in ADIF format to the configured hostname and port. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Ha be van jelölve, a WSJT-CB a naplózott QSO-t ADIF formátumban továbbítja a megadott hostnévre és portra. &lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="1986"/>
@@ -6119,8 +6119,8 @@ amikor egy 73 vagy szabad szöveges üzenet elküldésre kerül.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2020"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-X should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adja meg a portszámot, amelyet a WSJT-X az ADIF-naplóadatok UDP-továbbításához használ. Az N1MM Logger-nél ennek 2333-nak kell lennie. Ha ez nulla, akkor nem fog frissítéseket sugározni.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enter the port number that WSJT-CB should use for UDP broadcasts of ADIF log information. For N1MM Logger+, this value should be 2333. If this is zero,  no updates will be broadcast.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adja meg a portszámot, amelyet a WSJT-CB az ADIF-naplóadatok UDP-továbbításához használ. Az N1MM Logger-nél ennek 2333-nak kell lennie. Ha ez nulla, akkor nem fog frissítéseket sugározni.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2047"/>
@@ -6134,8 +6134,8 @@ amikor egy 73 vagy szabad szöveges üzenet elküldésre kerül.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2056"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-X User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A WSJT-X felhasználói kézikönyvben a &amp;quot;Frekvencia kalibrálás&amp;quot; című fejezetben talál részleteket arról, hogyan határozza meg ezeket a paramétereket a rádiója számára.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;See &amp;quot;Frequency Calibration&amp;quot; in the WSJT-CB User Guide for details of how to determine these parameters for your radio.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A WSJT-CB felhasználói kézikönyvben a &amp;quot;Frekvencia kalibrálás&amp;quot; című fejezetben talál részleteket arról, hogyan határozza meg ezeket a paramétereket a rádiója számára.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2059"/>
@@ -6221,8 +6221,8 @@ Jobb klikk a beillesztési és törlési lehetőségekhez.</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="2286"/>
-        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtx_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
-        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kattintson a gombra a wsjtx_log.adi  ADIF fájl ismételt átvizsgálásához a korábbi információk feldolgozásához.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
+        <source>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Click to scan the wsjtcb_log.adi ADIF file again for worked before information&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</source>
+        <translation>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Kattintson a gombra a wsjtcb_log.adi  ADIF fájl ismételt átvizsgálásához a korábbi információk feldolgozásához.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</translation>
     </message>
     <message>
         <location filename="../Configuration.ui" line="947"/>

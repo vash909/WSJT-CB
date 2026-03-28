@@ -1,0 +1,37 @@
+Release Notes 1.1
+
+Version 1.1 is a focused refinement of WSJT-CB 1.0. The main goal of this release is not to add complexity, but to make the CB-oriented workflow cleaner, more reliable,
+and more consistent for everyday operation.
+Compared with 1.0, version 1.1 improves the way the software handles CB-to-CB contacts,
+simplifies the interface by removing features that are less relevant to the project’s current direction, 
+and strengthens packaging and identity across the application.
+
+The most important practical improvement is in contact handling between CB-style callsigns.
+In 1.0, some non-standard exchanges could still be fragile, especially around signal reports, free-text parsing, and end-of-QSO messages such as RR73 and 73.
+In 1.1, that flow has been tightened so that reports are captured more reliably, duplicate RR73 behavior is avoided, 
+and CB-to-CB QSOs progress more naturally through the final stages of the exchange.
+In real use, this should make logging and AutoSeq behavior feel more dependable and less prone to edge-case confusion.
+
+Another visible improvement is country recognition and decoded text presentation.
+Version 1.1 continues the CB-specific country mapping work, but also refines how those results are shown to the operator.
+Country lookup has been corrected and cleaned up, including fixes for naming mismatches such as U.S.A.,
+and the decoded text display now behaves more gracefully when CB prefixes are recognized. 
+Unknown CB prefixes are no longer shown with rough placeholder labels, which makes the display cleaner and more professional.
+
+From a usability perspective, 1.1 also makes some opinionated choices. 
+PSK Reporter spotting is now enabled by default, so a fresh installation is more immediately connected and useful without extra setup. 
+At the same time, older or less relevant parts of the codebase have been removed, including the Astronomical Data widget, ALLCALL7 filtering logic, 
+legacy side tools, and several obsolete subprojects and documentation pieces. 
+This makes the application feel more centered on its intended CB digital-mode use case
+rather than carrying forward features from the broader WSJT-X ecosystem that are no longer essential here.
+
+The release also completes a broader identity and distribution pass. 
+WSJT-CB branding is now more consistent throughout the UI, help menu, logging files, configuration names, and installer-related paths. 
+The help area has been simplified, a Telegram group entry has been added, 
+and Windows packaging has been improved with a dedicated 1.1.0 installer configuration and fixes related to country-file lookup in installed environments. 
+Altogether, version 1.1 feels less like a fork in transition and more like a defined, self-contained application.
+
+In short, version 1.1 is a maturity release. 
+It does not try to become larger than 1.0; instead, it becomes sharper. 
+It improves the reliability of CB-specific operating flows, cleans up presentation and country handling, reduces legacy baggage, 
+and delivers a more coherent WSJT-CB experience from first launch to daily use.

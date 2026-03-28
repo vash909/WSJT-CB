@@ -238,10 +238,6 @@ include::faq.adoc[]
 == Protocol Specifications
 include::protocols.adoc[]
 
-[[ASTRODATA]]
-== Astronomical Data
-include::astro_data.adoc[]
-
 [[UTIL]]
 == Utility Programs
 include::utilities.adoc[]

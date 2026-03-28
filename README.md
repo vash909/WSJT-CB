@@ -8,6 +8,29 @@
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
+## Release Notes 1.1
+
+Version 1.1 is a focused refinement of WSJT-CB 1.0. This release does not try to add complexity; instead, it makes the CB-oriented workflow cleaner, more reliable, and more consistent for everyday operation.
+
+Compared with 1.0, version 1.1 improves the handling of CB-to-CB contacts, simplifies the interface by removing features that are less relevant to the project direction, and strengthens packaging, branding, and application identity.
+
+### Highlights of Version 1.1
+
+- Improved CB-to-CB QSO handling, especially around signal reports, free-text parsing, and final exchange messages such as `RR73` and `73`.
+- More reliable AutoSeq and logging flow during non-standard CB callsign contacts, with fewer edge-case failures and cleaner end-of-QSO progression.
+- Refined CB country recognition and decoded text presentation.
+- Corrected and cleaned up country naming and lookup behavior, including fixes for mismatches such as `U.S.A.`.
+- Unknown CB prefixes are no longer shown with rough placeholder labels, making the decoded display cleaner and more consistent.
+- PSK Reporter spotting is now enabled by default so a fresh installation is immediately more useful without extra setup.
+- Removed older or less relevant legacy components, including the Astronomical Data widget, ALLCALL7 filtering logic, legacy side tools, and several obsolete subprojects and documentation pieces.
+- WSJT-CB branding is now more consistent across the UI, help menu, log files, configuration names, and installer-related paths.
+- The help area has been simplified and a Telegram group entry has been added.
+- Windows packaging has been improved with a dedicated `1.1.0` installer configuration and fixes for country-file lookup in installed environments.
+
+### Summary
+
+Version 1.1 is a maturity release. It sharpens the reliability of CB-specific operating flows, cleans up presentation and country handling, reduces legacy baggage, and delivers a more coherent WSJT-CB experience from first launch to daily use.
+
 ## Important Note: `<...>` with Non-Standard Callsigns (FT8)
 
 When two non-standard/CB callsigns are exchanged in FT8, one callsign may be sent as a hash.
@@ -58,9 +81,17 @@ Examples:
 | `26AT715` | Yes | 2-digit prefix, 2 letters, 3-digit suffix |
 | `26AT1000` | No | 4-digit suffix is not allowed with a 2-digit prefix |
 | `111TT1000` | No | 4-digit suffix is not allowed with a 3-digit prefix |
+| `99Z9999` | No | 4-digit suffix is not allowed with a 2-digit prefix |
 | `1TT10000` | No | suffix longer than 4 digits is not allowed |
 | `1TT` | No | missing numeric suffix |
+| `1AT` | No | missing numeric suffix |
 | `AT1000` | No | missing numeric prefix |
+| `AAA` | No | letters only; numeric prefix and suffix are both missing |
+| `123` | No | digits only; the alphabetic middle part is missing |
+| `12A` | No | missing numeric suffix |
+| `12ABC1` | No | 3-letter middle part is not allowed; only 1 or 2 letters are accepted |
+| `ABC123` | No | missing numeric prefix |
+| `1/AT100` | No | slash-separated compound format does not match the CB regex |
 
 ## 2) 11m/CB Band, UI Modes, and Default Frequencies
 
@@ -218,7 +249,71 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 8) Arch Linux / CachyOS Build Notes
+## 8) Debian 12 (Bookworm) Build and .deb Packaging
+
+These package names are suitable for Debian 12 Bookworm when building a
+release `.deb` locally:
+
+- `build-essential`
+- `cmake`
+- `ninja-build`
+- `gfortran`
+- `dpkg-dev`
+- `debhelper`
+- `libudev-dev`
+- `libboost-log-dev`
+- `libboost-thread-dev`
+- `libfftw3-dev`
+- `libhamlib-dev`
+- `libusb-1.0-0-dev`
+- `qtbase5-dev`
+- `qtmultimedia5-dev`
+- `qttools5-dev`
+- `qttools5-dev-tools`
+- `libqt5serialport5-dev`
+- `libqt5websockets5-dev`
+
+Install them with:
+
+```bash
+sudo apt update
+sudo apt install -y \
+  build-essential cmake ninja-build gfortran dpkg-dev debhelper \
+  libudev-dev libboost-log-dev libboost-thread-dev libfftw3-dev \
+  libhamlib-dev libusb-1.0-0-dev qtbase5-dev qtmultimedia5-dev \
+  qttools5-dev qttools5-dev-tools libqt5serialport5-dev \
+  libqt5websockets5-dev
+```
+
+Build and package manually:
+
+```bash
+cmake -S . -B build-debian12 -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DWSJT_SKIP_MANPAGES=ON \
+  -DWSJT_GENERATE_DOCS=OFF
+
+cmake --build build-debian12 -j"$(nproc)"
+cpack --config build-debian12/CPackConfig.cmake -G DEB
+```
+
+Or use the helper script included in this repository:
+
+```bash
+./scripts/build-debian12-deb.sh
+```
+
+The generated package will be named like:
+
+```text
+build-debian12/wsjtcb_1.1.0_amd64.deb
+```
+
+The repository also includes a GitHub Actions workflow at
+`.github/workflows/release-deb.yml` that builds the Debian package and attaches
+it to a published GitHub Release.
+
+## 9) Arch Linux / CachyOS Build Notes
 
 These package names are for Arch Linux and CachyOS (Arch-based distributions):
 
