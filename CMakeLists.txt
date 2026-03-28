@@ -1665,7 +1665,7 @@ install (TARGETS ft8code jt65code jt9code jt4code msk144code
   )
 endif(WSJT_BUILD_UTILS)  
 
-if (RIGCTL_EXE)
+if (DEFINED RIGCTL_EXE AND NOT "${RIGCTL_EXE}" MATCHES "-NOTFOUND$" AND EXISTS "${RIGCTL_EXE}")
   install (PROGRAMS
     ${RIGCTL_EXE}
     DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -1676,7 +1676,7 @@ else ()
   message (STATUS "rigctl executable not found, skipping rigctl-wsjtcb install")
 endif ()
 
-if (RIGCTLD_EXE)
+if (DEFINED RIGCTLD_EXE AND NOT "${RIGCTLD_EXE}" MATCHES "-NOTFOUND$" AND EXISTS "${RIGCTLD_EXE}")
   install (PROGRAMS
     ${RIGCTLD_EXE}
     DESTINATION ${CMAKE_INSTALL_BINDIR}
@@ -1687,7 +1687,7 @@ else ()
   message (STATUS "rigctld executable not found, skipping rigctld-wsjtcb install")
 endif ()
 
-if (RIGCTLCOM_EXE)
+if (DEFINED RIGCTLCOM_EXE AND NOT "${RIGCTLCOM_EXE}" MATCHES "-NOTFOUND$" AND EXISTS "${RIGCTLCOM_EXE}")
   install (PROGRAMS
     ${RIGCTLCOM_EXE}
     DESTINATION ${CMAKE_INSTALL_BINDIR}
