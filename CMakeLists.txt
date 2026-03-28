@@ -146,7 +146,7 @@ option (WSJT_GENERATE_DOCS "Generate documentation files." ON)
 option (WSJT_ENABLE_WERROR "Treat C++ warnings as errors." OFF)
 option (WSJT_RIG_NONE_CAN_SPLIT "Allow split operation with \"None\" as rig.")
 option (WSJT_TRACE_UDP "Debugging option that turns on UDP message protocol diagnostics.")
-option (WSJT_BUILD_UTILS "Build simulators and code demonstrators." ON)
+option (WSJT_BUILD_UTILS "Build simulators and code demonstrators." OFF)
 option (WSJT_FOX_OTP "Enable Fox OTP Verification Messages." ON)
 CMAKE_DEPENDENT_OPTION (WSJT_QDEBUG_IN_RELEASE "Leave Qt debugging statements in Release configuration." OFF
   "NOT is_debug_build" OFF)
