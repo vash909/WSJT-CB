@@ -1,4 +1,4 @@
-name: Build Debian 12 package
+name: Build Linux Packages
 
 on:
   workflow_dispatch:
@@ -11,16 +11,50 @@ permissions:
 
 jobs:
   build-deb:
+    name: Build ${{ matrix.label }}
     runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - id: debian12
+            label: Debian 12
+            container_image: debian:12
+          - id: debian13
+            label: Debian 13
+            container_image: debian:13
+          - id: ubuntu2204
+            label: Ubuntu 22.04
+            container_image: ubuntu:22.04
+          - id: ubuntu2404
+            label: Ubuntu 24.04
+            container_image: ubuntu:24.04
+          - id: mint213
+            label: Linux Mint 21.3
+            container_image: linuxmintd/mint21.3-amd64
+          - id: mint223
+            label: Linux Mint 22.3
+            container_image: linuxmintd/mint22.3-amd64
+          - id: lmde7
+            label: LMDE 7
+            container_image: linuxmintd/lmde7-amd64
+    container:
+      image: ${{ matrix.container_image }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install build dependencies
+        shell: bash
+        env:
+          DEBIAN_FRONTEND: noninteractive
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
+          apt-get update
+          apt-get install -y --no-install-recommends \
+            bash \
+            ca-certificates \
+            git \
             build-essential \
             cmake \
             ninja-build \
@@ -32,7 +66,6 @@ jobs:
             libboost-thread-dev \
             libfftw3-dev \
             libhamlib-dev \
-            libhamlib-utils \
             libusb-1.0-0-dev \
             qtbase5-dev \
             qtmultimedia5-dev \
@@ -42,33 +75,40 @@ jobs:
             libqt5websockets5-dev
 
       - name: Configure
+        shell: bash
         run: |
-          cmake -S . -B build -G Ninja \
+          cmake -S . -B build-${{ matrix.id }} -G Ninja \
             -DCMAKE_BUILD_TYPE=Release \
             -DWSJT_SKIP_MANPAGES=ON \
             -DWSJT_GENERATE_DOCS=OFF
 
       - name: Build
-        run: cmake --build build -j"$(nproc)"
+        shell: bash
+        run: cmake --build build-${{ matrix.id }} -j"$(nproc)"
 
       - name: Package
+        shell: bash
         run: |
-          cpack --config build/CPackConfig.cmake -G DEB
-          mv wsjtcb_*.deb build/
-          sha256sum build/*.deb > build/SHA256SUMS.txt
+          mkdir -p dist
+          cpack --config build-${{ matrix.id }}/CPackConfig.cmake -G DEB
+          shopt -s nullglob
+          for deb in wsjtcb_*.deb; do
+            mv "$deb" "dist/${deb%.deb}_${{ matrix.id }}.deb"
+          done
+          sha256sum dist/*.deb > "dist/SHA256SUMS_${{ matrix.id }}.txt"
 
       - name: Upload workflow artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: wsjtcb-debian12
+          name: wsjtcb-${{ matrix.id }}
           path: |
-            build/*.deb
-            build/SHA256SUMS.txt
+            dist/*.deb
+            dist/SHA256SUMS_${{ matrix.id }}.txt
 
       - name: Attach assets to GitHub release
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            build/*.deb
-            build/SHA256SUMS.txt
+            dist/*.deb
+            dist/SHA256SUMS_${{ matrix.id }}.txt
