@@ -1665,26 +1665,38 @@ install (TARGETS ft8code jt65code jt9code jt4code msk144code
   )
 endif(WSJT_BUILD_UTILS)  
 
-install (PROGRAMS
-  ${RIGCTL_EXE}
-  DESTINATION ${CMAKE_INSTALL_BINDIR}
-  #COMPONENT runtime
-  RENAME rigctl-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
-  )
+if (RIGCTL_EXE)
+  install (PROGRAMS
+    ${RIGCTL_EXE}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    #COMPONENT runtime
+    RENAME rigctl-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
+    )
+else ()
+  message (STATUS "rigctl executable not found, skipping rigctl-wsjtcb install")
+endif ()
 
-install (PROGRAMS
-  ${RIGCTLD_EXE}
-  DESTINATION ${CMAKE_INSTALL_BINDIR}
-  #COMPONENT runtime
-  RENAME rigctld-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
-  )
+if (RIGCTLD_EXE)
+  install (PROGRAMS
+    ${RIGCTLD_EXE}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    #COMPONENT runtime
+    RENAME rigctld-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
+    )
+else ()
+  message (STATUS "rigctld executable not found, skipping rigctld-wsjtcb install")
+endif ()
 
-install (PROGRAMS
-  ${RIGCTLCOM_EXE}
-  DESTINATION ${CMAKE_INSTALL_BINDIR}
-  #COMPONENT runtime
-  RENAME rigctlcom-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
-  )
+if (RIGCTLCOM_EXE)
+  install (PROGRAMS
+    ${RIGCTLCOM_EXE}
+    DESTINATION ${CMAKE_INSTALL_BINDIR}
+    #COMPONENT runtime
+    RENAME rigctlcom-wsjtcb${CMAKE_EXECUTABLE_SUFFIX}
+    )
+else ()
+  message (STATUS "rigctlcom executable not found, skipping rigctlcom-wsjtcb install")
+endif ()
 
 install (FILES
   COPYING
