@@ -249,7 +249,71 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 8) Arch Linux / CachyOS Build Notes
+## 8) Debian 12 (Bookworm) Build and .deb Packaging
+
+These package names are suitable for Debian 12 Bookworm when building a
+release `.deb` locally:
+
+- `build-essential`
+- `cmake`
+- `ninja-build`
+- `gfortran`
+- `dpkg-dev`
+- `debhelper`
+- `libudev-dev`
+- `libboost-log-dev`
+- `libboost-thread-dev`
+- `libfftw3-dev`
+- `libhamlib-dev`
+- `libusb-1.0-0-dev`
+- `qtbase5-dev`
+- `qtmultimedia5-dev`
+- `qttools5-dev`
+- `qttools5-dev-tools`
+- `libqt5serialport5-dev`
+- `libqt5websockets5-dev`
+
+Install them with:
+
+```bash
+sudo apt update
+sudo apt install -y \
+  build-essential cmake ninja-build gfortran dpkg-dev debhelper \
+  libudev-dev libboost-log-dev libboost-thread-dev libfftw3-dev \
+  libhamlib-dev libusb-1.0-0-dev qtbase5-dev qtmultimedia5-dev \
+  qttools5-dev qttools5-dev-tools libqt5serialport5-dev \
+  libqt5websockets5-dev
+```
+
+Build and package manually:
+
+```bash
+cmake -S . -B build-debian12 -G Ninja \
+  -DCMAKE_BUILD_TYPE=Release \
+  -DWSJT_SKIP_MANPAGES=ON \
+  -DWSJT_GENERATE_DOCS=OFF
+
+cmake --build build-debian12 -j"$(nproc)"
+cpack --config build-debian12/CPackConfig.cmake -G DEB
+```
+
+Or use the helper script included in this repository:
+
+```bash
+./scripts/build-debian12-deb.sh
+```
+
+The generated package will be named like:
+
+```text
+build-debian12/wsjtcb_1.1.0_amd64.deb
+```
+
+The repository also includes a GitHub Actions workflow at
+`.github/workflows/release-deb.yml` that builds the Debian package and attaches
+it to a published GitHub Release.
+
+## 9) Arch Linux / CachyOS Build Notes
 
 These package names are for Arch Linux and CachyOS (Arch-based distributions):
 
