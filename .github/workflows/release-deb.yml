@@ -32,7 +32,7 @@ jobs:
             libboost-thread-dev \
             libfftw3-dev \
             libhamlib-dev \
-            hamlib-utils \
+            libhamlib-utils \
             libusb-1.0-0-dev \
             qtbase5-dev \
             qtmultimedia5-dev \
