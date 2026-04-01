@@ -21,6 +21,10 @@ Makefile
 /installer-output
 build-user/
 
+#AUR PKGBUILD utility
+PKGBUILD
+.SRCINFO
+
 
 # Qt Creator / Qt project user files
 *.pro.user
