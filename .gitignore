@@ -19,6 +19,7 @@ Makefile
 *.ilk
 *.pdb
 /installer-output
+build-user/
 
 
 # Qt Creator / Qt project user files
