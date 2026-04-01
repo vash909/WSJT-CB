@@ -24,6 +24,7 @@ build-user/
 #AUR PKGBUILD utility
 PKGBUILD
 .SRCINFO
+aur/
 
 
 # Qt Creator / Qt project user files
