@@ -534,6 +534,9 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
   QColor bg;
   QColor fg;
   bool CQcall = false;
+  auto is_cq_message = decodedText.string ().contains (" CQ ")
+    || decodedText.string ().contains (" CQDX ")
+    || decodedText.string ().contains (" QRZ ");
   auto is_73 = decodedText.messageWords().filter (QRegularExpression {"^(73|RR73)$"}).size();
   bool final_for_us = false;
   if (myCall.size () && is_73)
@@ -550,9 +553,7 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
       if (!muted) play_CQ = true;
     }
   }
-  if (decodedText.string ().contains (" CQ ")
-      || decodedText.string ().contains (" CQDX ")
-      || decodedText.string ().contains (" QRZ ")
+  if (is_cq_message
       || (is_73 && m_config->highlight_73 () && final_for_us))
     {
       CQcall = true;
@@ -595,7 +596,7 @@ void DisplayText::displayDecodedText(DecodedText const& decodedText, QString con
   if (CQcall || (is_73 && m_config->highlight_73() && final_for_us) || (mode == "FT4" && m_config->highlight_73() && m_config->NCCC_Sprint()
       && (SpecOp::NA_VHF == m_config->special_op_id()) && decodedText.string().contains(" R ")))
     {
-      if (displayDXCCEntity)
+      if (displayDXCCEntity && is_cq_message)
         {
           // if enabled add the DXCC entity and B4 status to the end of the
           // preformated text line t1
