@@ -60,7 +60,7 @@ if (NOT DEFINED CMAKE_Fortran_COMPILER AND NOT DEFINED ENV{FC})
 endif ()
 
 project (wsjtx
-  VERSION 1.1.0.0
+  VERSION 1.2.0.0
   LANGUAGES C CXX Fortran
   )
 set (PROJECT_DESCRIPTION "WSJT-CB: Digital Modes for Weak Signal Communications in CB Radio")

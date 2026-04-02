@@ -2,7 +2,7 @@
 
 #define AppId "{{0D8B5F52-0F37-4B8B-9D9D-1F7B33E7A4F5}"
 #define AppName "WSJT-CB"
-#define AppVersion "1.1.0"
+#define AppVersion "1.2.0"
 #define AppPublisher "1AT106 Lorenzo"
 #define AppURL "https://xzgroup.net/wsjt-cb.html"
 #define AppExeName "wsjtcb.exe"

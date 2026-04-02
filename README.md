@@ -8,13 +8,13 @@
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
-## Release Notes 1.1
+## Release Notes 1.2
 
-Version 1.1 is a focused refinement of WSJT-CB 1.0. This release does not try to add complexity; instead, it makes the CB-oriented workflow cleaner, more reliable, and more consistent for everyday operation.
+Version 1.2 is a focused refinement of WSJT-CB 1.0. This release does not try to add complexity; instead, it makes the CB-oriented workflow cleaner, more reliable, and more consistent for everyday operation.
 
-Compared with 1.0, version 1.1 improves the handling of CB-to-CB contacts, simplifies the interface by removing features that are less relevant to the project direction, and strengthens packaging, branding, and application identity.
+Compared with 1.0, version 1.2 improves the handling of CB-to-CB contacts, simplifies the interface by removing features that are less relevant to the project direction, and strengthens packaging, branding, and application identity.
 
-### Highlights of Version 1.1
+### Highlights of Version 1.2
 
 - Improved CB-to-CB QSO handling, especially around signal reports, free-text parsing, and final exchange messages such as `RR73` and `73`.
 - More reliable AutoSeq and logging flow during non-standard CB callsign contacts, with fewer edge-case failures and cleaner end-of-QSO progression.
@@ -25,11 +25,11 @@ Compared with 1.0, version 1.1 improves the handling of CB-to-CB contacts, simpl
 - Removed older or less relevant legacy components, including the Astronomical Data widget, ALLCALL7 filtering logic, legacy side tools, and several obsolete subprojects and documentation pieces.
 - WSJT-CB branding is now more consistent across the UI, help menu, log files, configuration names, and installer-related paths.
 - The help area has been simplified and a Telegram group entry has been added.
-- Windows packaging has been improved with a dedicated `1.1.0` installer configuration and fixes for country-file lookup in installed environments.
+- Windows packaging has been improved with a dedicated `1.2.0` installer configuration and fixes for country-file lookup in installed environments.
 
 ### Summary
 
-Version 1.1 is a maturity release. It sharpens the reliability of CB-specific operating flows, cleans up presentation and country handling, reduces legacy baggage, and delivers a more coherent WSJT-CB experience from first launch to daily use.
+Version 1.2 is a maturity release. It sharpens the reliability of CB-specific operating flows, cleans up presentation and country handling, reduces legacy baggage, and delivers a more coherent WSJT-CB experience from first launch to daily use.
 
 ## Important Note: `<...>` with Non-Standard Callsigns (FT8)
 
@@ -306,7 +306,7 @@ Or use the helper script included in this repository:
 The generated package will be named like:
 
 ```text
-build-debian12/wsjtcb_1.1.0_amd64.deb
+build-debian12/wsjtcb_1.2.0_amd64.deb
 ```
 
 The repository also includes a GitHub Actions workflow at
