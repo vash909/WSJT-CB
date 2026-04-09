@@ -15,6 +15,11 @@
 
 #define MAX_SCREENSIZE 8192
 
+namespace
+{
+  constexpr float kEmbeddedWaterfallMaxHz = 3000.0f;
+}
+
 extern "C" {
   void flat4_(float swide[], int* iz, int* nflatten);
   void plotsave_(float swide[], int* m_w , int* m_h1, int* irow);
@@ -186,7 +191,7 @@ void CPlotter::draw(float swide[], bool bScroll, bool bRed)
   static QPoint LineBuf4[MAX_SCREENSIZE];
   j=0;
   j0=int(m_startFreq/m_fftBinWidth + 0.5);
-  int iz=XfromFreq(5000.0);
+  int iz=XfromFreq(kEmbeddedWaterfallMaxHz);
   int jz=iz*m_binsPerPixel;
   m_fMax=FreqfromX(iz);
   if(bScroll and swide[0]<1.e29) {
@@ -801,8 +806,10 @@ void CPlotter::setPlot2dZero(int plot2dZero)              //setPlot2dZero
 
 void CPlotter::setStartFreq(int f)                    //SetStartFreq()
 {
+  if (f < 0) f = 0;
+  if (f > kEmbeddedWaterfallMaxHz) f = kEmbeddedWaterfallMaxHz;
   m_startFreq=f;
-  m_fMax=FreqfromX(XfromFreq(5000.0));
+  m_fMax=FreqfromX(XfromFreq(kEmbeddedWaterfallMaxHz));
   resizeEvent(NULL);
   DrawOverlay();
   update();
@@ -825,7 +832,7 @@ void CPlotter::setRxRange(int fMin)                           //setRxRange
 void CPlotter::setBinsPerPixel(int n)                         //setBinsPerPixel
 {
   m_binsPerPixel = n;
-  m_fMax=FreqfromX(XfromFreq(5000.0));
+  m_fMax=FreqfromX(XfromFreq(kEmbeddedWaterfallMaxHz));
   DrawOverlay();                         //Redraw scales and ticks
   update();                              //trigger a new paintEvent}
 }

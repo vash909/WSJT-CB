@@ -491,6 +491,8 @@ private:
 
 private:
   void set_mode (QString const& mode);
+  void embed_wide_graph ();
+  void ensure_wide_graph_visible ();
   void apply_main_window_chrome ();
   void hide_band_button_bar ();
   void writeAllTxt(QString message);

@@ -13,6 +13,11 @@
 #include "SettingsGroup.hpp"
 #include "moc_widegraph.cpp"
 
+namespace
+{
+  constexpr int kEmbeddedWaterfallMaxHz = 3000;
+}
+
 WideGraph::WideGraph(QSettings * settings, QWidget *parent) :
   QDialog(parent),
   ui(new Ui::WideGraph),
@@ -187,7 +192,7 @@ void WideGraph::dataSink2(float s[], float df3, int ihsym, int ndiskdata, float 
         splot[i] /= m_n;        //Normalize the average
     m_n=0;
     int i=int(ui->widePlot->startFreq()/df3 + 0.5);
-    int jz=5000.0/(nbpp*df3);
+    int jz=kEmbeddedWaterfallMaxHz/(nbpp*df3);
 		if(jz>MAX_SCREENSIZE) jz=MAX_SCREENSIZE;
     m_jz=jz;
     for (int j=0; j<jz; j++) {
@@ -282,12 +287,12 @@ void WideGraph::setRxRange ()
 
 int WideGraph::Fmin()                                              //Fmin
 {
-  return "60m" == m_rxBand ? 0 : m_fMinPerBand.value (m_rxBand, 2500).toUInt ();
+  return "60m" == m_rxBand ? 0 : std::min(kEmbeddedWaterfallMaxHz, m_fMinPerBand.value (m_rxBand, 2500).toInt ());
 }
 
 int WideGraph::Fmax()                                              //Fmax
 {
-  return std::min(5000,ui->widePlot->Fmax());
+  return std::min(kEmbeddedWaterfallMaxHz, ui->widePlot->Fmax());
 }
 
 int WideGraph::fSpan()

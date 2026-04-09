@@ -146,7 +146,7 @@
            <string>Start </string>
           </property>
           <property name="maximum">
-           <number>4900</number>
+           <number>3000</number>
           </property>
           <property name="singleStep">
            <number>100</number>
@@ -244,7 +244,7 @@
            <string>Split  </string>
           </property>
           <property name="maximum">
-           <number>5000</number>
+           <number>3000</number>
           </property>
           <property name="singleStep">
            <number>100</number>

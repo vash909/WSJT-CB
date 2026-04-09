@@ -46,6 +46,7 @@
 #include <QAction>
 #include <QButtonGroup>
 #include <QActionGroup>
+#include <QSplitter>
 #include <QSplashScreen>
 #include <QUdpSocket>
 #include <QAbstractItemView>
@@ -332,6 +333,49 @@ namespace
   }
 }
 
+void MainWindow::embed_wide_graph ()
+{
+  auto * outer_layout = ui->verticalLayout_6;
+  if (!outer_layout) return;
+
+  auto * main_splitter = new QSplitter {Qt::Vertical, ui->centralWidget};
+  main_splitter->setObjectName ("main_splitter");
+  main_splitter->setChildrenCollapsible (true);
+  main_splitter->setOpaqueResize (false);
+
+  outer_layout->removeWidget (ui->decodes_splitter);
+  outer_layout->insertWidget (0, main_splitter, 1);
+  outer_layout->setStretch (0, 1);
+  outer_layout->setStretch (1, 0);
+
+  main_splitter->addWidget (ui->decodes_splitter);
+
+  m_wideGraph->setParent (main_splitter);
+  m_wideGraph->setWindowFlags (Qt::Widget);
+  m_wideGraph->setSizePolicy (QSizePolicy::Preferred, QSizePolicy::Expanding);
+  main_splitter->addWidget (m_wideGraph.data ());
+
+  main_splitter->setStretchFactor (0, 3);
+  main_splitter->setStretchFactor (1, 2);
+  main_splitter->setSizes ({360, 240});
+}
+
+void MainWindow::ensure_wide_graph_visible ()
+{
+  m_wideGraph->show ();
+
+  auto * main_splitter = findChild<QSplitter *> ("main_splitter");
+  if (!main_splitter) return;
+
+  auto sizes = main_splitter->sizes ();
+  if (sizes.size () < 2) return;
+  if (sizes.at (1) > 0) return;
+
+  auto const total = qMax (1, sizes.at (0) + sizes.at (1));
+  auto const waterfall_height = qMin (320, qMax (180, total / 3));
+  main_splitter->setSizes ({qMax (0, total - waterfall_height), waterfall_height});
+}
+
 //--------------------------------------------------- MainWindow constructor
 MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
                        MultiSettings * multi_settings, QSharedMemory *shdmem,
@@ -558,6 +602,7 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_useDarkStyle {false}
 {
   ui->setupUi(this);
+  embed_wide_graph ();
   ui->actionBand_Buttons->setVisible (false);
   ui->actionBand_Buttons->setEnabled (false);
   ui->actionBand_Buttons->setChecked (false);
@@ -1433,6 +1478,7 @@ MainWindow::~MainWindow()
 //-------------------------------------------------------- writeSettings()
 void MainWindow::writeSettings()
 {
+  m_wideGraph->saveSettings ();
   m_settings->beginGroup("MainWindow");
   if (ui->actionSWL_Mode->isChecked ())
     {
@@ -1562,6 +1608,9 @@ void MainWindow::writeSettings()
   m_settings->setValue ("AutoClearAvg", ui->actionAuto_Clear_Avg->isChecked ());
   m_settings->setValue ("DisableClicksOnWaterfall", ui->actionDisable_clicks_on_waterfall->isChecked ());
   m_settings->setValue("SplitterState",ui->decodes_splitter->saveState());
+  if (auto * main_splitter = findChild<QSplitter *> ("main_splitter")) {
+    m_settings->setValue ("MainSplitterState", main_splitter->saveState ());
+  }
   m_settings->setValue("Blanker",ui->sbNB->value());
   m_settings->setValue("Score",m_score);
   m_settings->setValue("labDXpedText",ui->labDXped->text());
@@ -1979,6 +2028,12 @@ void MainWindow::readSettings()
   ui->actionAuto_Clear_Avg->setChecked (m_settings->value ("AutoClearAvg", false).toBool());
   ui->actionDisable_clicks_on_waterfall->setChecked (m_settings->value ("DisableClicksOnWaterfall", false).toBool());
   ui->decodes_splitter->restoreState(m_settings->value("SplitterState").toByteArray());
+  if (auto * main_splitter = findChild<QSplitter *> ("main_splitter")) {
+    auto const saved_state = m_settings->value ("MainSplitterState").toByteArray ();
+    if (saved_state.isEmpty () || !main_splitter->restoreState (saved_state)) {
+      main_splitter->setSizes ({360, 240});
+    }
+  }
   ui->sbNB->setValue(m_settings->value("Blanker",0).toInt());
   ui->sbEchoAvg->setValue(m_settings->value("EchoAvg",10).toInt());
   {
@@ -2179,6 +2234,7 @@ void MainWindow::apply_main_window_chrome ()
       "}"
       "#lower_panel_widget { border-top: 1px solid #435363; }"
       "#decodes_splitter::handle { background-color: #3a4651; width: 2px; }"
+      "#main_splitter::handle { background-color: #3a4651; height: 2px; }"
     });
   } else {
     set_decode_panel (ui->decodedTextBrowser, QColor {"#fbfdff"}, QColor {"#111111"}, QColor {"#cad8e4"}, QColor {"#2f80c1"});
@@ -2194,6 +2250,7 @@ void MainWindow::apply_main_window_chrome ()
       "}"
       "#lower_panel_widget { border-top: 1px solid #d5e0ea; }"
       "#decodes_splitter::handle { background-color: #d3dde7; width: 2px; }"
+      "#main_splitter::handle { background-color: #d3dde7; height: 2px; }"
     });
   }
 }
@@ -4682,7 +4739,7 @@ void MainWindow::on_actionLocal_User_Guide_triggered()
 
 void MainWindow::on_actionWide_Waterfall_triggered()      //Display Waterfalls
 {
-  m_wideGraph->showNormal();
+  ensure_wide_graph_visible ();
 }
 
 void MainWindow::on_actionEcho_Graph_triggered()
@@ -10793,7 +10850,7 @@ void MainWindow::on_actionFST4_triggered()
   m_bFast9=false;
   m_bFastMode=false;
   m_fastGraph->hide();
-  m_wideGraph->show();
+  ensure_wide_graph_visible ();
   if (m_tci_audio && ui->bandComboBox->currentText()!="OOB")
     Q_EMIT m_config.transceiver_period(m_TRperiod);
   m_nsps=6912;                   //For symspec only
@@ -10843,7 +10900,7 @@ void MainWindow::on_actionFST4W_triggered()
   m_bFast9=false;
   m_bFastMode=false;
   m_fastGraph->hide();
-  m_wideGraph->show();
+  ensure_wide_graph_visible ();
   if (m_tci_audio && ui->bandComboBox->currentText()!="OOB")
     Q_EMIT m_config.transceiver_period(m_TRperiod);
   m_nsps=6912;                   //For symspec only
@@ -10901,7 +10958,7 @@ void MainWindow::on_actionFT4_triggered()
   VHF_features_enabled(bVHF);
   ui->cbAutoSeq->setChecked(true);
   m_fastGraph->hide();
-  m_wideGraph->show();
+  ensure_wide_graph_visible ();
   ui->rh_decodes_headings_label->setText("  UTC   dB   DT Freq    " + tr ("Message"));
   m_wideGraph->setPeriod(m_TRperiod,m_nsps);
   if (m_tci_audio && ui->bandComboBox->currentText()!="OOB")
@@ -10968,7 +11025,7 @@ void MainWindow::on_actionFT8_triggered()
   m_TRperiod=15.0;
   ui->sbFtol->setValue (m_settings->value ("Ftol_SF", 50).toInt()); // restore last used Ftol parameter
   m_fastGraph->hide();
-  m_wideGraph->show();
+  ensure_wide_graph_visible ();
   ui->rh_decodes_headings_label->setText("  UTC   dB   DT Freq    " + tr ("Message"));
   m_wideGraph->setPeriod(m_TRperiod,m_nsps);
   if (m_tci_audio && ui->bandComboBox->currentText()!="OOB")
@@ -11696,7 +11753,7 @@ void MainWindow::fast_config(bool b)
     m_wideGraph->hide();
     m_fastGraph->showNormal();
   } else {
-    m_wideGraph->showNormal();
+    ensure_wide_graph_visible ();
     m_fastGraph->hide();
   }
 }
