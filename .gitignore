@@ -78,3 +78,6 @@ scripts/check_callsign.py
 
 #Win
 rebuild.ps1
+
+# Local website deployment workspace
+website/
