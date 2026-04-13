@@ -15,7 +15,7 @@ CAboutDlg::CAboutDlg(QWidget *parent) :
 
   ui->labelTxt->setText ("<h2>" + product_versioned_name (revision ()) + "</h2>"
 
-    "WSJT-CB is an optimized version of the WSJT software for<br />"
+    "WSJT-CB V 1.2.0-crimson is an optimized version of the WSJT software for<br />"
     "weak-signal CB 27MHz communications.  <br /><br />"
     "&copy; 2026 by Lorenzo 1AT106, Pietro 1XZ732,  <br />"
     "Mancausoft, 161XZ085. <br />"
