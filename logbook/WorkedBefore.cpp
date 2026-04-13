@@ -463,7 +463,7 @@ bool WorkedBefore::add (QString const& call
                   "<created_timestamp:15>%0\n"
                   "<programid:7>WSJT-CB\n"
                   "<programversion:%1>%2\n"
-                  "<eoh>"
+                  "<EOH>"
                     }.arg (ts).arg (ver.size ()).arg (ver)
                   <<
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
@@ -473,7 +473,7 @@ bool WorkedBefore::add (QString const& call
 #endif
                  ;
             }
-          out << ADIF_record << " <eor>" <<
+          out << ADIF_record << " <EOR>" <<
 #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
                  endl
 #else
