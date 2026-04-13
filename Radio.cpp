@@ -18,12 +18,18 @@ namespace Radio
     QRegularExpression callsign_alphabet_re {R"(^[A-Z0-9/]{3,11}$)"};
 
     // CB callsign family used in this fork:
-    // numeric prefix 1-3 digits, 1-2 letters, numeric suffix 1-3 digits.
-    // Special-case: allow a 4-digit suffix only when the numeric prefix is
-    // exactly 1 digit, e.g. 1AT1000 is valid while 26AT1000 is not.
-    // Examples: 1A1, 21AT106, 26AT101, 999ZZ999, 1AT1000.
-    QRegularExpression cb_callsign_re {
-      R"(^(?:[0-9][A-Z]{1,2}[0-9]{1,4}|[0-9]{2,3}[A-Z]{1,2}[0-9]{1,3})$)"};
+    // compact form: numeric prefix 1-3 digits, 1-2 letters, numeric suffix
+    // 1-3 digits, with a 4-digit suffix allowed only for a 1-digit prefix.
+    // compound form: numeric prefix 1-3 digits, 1-2 letters, slash, 2 letters.
+    // Examples: 1A1, 21AT106, 26AT101, 999ZZ999, 1AT1000, 999ZZ/ZZ.
+    QRegularExpression cb_callsign_one_digit_suffix_re {
+      R"(^([0-9])[A-Z]{1,2}[0-9]{1,4}$)"};
+    QRegularExpression cb_callsign_multi_digit_suffix_re {
+      R"(^([0-9]{2,3})[A-Z]{1,2}[0-9]{1,3}$)"};
+    QRegularExpression cb_callsign_slash_suffix_re {
+      R"(^([0-9]{1,3})[A-Z]{1,2}/[A-Z]{2}$)"};
+    QRegularExpression cb_callsign_base_re {
+      R"(^([0-9]{1,3})[A-Z]{1,2}$)"};
 
     // very loose validation - callsign must contain a letter next to
     // a number
@@ -35,6 +41,29 @@ namespace Radio
     // suffixes that are often used and should not be interpreted as a
     // DXCC Entity prefix used as a suffix
     QRegularExpression non_prefix_suffix {R"(\A([0-9AMPQR]|QRP|F[DF]|[AM]M|L[HT]|LGT)\z)"};
+
+    QString cb_country_prefix_impl (QString const& callsign)
+    {
+      auto const normalized = callsign.trimmed ().toUpper ();
+      if (normalized.isEmpty ())
+        {
+          return {};
+        }
+
+      for (auto const& re : {cb_callsign_one_digit_suffix_re,
+                             cb_callsign_multi_digit_suffix_re,
+                             cb_callsign_slash_suffix_re,
+                             cb_callsign_base_re})
+        {
+          auto const match = re.match (normalized);
+          if (match.hasMatch ())
+            {
+              return match.captured (1).rightJustified (3, QChar {'0'});
+            }
+        }
+
+      return {};
+    }
   }
 
 
@@ -145,12 +174,17 @@ namespace Radio
   bool is_callsign (QString const& callsign)
   {
     return callsign.contains (valid_callsign_regexp)
-      || callsign.toUpper ().contains (cb_callsign_re);
+      || !cb_country_prefix (callsign).isEmpty ();
   }
 
   bool is_cb_callsign (QString const& callsign)
   {
-    return callsign.toUpper ().contains (cb_callsign_re);
+    return !cb_country_prefix (callsign).isEmpty ();
+  }
+
+  QString cb_country_prefix (QString const& callsign)
+  {
+    return cb_country_prefix_impl (callsign);
   }
 
   bool is_compound_callsign (QString const& callsign)

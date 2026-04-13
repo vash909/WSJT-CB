@@ -217,14 +217,11 @@ namespace
 
   QString cb_country_name_from_call (QString const& call)
   {
-    auto call_base = Radio::base_callsign (call).trimmed ().toUpper ();
-    QRegularExpression cb_re {R"(^([0-9]{1,3})[A-Z]{1,2}[0-9]{1,3}$)"};
-    auto match = cb_re.match (call_base);
-    if (!match.hasMatch ())
+    auto const prefix = Radio::cb_country_prefix (call);
+    if (prefix.isEmpty ())
       {
         return {};
       }
-    auto prefix = match.captured (1).rightJustified (3, QChar {'0'});
     auto const& map = cb_NNN_to_country ();
     auto it = map.find (prefix);
     if (it != map.end ())
@@ -709,20 +706,15 @@ AD1CCty::~AD1CCty ()
 auto AD1CCty::lookup (QString const& call) const -> Record
 {
   auto const exact_search = call.trimmed ().toUpper ();
-  auto const cb_call_base = Radio::base_callsign (exact_search).trimmed ();
+  auto const cb_prefix = Radio::cb_country_prefix (exact_search);
 
   // CB callsigns should never fall back to the amateur-radio cty.dat
   // lookup, otherwise prefixes like "1A" can be misread as Malta.
-  if (Radio::is_cb_callsign (cb_call_base))
+  if (!cb_prefix.isEmpty ())
     {
       Record r;
-      r.entity_name = cb_country_name_from_call (cb_call_base);
-      auto digit_count = 0;
-      while (digit_count < cb_call_base.size () && cb_call_base[digit_count].isDigit ())
-        {
-          ++digit_count;
-        }
-      r.primary_prefix = cb_call_base.left (digit_count).rightJustified (3, QChar {'0'});
+      r.entity_name = cb_country_name_from_call (exact_search);
+      r.primary_prefix = cb_prefix;
       return r;
     }
 

@@ -49,7 +49,7 @@ If your station has not yet learned the hash-to-callsign mapping (for example be
 - `widgets/mainwindow.cpp`
 - `main.cpp`
 
-## 1) CB Callsign Support (`N{1,3}L{1,2}N{1,3}`)
+## 1) CB Callsign Support (`N{1,3}L{1,2}N{1,3}` and `N{1,3}L{1,2}/L{2}`)
 
 Files:
 - `Radio.hpp`
@@ -57,13 +57,16 @@ Files:
 
 Changes:
 - Added `Radio::is_cb_callsign(QString const&)`.
+- Added `Radio::cb_country_prefix(QString const&)` so CB country lookup can use
+  only the leading numeric prefix, including compound calls such as `999ZZ/ZZ`.
 - Added CB callsign regex:
   - `^[0-9]{1,3}[A-Z]{1,2}[0-9]{1,3}$`
   - special-case extension for 4-digit unit numbers only with a 1-digit country prefix
+  - compound extension `^[0-9]{1,3}[A-Z]{1,2}/[A-Z]{2}$`
 - Extended `Radio::is_callsign(...)` so CB calls are treated as valid callsigns.
 
 Impact:
-- Callsigns like `1A1`, `26AT101`, `21AT106`, `999ZZ999`, and `1AT1000` are accepted by validation logic used by the UI and message processing flow.
+  - Callsigns like `1A1`, `26AT101`, `21AT106`, `999ZZ999`, `1AT1000`, and `999ZZ/ZZ` are accepted by validation logic used by the UI and message processing flow.
 
 Examples:
 
@@ -79,6 +82,7 @@ Examples:
 | `111TT11` | Yes | 3-digit prefix, 2 letters, 2-digit suffix |
 | `111TT999` | Yes | 3-digit prefix, 2 letters, 3-digit suffix |
 | `26AT715` | Yes | 2-digit prefix, 2 letters, 3-digit suffix |
+| `999ZZ/ZZ` | Yes | 3-digit prefix, 2 letters, slash, 2-letter suffix |
 | `26AT1000` | No | 4-digit suffix is not allowed with a 2-digit prefix |
 | `111TT1000` | No | 4-digit suffix is not allowed with a 3-digit prefix |
 | `99Z9999` | No | 4-digit suffix is not allowed with a 2-digit prefix |
@@ -91,7 +95,7 @@ Examples:
 | `12A` | No | missing numeric suffix |
 | `12ABC1` | No | 3-letter middle part is not allowed; only 1 or 2 letters are accepted |
 | `ABC123` | No | missing numeric prefix |
-| `1/AT100` | No | slash-separated compound format does not match the CB regex |
+| `1/AT100` | No | slash is only allowed as a final `/LL` suffix after the CB stem |
 
 ## 2) 11m/CB Band, UI Modes, and Default Frequencies
 
@@ -135,7 +139,7 @@ Files:
 - `widgets/displaytext.cpp`
 
 Changes:
-- Added CB country-resolution using the numeric prefix for CB callsigns matching `N{1,3}L{1,2}N{1,3}`.
+- Added CB country-resolution using the numeric prefix for CB callsigns matching `N{1,3}L{1,2}N{1,3}` and `N{1,3}L{1,2}/L{2}`.
 - Added static NNN→country map based on international CB prefix list.
 - Added lookup in `AD1CCty::lookup(...)` before standard DXCC lookup. For CB callsigns it normalizes the numeric prefix to a zero-padded `NNN`, then returns a record with `entity_name` country and `primary_prefix` `NNN`.
 - Kept fallback lookup behavior unchanged for regular non-CB callsigns.
