@@ -166,6 +166,7 @@ public:
   bool tx_QSY_allowed () const;
   bool progressBar_red () const;
   bool spot_to_psk_reporter () const;
+  bool spot_to_wsjtcb_server () const;
   bool psk_reporter_tcpip () const;
   bool monitor_off_at_startup () const;
   bool monitor_last_used () const;

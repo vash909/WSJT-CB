@@ -864,6 +864,7 @@ private:
   bool tx_QSY_allowed_;
   bool progressBar_red_;
   bool spot_to_psk_reporter_;
+  bool spot_to_wsjtcb_server_;
   bool psk_reporter_tcpip_;
   bool monitor_off_at_startup_;
   bool monitor_last_used_;
@@ -1027,6 +1028,10 @@ bool Configuration::spot_to_psk_reporter () const
 {
   // rig must be open and working to spot externally
   return is_transceiver_online () && m_->spot_to_psk_reporter_;
+}
+bool Configuration::spot_to_wsjtcb_server () const
+{
+  return is_transceiver_online () && m_->spot_to_wsjtcb_server_;
 }
 bool Configuration::psk_reporter_tcpip () const {return m_->psk_reporter_tcpip_;}
 bool Configuration::monitor_off_at_startup () const {return m_->monitor_off_at_startup_;}
@@ -2120,6 +2125,7 @@ void Configuration::impl::initialize_models ()
   ui_->tx_QSY_check_box->setChecked (tx_QSY_allowed_);
   ui_->progress_bar_check_box->setChecked (progressBar_red_);
   ui_->psk_reporter_check_box->setChecked (spot_to_psk_reporter_);
+  ui_->wsjtcb_spot_server_check_box->setChecked (spot_to_wsjtcb_server_);
   ui_->psk_reporter_tcpip_check_box->setChecked (psk_reporter_tcpip_);
   ui_->monitor_off_check_box->setChecked (monitor_off_at_startup_);
   ui_->monitor_last_used_check_box->setChecked (monitor_last_used_);
@@ -2461,6 +2467,7 @@ void Configuration::impl::read_settings ()
   monitor_off_at_startup_ = settings_->value ("MonitorOFF", false).toBool ();
   monitor_last_used_ = settings_->value ("MonitorLastUsed", false).toBool ();
   spot_to_psk_reporter_ = settings_->value ("PSKReporter", true).toBool ();
+  spot_to_wsjtcb_server_ = settings_->value ("WSJTCBSpotServer", false).toBool ();
   psk_reporter_tcpip_ = settings_->value ("PSKReporterTCPIP", false).toBool ();
   id_after_73_ = settings_->value ("After73", false).toBool ();
   tx_QSY_allowed_ = settings_->value ("TxQSYAllowed", false).toBool ();
@@ -2797,6 +2804,7 @@ void Configuration::impl::write_settings ()
   settings_->setValue ("MonitorOFF", monitor_off_at_startup_);
   settings_->setValue ("MonitorLastUsed", monitor_last_used_);
   settings_->setValue ("PSKReporter", spot_to_psk_reporter_);
+  settings_->setValue ("WSJTCBSpotServer", spot_to_wsjtcb_server_);
   settings_->setValue ("PSKReporterTCPIP", psk_reporter_tcpip_);
   settings_->setValue ("After73", id_after_73_);
   settings_->setValue ("TxQSYAllowed", tx_QSY_allowed_);
@@ -3391,6 +3399,7 @@ void Configuration::impl::accept ()
   check_SWR_ = ui_->check_SWR_check_box->isChecked ();
 
   spot_to_psk_reporter_ = ui_->psk_reporter_check_box->isChecked ();
+  spot_to_wsjtcb_server_ = ui_->wsjtcb_spot_server_check_box->isChecked ();
   psk_reporter_tcpip_ = ui_->psk_reporter_tcpip_check_box->isChecked ();
   id_interval_ = ui_->CW_id_interval_spin_box->value ();
   align_steps_ = ui_->align_spin_box->value ();

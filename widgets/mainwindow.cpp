@@ -33,6 +33,8 @@
 #include <QNetworkAccessManager> // TCI
 #include <QNetworkRequest> // TCI
 #include <QNetworkReply> // TCI
+#include <QJsonDocument>
+#include <QJsonObject>
 #include <QUrl>
 #include <QStandardPaths>
 #include <QDir>
@@ -7536,7 +7538,10 @@ void MainWindow::auto_sequence (DecodedText const& message, unsigned start_toler
 
 void MainWindow::pskPost (DecodedText const& decodedtext)
 {
-  if (m_diskData || !m_config.spot_to_psk_reporter() || decodedtext.isLowConfidence ()
+  auto const spot_to_psk = m_config.spot_to_psk_reporter ();
+  auto const spot_to_wsjtcb = m_config.spot_to_wsjtcb_server ();
+
+  if (m_diskData || (!spot_to_psk && !spot_to_wsjtcb) || decodedtext.isLowConfidence ()
       || (decodedtext.string().contains(m_baseCall) && decodedtext.string().contains(m_config.my_grid().left(4)))) return; // prevent self-spotting when running multiple instances
 
   QString msgmode=m_mode;
@@ -7550,12 +7555,69 @@ void MainWindow::pskPost (DecodedText const& decodedtext)
   int snr = decodedtext.snr();
   Frequency frequency = m_freqNominalPeriod + audioFrequency;   // prevent spotting wrong band
   if(grid.contains (grid_regexp)  || decodedtext.string().contains(" CQ ")) {
-//    qDebug() << "To PSKreporter:" << deCall << grid << frequency << msgmode << snr;
-    if (!m_psk_Reporter.addRemoteStation (deCall, grid, frequency, msgmode, snr))
+    if (spot_to_psk && !m_psk_Reporter.addRemoteStation (deCall, grid, frequency, msgmode, snr))
       {
         showStatusMessage (tr ("Spotting to PSK Reporter unavailable"));
       }
+    if (spot_to_wsjtcb)
+      {
+        auto message_text = decodedtext.clean_string ().mid (22).trimmed ();
+        postWsjtCbSpot (deCall, grid, frequency, msgmode, snr, decodedtext.dt (), audioFrequency, message_text);
+      }
   }
+}
+
+void MainWindow::postWsjtCbSpot (QString const& dx_call, QString const& dx_grid, Frequency frequency,
+                                 QString const& mode, int snr, double dt, int df, QString const& message_text)
+{
+  if (!m_config.spot_to_wsjtcb_server ())
+    {
+      return;
+    }
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+  if (QNetworkAccessManager::Accessible != m_network_manager.networkAccessible ())
+    {
+      m_network_manager.setNetworkAccessible (QNetworkAccessManager::Accessible);
+    }
+#endif
+
+  static QUrl const endpoint {QStringLiteral ("https://xzgroup.net/spots/api/ingest.php")};
+
+  QJsonObject spot;
+  if (!m_config.my_callsign ().isEmpty ()) spot.insert ("spotter_call", m_config.my_callsign ());
+  if (m_config.my_grid ().contains (grid_regexp)) spot.insert ("spotter_grid", m_config.my_grid ());
+  if (!dx_call.isEmpty ()) spot.insert ("dx_call", dx_call);
+  if (dx_grid.contains (grid_regexp)) spot.insert ("dx_grid", dx_grid);
+  spot.insert ("frequency_hz", static_cast<double> (frequency));
+  if (!mode.isEmpty ()) spot.insert ("mode", mode);
+  spot.insert ("snr", snr);
+  if (std::isfinite (dt)) spot.insert ("dt", dt);
+  if (df != std::numeric_limits<int>::min ()) spot.insert ("df", df);
+  if (!message_text.trimmed ().isEmpty ()) spot.insert ("message_text", message_text.trimmed ());
+  spot.insert ("timestamp_utc", QDateTime::currentDateTimeUtc ().toString (Qt::ISODate));
+  spot.insert ("source", QStringLiteral ("wsjt-cb"));
+  if (!QCoreApplication::applicationVersion ().isEmpty ())
+    {
+      spot.insert ("client_version", QCoreApplication::applicationVersion ());
+    }
+
+  QNetworkRequest request {endpoint};
+  request.setHeader (QNetworkRequest::ContentTypeHeader, QStringLiteral ("application/json"));
+  request.setRawHeader ("User-Agent", "WSJT-CB Spot Server");
+  request.setAttribute (QNetworkRequest::FollowRedirectsAttribute, true);
+
+  QJsonObject payload;
+  payload.insert ("spot", spot);
+
+  auto * reply = m_network_manager.post (request, QJsonDocument {payload}.toJson (QJsonDocument::Compact));
+  connect (reply, &QNetworkReply::finished, this, [reply] () {
+    if (QNetworkReply::NoError != reply->error ())
+      {
+        LOG_WARN (QString {"WSJT-CB spot server upload failed: %1"}.arg (reply->errorString ()).toStdString ());
+      }
+    reply->deleteLater ();
+  });
 }
 
 void MainWindow::killFile ()
@@ -8957,30 +9019,51 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
   }
 
   bool is_73 = message_words.filter (QRegularExpression {"^(73|RR73)$"}).size ();
+  auto cb_matches_local_call = [this] (QString const& token) {
+    auto const normalized = token.trimmed ().toUpper ();
+    if (normalized.isEmpty ()) {
+      return false;
+    }
+
+    auto const my_call = m_config.my_callsign ().trimmed ().toUpper ();
+    return normalized == my_call
+      || normalized == m_baseCall
+      || Radio::base_callsign (normalized) == m_baseCall;
+  };
+
   bool cb_free_text_for_us = false;
+  bool cb_free_text_reply_to_cq = false;
   if (!message.isStandardMessage ()
       && !message.clean_string ().contains ("<")
       && w.size () >= 2
-      && Radio::is_cb_callsign (w.at (0))
-      && (w.at (0) == m_baseCall || w.at (0) == m_config.my_callsign ())) {
-    cb_free_text_for_us = true;
-    // For CB free-text reports/finals like "MYCALL RR73" or "MYCALL 73",
-    // the parser may return an empty/partial pseudo-call or even our own
-    // callsign as "hiscall". In those cases, keep using the selected DX peer.
-    auto const& dx_peer = ui->dxCallEntry->text ();
-    auto const his_base = Radio::base_callsign (hiscall);
-    if (hiscall.isEmpty ()
-        || !Radio::is_cb_callsign (hiscall)
-        || his_base == m_baseCall
-        || his_base == Radio::base_callsign (m_config.my_callsign ())) {
-      hiscall = dx_peer;
-    }
-    if (hisgrid.isEmpty () && Radio::base_callsign (dx_peer) == Radio::base_callsign (hiscall)) {
-      hiscall = ui->dxCallEntry->text ();
+      && Radio::is_cb_callsign (w.at (0))) {
+    cb_free_text_for_us = cb_matches_local_call (w.at (0));
+    cb_free_text_reply_to_cq = w.size () >= 2
+      && cb_matches_local_call (w.at (1));
+
+    if (cb_free_text_for_us) {
+      // For CB free-text reports/finals like "MYCALL RR73" or "MYCALL 73",
+      // the parser may return an empty/partial pseudo-call or even our own
+      // callsign as "hiscall". In those cases, keep using the selected DX peer.
+      auto const& dx_peer = ui->dxCallEntry->text ();
+      auto const his_base = Radio::base_callsign (hiscall);
+      if (hiscall.isEmpty ()
+          || !Radio::is_cb_callsign (hiscall)
+          || his_base == m_baseCall
+          || his_base == Radio::base_callsign (m_config.my_callsign ())) {
+        hiscall = dx_peer;
+      }
+      if (hisgrid.isEmpty () && Radio::base_callsign (dx_peer) == Radio::base_callsign (hiscall)) {
+        hiscall = ui->dxCallEntry->text ();
+      }
+    } else if (cb_free_text_reply_to_cq) {
+      // Older and free-text CB replies can arrive as "DXCALL MYCALL"
+      // without hashes or reports. Treat the first token as the caller.
+      hiscall = w.at (0);
     }
   }
   if (!is_73 and !message.isStandardMessage() and !message.clean_string ().contains("<")
-      && !cb_free_text_for_us) {
+      && !cb_free_text_for_us && !cb_free_text_reply_to_cq) {
     qDebug () << "Not processing message - hiscall:" << hiscall << "hisgrid:" << hisgrid
               << message.clean_string () << message.isStandardMessage();
     return;
@@ -9090,28 +9173,44 @@ void MainWindow::processMessage (DecodedText const& message, Qt::KeyboardModifie
       && !message.clean_string ().contains ("<")
       && w.size () >= 2
       && Radio::is_cb_callsign (w.at (0))
-      && (w.at (0) == m_baseCall || w.at (0) == m_config.my_callsign ());
+      && (cb_matches_local_call (w.at (0)) || cb_matches_local_call (w.at (1)));
 
     if (cb_text_for_us) {
-      auto const& cb_token = w.at (1).toUpper ();
+      auto const directed_to_us = cb_matches_local_call (w.at (0));
+      auto const cb_token = (directed_to_us && w.size () >= 2 ? w.at (1) : QString {}).toUpper ();
+      auto const cb_replying_call = cb_free_text_reply_to_cq ? w.at (0) : hiscall;
+
+      if (cb_free_text_reply_to_cq && Radio::is_cb_callsign (cb_replying_call)) {
+        hiscall = cb_replying_call;
+      }
+
       auto const cb_report_match = QRegularExpression {R"(^(R?[+-][0-9]{2})$)"}.match (cb_token);
       if (cb_report_match.hasMatch ()) {
         m_rptRcvd = cb_token.startsWith ("R") ? cb_token.mid (1) : cb_token;
       }
-      if (cb_token.startsWith ("R+") || cb_token.startsWith ("R-")) {
+      if (directed_to_us && (cb_token.startsWith ("R+") || cb_token.startsWith ("R-"))) {
         setTxMsg (4);
         m_QSOProgress = ROGERS;
-      } else if (cb_token.startsWith ("+") || cb_token.startsWith ("-")) {
+      } else if (directed_to_us && (cb_token.startsWith ("+") || cb_token.startsWith ("-"))) {
         setTxMsg (3);
         m_QSOProgress = ROGER_REPORT;
-      } else if (cb_token == "RR73" || cb_token == "RRR") {
+      } else if (directed_to_us && (cb_token == "RR73" || cb_token == "RRR")) {
         m_ntx=5;
         ui->txrb5->setChecked(true);
         m_QSOProgress = SIGNOFF;
-      } else if (cb_token == "73") {
+      } else if (directed_to_us && cb_token == "73") {
         m_ntx=5;
         ui->txrb5->setChecked(true);
         m_QSOProgress = SIGNOFF;
+      } else if (cb_free_text_reply_to_cq) {
+        if (ui->tx1->isEnabled ()) {
+          m_ntx = 1;
+          m_QSOProgress = REPLYING;
+          ui->txrb1->setChecked (true);
+        } else {
+          setTxMsg (2);
+          m_QSOProgress = REPORT;
+        }
       }
     } else if(message_words.size () > 4   // enough fields for a normal message
        && (message_words.at(2).contains(m_baseCall) || "DE" == message_words.at(2))
@@ -14028,10 +14127,18 @@ void MainWindow::readWidebandDecodes()
       m_EMECall[dxcall].ready2call=(bCQ);
       Frequency frequency = (m_freqNominal/1000000) * 1000000 + int(fsked*1000.0);
       bool bFromDisk=qmapcom.nQDecoderDone==2;
-      if(!bFromDisk and (m_EMECall[dxcall].grid4.contains(grid_regexp)  or bCQ)) {
-        qDebug() << "To PSKreporter:" << dxcall << m_EMECall[dxcall].grid4 << frequency << m_mode << nsnr;
-        if (!m_psk_Reporter.addRemoteStation (dxcall, m_EMECall[dxcall].grid4, frequency, m_mode, nsnr)) {
-          showStatusMessage (tr ("Spotting to PSK Reporter unavailable"));
+      auto const spot_to_psk = m_config.spot_to_psk_reporter ();
+      auto const spot_to_wsjtcb = m_config.spot_to_wsjtcb_server ();
+      if(!bFromDisk and (spot_to_psk || spot_to_wsjtcb) and (m_EMECall[dxcall].grid4.contains(grid_regexp)  or bCQ)) {
+        if (spot_to_psk) {
+          qDebug() << "To PSKreporter:" << dxcall << m_EMECall[dxcall].grid4 << frequency << m_mode << nsnr;
+          if (!m_psk_Reporter.addRemoteStation (dxcall, m_EMECall[dxcall].grid4, frequency, m_mode, nsnr)) {
+            showStatusMessage (tr ("Spotting to PSK Reporter unavailable"));
+          }
+        }
+        if (spot_to_wsjtcb) {
+          postWsjtCbSpot (dxcall, m_EMECall[dxcall].grid4, frequency, m_mode, nsnr,
+                          std::numeric_limits<double>::quiet_NaN (), std::numeric_limits<int>::min (), line.trimmed ());
         }
       }
     }

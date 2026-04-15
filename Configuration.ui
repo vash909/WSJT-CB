@@ -2338,6 +2338,16 @@ comments field.</string>
            </widget>
           </item>
           <item>
+           <widget class="QCheckBox" name="wsjtcb_spot_server_check_box">
+            <property name="toolTip">
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Send decoded spots to the WSJT-CB spot server at https://xzgroup.net/spots/api/ingest.php.&lt;/p&gt;&lt;p&gt;This uses the same locator-based data already available in the decode stream and can be enabled independently from PSK Reporter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+            </property>
+            <property name="text">
+             <string>Enable WSJT-CB Spot Server</string>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QCheckBox" name="psk_reporter_tcpip_check_box">
             <property name="toolTip">
              <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this option if a reliable connection is needed&lt;/p&gt;&lt;p&gt;Most users do not need this, the default uses UDP which is more efficient. Only check this if you have evidence that UDP traffic from you to PSK Reporter is being lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
@@ -4730,6 +4740,7 @@ Right click for insert and delete options.</string>
   <tabstop>report_in_comments_check_box</tabstop>
   <tabstop>opCallEntry</tabstop>
   <tabstop>psk_reporter_check_box</tabstop>
+  <tabstop>wsjtcb_spot_server_check_box</tabstop>
   <tabstop>psk_reporter_tcpip_check_box</tabstop>
   <tabstop>udp_server_line_edit</tabstop>
   <tabstop>udp_server_port_spin_box</tabstop>
