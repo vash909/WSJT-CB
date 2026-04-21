@@ -1729,11 +1729,20 @@ install (DIRECTORY
   )
 
 if (WIN32)
+  if (CMAKE_SIZEOF_VOID_P EQUAL 8)
+    set (WSJT_OPENSSL_RUNTIME_DLLS
+      contrib/tls/libssl-1_1-x64.dll
+      contrib/tls/libcrypto-1_1-x64.dll
+      )
+  else ()
+    set (WSJT_OPENSSL_RUNTIME_DLLS
+      contrib/tls/libssl-1_1.dll
+      contrib/tls/libcrypto-1_1.dll
+      )
+  endif ()
+
   install (FILES
-    contrib/tls/libssl-1_1.dll
-    contrib/tls/libcrypto-1_1.dll
-    contrib/tls/libssl-1_1-x64.dll
-    contrib/tls/libcrypto-1_1-x64.dll
+    ${WSJT_OPENSSL_RUNTIME_DLLS}
     DESTINATION ${CMAKE_INSTALL_BINDIR}
     #COMPONENT runtime
   )

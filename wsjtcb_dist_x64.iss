@@ -28,13 +28,17 @@ ArchitecturesAllowed=x64compatible
 ArchitecturesInstallIn64BitMode=x64compatible
 OutputDir=installer-output
 OutputBaseFilename=wsjtcb-{#AppVersion}-win64-setup
-Compression=lzma2/max
-SolidCompression=yes
+Compression=lzma2/normal
+SolidCompression=no
 WizardStyle=modern
 PrivilegesRequired=admin
 ChangesAssociations=no
 UninstallDisplayIcon={app}\bin\{#AppExeName}
 SetupLogging=yes
+UsePreviousAppDir=yes
+UsePreviousGroup=yes
+CloseApplications=yes
+RestartApplications=no
 VersionInfoVersion={#AppVersion}
 VersionInfoCompany={#AppPublisher}
 VersionInfoDescription={#AppName} Installer
@@ -50,6 +54,10 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 
 [Files]
 Source: "{#DistDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+[InstallDelete]
+Type: files; Name: "{app}\bin\libssl-1_1.dll"
+Type: files; Name: "{app}\bin\libcrypto-1_1.dll"
 
 [Icons]
 Name: "{autoprograms}\{#AppName}\{#AppName}"; Filename: "{app}\bin\{#AppExeName}"; WorkingDir: "{app}\bin"
