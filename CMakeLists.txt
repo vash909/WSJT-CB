@@ -1014,6 +1014,7 @@ find_program (RIGCTLCOM_EXE rigctlcom)
 
 check_type_size (CACHE_ALL HAMLIB_OLD_CACHING)
 check_symbol_exists (rig_set_cache_timeout_ms "hamlib/rig.h" HAVE_HAMLIB_CACHING)
+check_symbol_exists (rig_get_conf2 "hamlib/rig.h" HAVE_HAMLIB_GET_CONF2)
 
 find_package (Usb REQUIRED)
 
