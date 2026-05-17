@@ -1976,69 +1976,6 @@ color: rgb(0, 0, 0);</string>
         </widget>
        </item>
        <item>
-        <widget class="QGroupBox" name="azel_path_group_box">
-         <property name="toolTip">
-          <string>AzEl Directory</string>
-         </property>
-         <property name="title">
-          <string>AzEl Directory</string>
-         </property>
-         <layout class="QGridLayout" name="gridLayout_27">
-          <item row="0" column="0" colspan="4">
-           <layout class="QHBoxLayout" name="AzEl_Layout">
-            <property name="spacing">
-             <number>6</number>
-            </property>
-            <item>
-             <widget class="QLabel" name="azel_path_label">
-              <property name="text">
-               <string>Location:</string>
-              </property>
-              <property name="buddy">
-               <cstring>azel_path_select_push_button</cstring>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="azel_path_display_label">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-                <horstretch>1</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="styleSheet">
-               <string notr="true">background-color: rgb(255, 255, 255);
-color: rgb(0, 0, 0);</string>
-              </property>
-              <property name="text">
-               <string>TextLabel</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="azel_path_select_push_button">
-              <property name="text">
-               <string>Select</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item row="2" column="0">
-           <widget class="QCheckBox" name="checkBoxAzElExtraLines">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enables additional line in azel.dat for Dpol parameter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Enable extra line in azel.dat</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </widget>
-       </item>
-       <item>
         <widget class="QGroupBox" name="split_operation_group_box_2">
          <property name="toolTip">
           <string>Power Memory By Band</string>

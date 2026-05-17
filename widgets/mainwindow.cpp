@@ -48,6 +48,7 @@
 #include <QAction>
 #include <QButtonGroup>
 #include <QActionGroup>
+#include <QStyleFactory>
 #include <QSplitter>
 #include <QSplashScreen>
 #include <QUdpSocket>
@@ -332,6 +333,22 @@ namespace
       || mode == "FT4"
       || mode == "FST4"
       || mode == "Q65";
+  }
+
+  QString modern_dark_stylesheet (QFont const& font)
+  {
+    QFile file {":qdarkstyle/style.qss"};
+    QString stylesheet;
+    if (file.open (QFile::ReadOnly | QFile::Text))
+      {
+        QTextStream stream {&file};
+        stylesheet = stream.readAll ();
+      }
+    else
+      {
+        qWarning () << "Unable to load dark stylesheet resource:" << file.fileName ();
+      }
+    return stylesheet + "* {" + font_as_stylesheet (font) + '}';
   }
 }
 
@@ -1869,7 +1886,7 @@ void MainWindow::readSettings()
   ui->actionSplit_ALL_TXT_monthly->setChecked(m_settings->value("splitAllTxtMonthly", false).toBool());
   ui->actionDisable_writing_of_ALL_TXT->setChecked(m_settings->value("disableWritingOfAllTxt", false).toBool());
   ui->actionDisable_event_logging->setChecked(m_settings->value("DisableEventLogging", false).toBool());
-  ui->actionUse_Dark_Style->setChecked(m_settings->value("DarkStyle", false).toBool());
+  ui->actionUse_Dark_Style->setChecked(m_settings->value("DarkStyle", true).toBool());
   ui->actionBand_Buttons->setChecked(false);
   ui->actionVHF_UHF_Buttons->setChecked(false);
   ui->tx1->setEnabled(m_settings->value("tx1State", true).toBool());
@@ -2101,27 +2118,20 @@ void MainWindow::set_application_font (QFont const& font)
 {
   // check if dark style is enabled, this check is also effective during the program start
   if (ui->actionUse_Dark_Style->isChecked()) {
-      QFile f(":qdarkstyle/style.qss");
-      if (!f.exists())   {
-          printf("Unable to set stylesheet, file not found\n");
-      } else {
-          qApp->setFont (font);
-          QString ss;
-          f.open(QFile::ReadOnly | QFile::Text);
-          QTextStream ts(&f);
-          qApp->setStyleSheet(ts.readAll() + "* {" + font_as_stylesheet (font) + '}');
-          m_useDarkStyle = true;
-          m_wideGraph->setDarkStyle(m_useDarkStyle);
-          apply_main_window_chrome ();
-          check_button_color();
-          ui->tabWidget->setTabShape(QTabWidget::Rounded);
-      }
+      qApp->setStyle (QStyleFactory::create ("Fusion"));
+      qApp->setFont (font);
+      qApp->setStyleSheet (modern_dark_stylesheet (font));
+      m_useDarkStyle = true;
+      m_wideGraph->setDarkStyle(m_useDarkStyle);
+      apply_main_window_chrome ();
+      check_button_color();
+      ui->tabWidget->setTabShape(QTabWidget::Rounded);
    } else {
       m_useDarkStyle = false;
       m_wideGraph->setDarkStyle(m_useDarkStyle);
       apply_main_window_chrome ();
       check_button_color();
-      ui->tabWidget->setTabShape(QTabWidget::Triangular);
+      ui->tabWidget->setTabShape(QTabWidget::Rounded);
       qApp->setFont (font);
       // set font in the application style sheet as well in case it has
       // been modified in the style sheet which has priority
@@ -2223,20 +2233,47 @@ void MainWindow::apply_main_window_chrome ()
   };
 
   if (is_dark_palette) {
-    set_decode_panel (ui->decodedTextBrowser, QColor {"#1f252b"}, QColor {"#f4f8fc"}, QColor {"#435363"}, QColor {"#2b7dbf"});
-    set_decode_panel (ui->decodedTextBrowser2, QColor {"#1f252b"}, QColor {"#f4f8fc"}, QColor {"#435363"}, QColor {"#2b7dbf"});
+    set_decode_panel (ui->decodedTextBrowser, QColor {"#111922"}, QColor {"#eaf2fb"}, QColor {"#2f4258"}, QColor {"#20a8c9"});
+    set_decode_panel (ui->decodedTextBrowser2, QColor {"#111922"}, QColor {"#eaf2fb"}, QColor {"#2f4258"}, QColor {"#20a8c9"});
     setStyleSheet (QString {
+      "QMainWindow#MainWindow, #centralWidget {"
+      "  background-color: qlineargradient(x1:0, y1:0, x2:1, y2:1, stop:0 #090e14, stop:0.55 #0d141d, stop:1 #121c28);"
+      "}"
       "#lh_decodes_title_label, #rh_decodes_title_label {"
-      "  color: #f4f8fc; background-color: #34424f; border: 1px solid #4a5c6d;"
-      "  border-radius: 8px; padding: 6px 10px;"
+      "  color: #eaf2fb; background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, stop:0 #1b2a3b, stop:1 #253448);"
+      "  border: 1px solid #39516b; border-radius: 12px; padding: 7px 12px; font-weight: 600;"
       "}"
       "#lh_decodes_headings_label, #rh_decodes_headings_label {"
-      "  color: #cfd9e4; background-color: #2d3945; border: 1px solid #435363;"
-      "  border-radius: 6px; padding: 4px 8px;"
+      "  color: #b9c9da; background-color: #18222e; border: 1px solid #2e4358;"
+      "  border-radius: 9px; padding: 0px 10px; min-height: 18px;"
       "}"
-      "#lower_panel_widget { border-top: 1px solid #435363; }"
-      "#decodes_splitter::handle { background-color: #3a4651; width: 2px; }"
-      "#main_splitter::handle { background-color: #3a4651; height: 2px; }"
+      "#tabWidget::pane, #controls_container, #lower_panel_widget {"
+      "  background-color: #0f1620; border: 1px solid #2a3a4f; border-radius: 12px;"
+      "}"
+      "QGroupBox {"
+      "  background-color: #111b27; border: 1px solid #2d4158; border-radius: 10px; margin-top: 1.1em; padding-top: 0.6em;"
+      "}"
+      "QGroupBox::title {"
+      "  subcontrol-origin: margin; left: 10px; padding: 0 6px; color: #c2d1de;"
+      "}"
+      "QTabWidget::pane { border-top: 1px solid #31475f; }"
+      "QTabBar::tab:top, QTabBar::tab:bottom {"
+      "  background: #1a2533; border: 1px solid #30465e; border-bottom: none;"
+      "  color: #c3d3e3; min-width: 70px; padding: 7px 14px; margin-right: 4px;"
+      "  border-top-left-radius: 9px; border-top-right-radius: 9px;"
+      "}"
+      "QTabBar::tab:top:selected, QTabBar::tab:bottom:selected { background: #223246; color: #f4f8fc; }"
+      "QTabBar::tab:top:hover:!selected, QTabBar::tab:bottom:hover:!selected { background: #213043; }"
+      "#tabWidget QTabBar::tab:left {"
+      "  background: #152434; color: #c3d3e3; border: 1px solid #30465e; border-right: none;"
+      "  min-width: 28px; min-height: 34px; padding: 6px 4px; margin: 2px 0;"
+      "  border-top-left-radius: 7px; border-bottom-left-radius: 7px;"
+      "}"
+      "#tabWidget QTabBar::tab:left:selected { background: #223246; color: #f4f8fc; border-color: #3a5977; }"
+      "#tabWidget QTabBar::tab:left:hover:!selected { background: #213043; }"
+      "#lower_panel_widget { border-top: 1px solid #2b3e54; }"
+      "#decodes_splitter::handle { background-color: #243649; width: 2px; }"
+      "#main_splitter::handle { background-color: #243649; height: 2px; }"
     });
   } else {
     set_decode_panel (ui->decodedTextBrowser, QColor {"#fbfdff"}, QColor {"#111111"}, QColor {"#cad8e4"}, QColor {"#2f80c1"});
@@ -2248,7 +2285,7 @@ void MainWindow::apply_main_window_chrome ()
       "}"
       "#lh_decodes_headings_label, #rh_decodes_headings_label {"
       "  color: #466074; background-color: #f4f8fb; border: 1px solid #d3dfe9;"
-      "  border-radius: 6px; padding: 4px 8px;"
+      "  border-radius: 6px; padding: 0px 8px; min-height: 18px;"
       "}"
       "#lower_panel_widget { border-top: 1px solid #d5e0ea; }"
       "#decodes_splitter::handle { background-color: #d3dde7; width: 2px; }"
@@ -16101,27 +16138,20 @@ void MainWindow::on_actionUse_Dark_Style_triggered (bool checked)
 {
     QFont font = m_config.text_font();
     if (checked) {
-        QFile f(":qdarkstyle/style.qss");
-        if (!f.exists())   {
-            printf("Unable to set stylesheet, file not found\n");
-        } else {
-            qApp->setFont (font);
-            QString ss;
-            f.open(QFile::ReadOnly | QFile::Text);
-            QTextStream ts(&f);
-            qApp->setStyleSheet(ts.readAll() + "* {" + font_as_stylesheet (font) + '}');
-            m_useDarkStyle = true;
-            m_wideGraph->setDarkStyle(m_useDarkStyle);
-            apply_main_window_chrome ();
-            check_button_color();
-            ui->tabWidget->setTabShape(QTabWidget::Rounded);
-        }
+        qApp->setStyle (QStyleFactory::create ("Fusion"));
+        qApp->setFont (font);
+        qApp->setStyleSheet (modern_dark_stylesheet (font));
+        m_useDarkStyle = true;
+        m_wideGraph->setDarkStyle(m_useDarkStyle);
+        apply_main_window_chrome ();
+        check_button_color();
+        ui->tabWidget->setTabShape(QTabWidget::Rounded);
     } else {
         m_useDarkStyle = false;
         m_wideGraph->setDarkStyle(m_useDarkStyle);
         apply_main_window_chrome ();
         check_button_color();
-        ui->tabWidget->setTabShape(QTabWidget::Triangular);
+        ui->tabWidget->setTabShape(QTabWidget::Rounded);
         qApp->setFont (font);
         QString ss;
         if (qApp->styleSheet ().size ()) {

@@ -598,7 +598,6 @@ private:
   Q_SLOT void on_udp_server_line_edit_textChanged (QString const&);
   Q_SLOT void on_udp_server_line_edit_editingFinished ();
   Q_SLOT void on_save_path_select_push_button_clicked (bool);
-  Q_SLOT void on_azel_path_select_push_button_clicked (bool);
   Q_SLOT void on_calibration_intercept_spin_box_valueChanged (double);
   Q_SLOT void handle_leavingSettings ();
   Q_SLOT void on_calibration_slope_ppm_spin_box_valueChanged (double);
@@ -716,8 +715,6 @@ private:
   QDir writeable_data_dir_;
   QDir default_save_directory_;
   QDir save_directory_;
-  QDir default_azel_directory_;
-  QDir azel_directory_;
 
   QFont font_;
   QFont next_font_;
@@ -937,7 +934,6 @@ private:
   bool bLowSidelobes_;
   bool sortAlphabetically_;
   bool hideCARD_;
-  bool AzElExtraLines_;
   bool pwrBandTxMemory_;
   bool pwrBandTuneMemory_;
   bool highlight_DXcall_;
@@ -1115,9 +1111,7 @@ FrequencyList_v2_101 const * Configuration::frequencies () const {return &m_->fr
 QStringListModel * Configuration::macros () {return &m_->macros_;}
 QStringListModel const * Configuration::macros () const {return &m_->macros_;}
 QDir Configuration::save_directory () const {return m_->save_directory_;}
-QDir Configuration::azel_directory () const {return m_->azel_directory_;}
 QString Configuration::rig_name () const {return m_->rig_params_.rig_name;}
-bool Configuration::AzElExtraLines () const {return m_->AzElExtraLines_;}
 bool Configuration::pwrBandTxMemory () const {return m_->pwrBandTxMemory_;}
 bool Configuration::pwrBandTuneMemory () const {return m_->pwrBandTuneMemory_;}
 LotWUsers const& Configuration::lotw_users () const {return m_->lotw_users_;}
@@ -1794,7 +1788,6 @@ Configuration::impl::impl (Configuration * self, QNetworkAccessManager * network
     // Make sure the default save directory exists
     QString save_dir {"save"};
     default_save_directory_ = writeable_data_dir_;
-    default_azel_directory_ = writeable_data_dir_;
     if (!default_save_directory_.mkpath (save_dir) || !default_save_directory_.cd (save_dir))
       {
         MessageBox::critical_message (this, tr ("Failed to create save directory"),
@@ -2120,7 +2113,6 @@ void Configuration::impl::initialize_models ()
   ui_->check_SWR_check_box->setChecked (check_SWR_);
   if (!ui_->PWR_and_SWR_check_box->isChecked()) ui_->check_SWR_check_box->setEnabled (false);
   ui_->save_path_display_label->setText (save_directory_.absolutePath ());
-  ui_->azel_path_display_label->setText (azel_directory_.absolutePath ());
   ui_->CW_id_after_73_check_box->setChecked (id_after_73_);
   ui_->tx_QSY_check_box->setChecked (tx_QSY_allowed_);
   ui_->progress_bar_check_box->setChecked (progressBar_red_);
@@ -2198,7 +2190,6 @@ void Configuration::impl::initialize_models ()
   ui_->CAT_handshake_button_group->button (rig_params_.handshake)->setChecked (true);
   ui_->cbSortAlphabetically->setChecked(sortAlphabetically_);
   ui_->cbHideCARD->setChecked(hideCARD_);
-  ui_->checkBoxAzElExtraLines->setChecked(AzElExtraLines_);
   ui_->checkBoxPwrBandTxMemory->setChecked(pwrBandTxMemory_);
   ui_->checkBoxPwrBandTuneMemory->setChecked(pwrBandTuneMemory_);
   if (rig_params_.force_dtr)
@@ -2458,7 +2449,6 @@ void Configuration::impl::read_settings ()
   aggressive_ = settings_->value ("Aggressive", 4).toInt ();
   RxBandwidth_ = settings_->value ("RxBandwidth", 2500).toInt ();
   save_directory_.setPath (settings_->value ("SaveDir", default_save_directory_.absolutePath ()).toString ());
-  azel_directory_.setPath (settings_->value ("AzElDir", default_azel_directory_.absolutePath ()).toString ());
 
   tci_audio_ = settings_->value ("TCIAudio", tci_audio_).toBool ();
 
@@ -2645,7 +2635,6 @@ void Configuration::impl::read_settings ()
   calibration_.slope_ppm = settings_->value ("CalibrationSlopePPM", 0.).toDouble ();
   sortAlphabetically_ = settings_->value("SortAlphabetically",true).toBool ();
   hideCARD_ = settings_->value("HideCARD",true).toBool ();
-  AzElExtraLines_ = settings_->value("AzElExtraLines",false).toBool ();
   pwrBandTxMemory_ = settings_->value("pwrBandTxMemory",false).toBool ();
   pwrBandTuneMemory_ = settings_->value("pwrBandTuneMemory",false).toBool ();
   highlight_DXcall_ = settings_->value("highlight_DXcall",true).toBool ();
@@ -2785,7 +2774,6 @@ void Configuration::impl::write_settings ()
   settings_->setValue ("PTTMethod", QVariant::fromValue (rig_params_.ptt_type));
   settings_->setValue ("PTTport", rig_params_.ptt_port);
   settings_->setValue ("SaveDir", save_directory_.absolutePath ());
-  settings_->setValue ("AzElDir", azel_directory_.absolutePath ());
   if (!audio_input_device_.isNull ()) {
       settings_->setValue ("SoundInName", audio_input_device_.deviceName ());
       settings_->setValue ("AudioInputChannel", AudioDevice::toString (audio_input_channel_));
@@ -2908,7 +2896,6 @@ void Configuration::impl::write_settings ()
   settings_->setValue ("CalibrationSlopePPM", calibration_.slope_ppm);
   settings_->setValue ("SortAlphabetically", sortAlphabetically_);
   settings_->setValue ("HideCARD", hideCARD_);
-  settings_->setValue ("AzElExtraLines", AzElExtraLines_);
   settings_->setValue ("pwrBandTxMemory", pwrBandTxMemory_);
   settings_->setValue ("pwrBandTuneMemory", pwrBandTuneMemory_);
   settings_->setValue ("Region", QVariant::fromValue (region_));
@@ -3444,7 +3431,6 @@ void Configuration::impl::accept ()
   data_mode_ = static_cast<DataMode> (ui_->TX_mode_button_group->checkedId ());
   bLowSidelobes_ = ui_->rbLowSidelobes->isChecked();
   save_directory_.setPath (ui_->save_path_display_label->text ());
-  azel_directory_.setPath (ui_->azel_path_display_label->text ());
   enable_VHF_features_ = ui_->enable_VHF_features_check_box->isChecked ();
   decode_at_52s_ = ui_->decode_at_52s_check_box->isChecked ();
   kHz_without_k_ = ui_->kHz_without_k_check_box->isChecked ();
@@ -3479,7 +3465,6 @@ void Configuration::impl::accept ()
   calibration_.slope_ppm = ui_->calibration_slope_ppm_spin_box->value ();
   sortAlphabetically_ = ui_->cbSortAlphabetically->isChecked ();
   hideCARD_ = ui_->cbHideCARD->isChecked ();
-  AzElExtraLines_ = ui_->checkBoxAzElExtraLines->isChecked ();
   pwrBandTxMemory_ = ui_->checkBoxPwrBandTxMemory->isChecked ();
   pwrBandTuneMemory_ = ui_->checkBoxPwrBandTuneMemory->isChecked ();
   opCall_=ui_->opCallEntry->text();
@@ -4469,18 +4454,6 @@ void Configuration::impl::on_save_path_select_push_button_clicked (bool /* check
           ui_->save_path_display_label->setText (fd.selectedFiles ().at (0));
         }
     }
-}
-
-void Configuration::impl::on_azel_path_select_push_button_clicked (bool /* checked */)
-{
-  QFileDialog fd {this, tr ("AzEl Directory"), ui_->azel_path_display_label->text ()};
-  fd.setFileMode (QFileDialog::Directory);
-  fd.setOption (QFileDialog::ShowDirsOnly);
-  if (fd.exec ()) {
-    if (fd.selectedFiles ().size ()) {
-      ui_->azel_path_display_label->setText(fd.selectedFiles().at(0));
-    }
-  }
 }
 
 void Configuration::impl::on_calibration_intercept_spin_box_valueChanged (double)

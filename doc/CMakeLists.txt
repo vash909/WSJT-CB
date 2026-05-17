@@ -73,8 +73,6 @@ set (UG_IMGS
   images/Add_Frequency.png
   images/Add_station_info.png
   images/algui.png
-  images/AstroData_2.png
-  images/Astronomical_data.png
   images/audiostep1.png
   images/audiostep2.png
   images/auto-seq.png
