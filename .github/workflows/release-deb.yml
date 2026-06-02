@@ -97,6 +97,14 @@ jobs:
           done
           sha256sum dist/*.deb > "dist/SHA256SUMS_${{ matrix.id }}.txt"
 
+      - name: Test package
+        shell: bash
+        run: |
+          apt-get update
+          apt-get install -y ./dist/wsjtcb_*.deb
+          wsjtcb --version
+        
+
       - name: Upload workflow artifacts
         uses: actions/upload-artifact@v4
         with:
