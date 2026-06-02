@@ -1895,6 +1895,7 @@ function(set_distro_version)
       )
     set (CPACK_DISTRIBUTION_NAME "${CPACK_DISTRIBUTION_NAME}" PARENT_SCOPE)
     set (CPACK_DISTRIBUTION_VERSION "${CPACK_DISTRIBUTION_VERSION}" PARENT_SCOPE)
+  endif ()
 endfunction(set_distro_version)
 
 
