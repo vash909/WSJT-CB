@@ -1885,11 +1885,11 @@ endif ()
 
 function(set_distro_version)
   if (EXISTS /etc/os-release)
-    execute process ( COMMAND . /etc/os-release && echo "$NAME"
+    execute_process ( COMMAND . /etc/os-release && echo "$NAME"
       OUTPUT_VARIABLE CPACK_DISTRIBUTION_NAME
       OUTPUT_STRIP_TRAILING_WHITESPACE
       )
-      execute process ( COMMAND . /etc/os-release && echo "$VERSION_ID"
+      execute_process ( COMMAND . /etc/os-release && echo "$VERSION_ID"
       OUTPUT_VARIABLE CPACK_DISTRIBUTION_VERSION
       OUTPUT_STRIP_TRAILING_WHITESPACE
       )
