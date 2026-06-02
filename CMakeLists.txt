@@ -1881,10 +1881,40 @@ else ()
   endif (RPMBUILDER)
 endif ()
 
-set (CPACK_DEBIAN_PACKAGE_HOMEPAGE "${PROJECT_HOMEPAGE}")
-set (CPACK_DEBIAN_PACKAGE_NAME "${PROJECT_PACKAGE_NAME}")
-set (CPACK_DEBIAN_PACKAGE_DEPENDS "libgfortran5 (>=8.3) | libgfortran4 (>=7.3) | libgfortran3 (>=6.3), libfftw3-single3 (>=3.3), libgomp1 (>=6), libqt5serialport5 (>=5.7), libqt5multimedia5-plugins (>=5.7), libqt5widgets5 (>=5.7), libqt5network5 (>=5.7), libqt5printsupport5 (>=5.7), libqt5websockets5 (>=5.7),  libqt5sql5-sqlite (>=5.7), libusb-1.0-0 (>=1.0.21), libboost-log1.62.0 (>=1.62.0) | libboost-log1.65.1 (>=1.65.1) | libboost-log1.67.0 (>=1.67.0) | libboost-log1.71.0 (>=1.71.0) | libboost-log1.74.0 (>=1.74.0)")
-set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+# Prepare package metadata based on the distribution we're building for. This is needed to ensure that the correct dependencies are specified for Debian-based distributions and RPM-based distributions.
+
+function(set_distro_version)
+  if (EXISTS /etc/os-release)
+    execute process ( COMMAND . /etc/os-release && echo "$NAME"
+      OUTPUT_VARIABLE CPACK_DISTRIBUTION_NAME
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+      execute process ( COMMAND . /etc/os-release && echo "$VERSION_ID"
+      OUTPUT_VARIABLE CPACK_DISTRIBUTION_VERSION
+      OUTPUT_STRIP_TRAILING_WHITESPACE
+      )
+      set (CPACK_DISTRIBUTION_NAME "${CPACK_DISTRIBUTION_NAME}" PARENT_SCOPE)
+      set (CPACK_DISTRIBUTION_VERSION "${CPACK_DISTRIBUTION_VERSION}" PARENT_SCOPE)
+endfunction(set_distro_version)
+
+
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+  set_distro_version()
+  if (CPACK_DISTRIBUTION_NAME STREQUAL "debian")
+    set (CPACK_DEBIAN_PACKAGE_HOMEPAGE "${PROJECT_HOMEPAGE}")
+    set (CPACK_DEBIAN_PACKAGE_NAME "${PROJECT_PACKAGE_NAME}")
+    set (CPACK_DEBIAN_PACKAGE_DEPENDS "libgfortran5 (>=8.3) | libgfortran4 (>=7.3) | libgfortran3 (>=6.3), libfftw3-single3 (>=3.3), libgomp1 (>=6), libqt5serialport5 (>=5.7), libqt5multimedia5-plugins (>=5.7), libqt5widgets5 (>=5.7), libqt5network5 (>=5.7), libqt5printsupport5 (>=5.7), libqt5websockets5 (>=5.7),  libqt5sql5-sqlite (>=5.7), libusb-1.0-0 (>=1.0.21), libboost-log1.62.0 (>=1.62.0) | libboost-log1.65.1 (>=1.65.1) | libboost-log1.67.0 (>=1.67.0) | libboost-log1.71.0 (>=1.71.0) | libboost-log1.74.0 (>=1.74.0)")
+    set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+  endif ()
+
+  if (CPACK_DISTRIBUTION_NAME STREQUAL "ubuntu")
+    set (CPACK_DEBIAN_PACKAGE_HOMEPAGE "${PROJECT_HOMEPAGE}")
+    set (CPACK_DEBIAN_PACKAGE_NAME "${PROJECT_PACKAGE_NAME}")
+    set (CPACK_DEBIAN_PACKAGE_DEPENDS "libgfortran5 (>=8.3) | libgfortran4 (>=7.3) | libgfortran3 (>=6.3), libfftw3-single3 (>=3.3), libgomp1 (>=6), libqt5serialport5 (>=5.7), libqt5multimedia5-plugins (>=5.7), libqt5widgets5 (>=5.7), libqt5network5 (>=5.7), libqt5printsupport5 (>=5.7), libqt5websockets5 (>=5.7),  libqt5sql5-sqlite (>=5.7), libusb-1.0-0 (>=1.0.21), libboost-log1.62.0 (>=1.62.0) | libboost-log1.65.1 (>=1.65.1) | libboost-log1.67.0 (>=1.67.0) | libboost-log1.71.0 (>=1.71.0) | libboost-log1.74.0 (>=1.74.0)")
+    set (CPACK_DEBIAN_PACKAGE_SHLIBDEPS ON)
+  endif ()
+endif()
+
 
 set (CPACK_RPM_PACKAGE_ARCHITECTURE ${CMAKE_SYSTEM_PROCESSOR})
 set (CPACK_RPM_PACKAGE_REQUIRES "qt5-qtbase >= 5.9, qt5-qtserialport >= 5.9, qt5-qtmultimedia >= 5.9, qt5-qtwebsockets >= 5.9, qt5-qtsvg >= 5.9, libusbx >= 1.0.22, libgfortran >= 7, libgomp >= 7, fftw-libs-single >= 3.3, boost-log >= 1.62")
