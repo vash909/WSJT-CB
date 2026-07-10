@@ -1,5 +1,6 @@
 TODO LIST: 
 - WSJT-CB is printing a lot of things on the shell while started via ./wsjtcb command, probably some debug printing not needed anymore.
 - WSJT-CB spots server doesn't work anymore, latest working version was 1.2.0
-- some users on windows are experiencing a longer load time, worth investigate this issue
+- some users on windows are experiencing a longer load time, worth investigate this issue (that could be a log folder/naming problem)
 - some users on windows are reporting problems with hamlib, need to investigate
+- needs to change the versioning of the software from 1.3.0 to 1.4.0 
