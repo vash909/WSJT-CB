@@ -7685,10 +7685,11 @@ void MainWindow::postWsjtCbSpot (QString const& dx_call, QString const& dx_grid,
   payload.insert ("spot", spot);
 
   auto * reply = m_network_manager.post (request, QJsonDocument {payload}.toJson (QJsonDocument::Compact));
-  connect (reply, &QNetworkReply::finished, this, [reply] () {
+  connect (reply, &QNetworkReply::finished, this, [this, reply] () {
     if (QNetworkReply::NoError != reply->error ())
       {
         LOG_WARN (QString {"WSJT-CB spot server upload failed: %1"}.arg (reply->errorString ()).toStdString ());
+        showStatusMessage (tr ("Spotting to WSJT-CB spot server unavailable"));
       }
     reply->deleteLater ();
   });
