@@ -1,5 +1,17 @@
 Release Notes
 
+Version 1.4.0
+
+This section tracks updates for release 1.4.0.
+
+Changes already included
+
+- WSPR now works with CB (11 m) callsigns. Standard WSPR cannot pack a CB callsign: its formats only encode a standard amateur callsign into 28 bits, and the only alternative (a 15-bit hashed callsign) can be resolved by a receiver just if it was previously learned from a decodable standard transmission, which a CB callsign can never send. Plain WSPR would therefore only ever show "<...>" for CB stations.
+- WSPR mode is now CB-only in WSJT-CB and uses a dedicated, self-contained source encoding: the CB callsign is enumerated bijectively into 30 bits, the 4-character grid into 15 bits, and the transmit power into a 5-bit index (the 19 standard WSPR dBm levels), filling exactly the 50 WSPR source bits. The full callsign is transmitted in every frame, so no hash table is used and receivers never show "<...>".
+- The convolutional code, interleaving, sync vector, and 4-FSK modulation are unchanged, so weak-signal sensitivity is identical to standard WSPR. These transmissions are decodable only by other WSJT-CB stations and are intentionally not compatible with standard WSPR/WSJT-X or wsprnet. 6-character grids are not used in WSPR mode.
+- "My callsign" must be a valid CB callsign and "My grid" a 4-character locator for WSPR transmission; the WSPR message is always built as "CALL GRID4 dBm".
+- Implementation: packcb/unpackcb in lib/packjt.f90 (TX) with mirrored C packcb/unpackcb in lib/wsprd/wsprd_utils.c and lib/wsprd/wsprsim_utils.c (RX and signal subtraction), wired through lib/wqencode.f90 and MainWindow::WSPR_message(). The bijection was validated with exhaustive boundary sweeps and multi-million-sample round-trip tests, including the full Fortran-encode to C-decode path.
+
 Version 1.3.0 (in development)
 
 This section tracks all updates for release 1.3.0, including the visual redesign already introduced and the next changes that will be added in this repository.

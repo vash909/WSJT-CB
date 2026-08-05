@@ -194,6 +194,7 @@ private slots:
   void on_cbHoldTxFreq_clicked (bool);
   void on_ft8Button_clicked();
   void on_ft4Button_clicked();
+  void on_wsprButton_clicked();
   void on_msk144Button_clicked();
   void on_q65Button_clicked();
   void on_jt65Button_clicked();

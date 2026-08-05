@@ -240,101 +240,137 @@ int floatcomp(const void* elem1, const void* elem2)
     return *(const float*)elem1 > *(const float*)elem2;
 }
 
+// ---------------------------------------------------------------------------
+// WSJT-CB (11 m) CB callsign source coding.
+// CB callsign = <prefix 1-3 digits><letters 1-2><suffix 0-4 digits>
+//   prefix 1 digit    -> suffix 0-4 digits
+//   prefix 2-3 digits -> suffix 0-3 digits
+// Bijective mixed-radix enumeration into a 30-bit integer. The shape
+// ordering here MUST match packcb/unpackcb in lib/packjt.f90 exactly.
+// ---------------------------------------------------------------------------
+static const int64_t CB_P10[5] = {1,10,100,1000,10000};
+static const int64_t CB_P26[3] = {1,26,676};
+
+void cb_offset(int tnp, int tnl, int tns, int64_t *offset, int64_t *base)
+{
+    int np,nl,ns,nsmax;
+    int64_t sz,p26,p10p,p10s;
+    *offset=0; *base=-1;
+    for(np=1; np<=3; np++) {
+        nsmax = (np==1) ? 4 : 3;
+        p10p = CB_P10[np];
+        for(nl=1; nl<=2; nl++) {
+            p26 = CB_P26[nl];
+            for(ns=0; ns<=nsmax; ns++) {
+                p10s = CB_P10[ns];
+                sz = p10p*p26*p10s;
+                if(np==tnp && nl==tnl && ns==tns) { *base = p26*p10s; return; }
+                *offset += sz;
+            }
+        }
+    }
+}
+
+int packcb(const char *call_in, int32_t *ncb)
+{
+    char s[16];
+    int i,k,np,nl,ns,ip,il,is;
+    int64_t offset,base;
+    const char *p = call_in;
+    while(*p==' ') p++;
+    k=0;
+    while(p[k] && k<15) {
+        char ch=p[k];
+        if(ch>='a' && ch<='z') ch-=32;
+        s[k]=ch; k++;
+    }
+    s[k]='\0';
+    while(k>0 && s[k-1]==' ') { k--; s[k]='\0'; }
+    if(k<2 || k>8) return 0;
+    i=0; np=0;
+    while(i<k && s[i]>='0' && s[i]<='9') { np++; i++; }
+    nl=0;
+    while(i<k && s[i]>='A' && s[i]<='Z') { nl++; i++; }
+    ns=0;
+    while(i<k && s[i]>='0' && s[i]<='9') { ns++; i++; }
+    if(i<k) return 0;
+    if(np<1 || np>3) return 0;
+    if(nl<1 || nl>2) return 0;
+    if(np==1) { if(ns>4) return 0; } else { if(ns>3) return 0; }
+    ip=0; for(i=0; i<np; i++) ip=10*ip+(s[i]-'0');
+    il=0; for(i=np; i<np+nl; i++) il=26*il+(s[i]-'A');
+    is=0; for(i=np+nl; i<np+nl+ns; i++) is=10*is+(s[i]-'0');
+    cb_offset(np,nl,ns,&offset,&base);
+    if(base<0) return 0;
+    *ncb = (int32_t)(offset + (int64_t)ip*base + (int64_t)il*CB_P10[ns] + is);
+    return 1;
+}
+
+void unpackcb(int32_t ncb, char *callsign)
+{
+    int np,nl,ns,nsmax,ip,il,is,j,d,pos;
+    int64_t idx,offset,sz,p26,p10p,p10s,base,r;
+    idx=ncb; offset=0; pos=0;
+    callsign[0]='\0';
+    for(np=1; np<=3; np++) {
+        nsmax = (np==1) ? 4 : 3;
+        p10p = CB_P10[np];
+        for(nl=1; nl<=2; nl++) {
+            p26 = CB_P26[nl];
+            for(ns=0; ns<=nsmax; ns++) {
+                p10s = CB_P10[ns];
+                sz = p10p*p26*p10s;
+                if(idx < offset+sz) {
+                    r = idx-offset; base = p26*p10s;
+                    ip = (int)(r/base); r %= base;
+                    il = (int)(r/p10s); is = (int)(r%p10s);
+                    for(j=np; j>=1; j--) { d=(int)((ip/CB_P10[j-1])%10); callsign[pos++]=(char)('0'+d); }
+                    for(j=nl; j>=1; j--) { d=(int)((il/CB_P26[j-1])%26); callsign[pos++]=(char)('A'+d); }
+                    for(j=ns; j>=1; j--) { d=(int)((is/CB_P10[j-1])%10); callsign[pos++]=(char)('0'+d); }
+                    callsign[pos]='\0';
+                    return;
+                }
+                offset += sz;
+            }
+        }
+    }
+}
+
 int unpk_(signed char *message, char *hashtab, char *loctab, char *call_loc_pow, char *callsign)
 {
-    int n1,n2,n3,ndbm,ihash,nadd,noprint=0;
-    char grid[5],grid6[7],cdbm[4];
+    int n1,n2,ndbm,noprint=0;
+    char grid[5],cdbm[4];
     
     unpack50(message,&n1,&n2);
-    if( !unpackcall(n1,callsign) ) return 1;
-    if( !unpackgrid(n2, grid) ) return 1;
-    int ntype = (n2&127) - 64;
-    callsign[12]=0;
-    grid[4]=0;
 
-    /*
-     Based on the value of ntype, decide whether this is a Type 1, 2, or
-     3 message.
-     
-     * Type 1: 6 digit call, grid, power - ntype is positive and is a member
-     of the set {0,3,7,10,13,17,20...60}
-     
-     * Type 2: extended callsign, power - ntype is positive but not
-     a member of the set of allowed powers
-     
-     * Type 3: hash, 6 digit grid, power - ntype is negative.
-     */
+    /* WSJT-CB exclusive mode: the 50 source bits carry a CB (11 m) callsign
+       (30 bits) + 15-bit Maidenhead grid + 5-bit power index. The standard
+       WSPR type-1/2/3 message formats are not used. */
+    (void)hashtab; (void)loctab;
+    {
+        int64_t n50 = (((int64_t)(n1 & 0x0FFFFFFF)) << 22) | ((int64_t)(n2 & 0x3FFFFF));
+        int idbm5    = (int)(n50 & 0x1F);
+        int32_t ng15 = (int32_t)((n50 >> 5) & 0x7FFF);
+        int32_t ncb  = (int32_t)((n50 >> 20) & 0x3FFFFFFF);
+        int dec, rem;
 
-    if( (ntype >= 0) && (ntype <= 62) ) {
-        int nu=ntype%10;
-        if( nu == 0 || nu == 3 || nu == 7 ) {
-            ndbm=ntype;
-            memset(call_loc_pow,0,sizeof(char)*23);
-            sprintf(cdbm,"%2d",ndbm);
-            strncat(call_loc_pow,callsign,strlen(callsign));
-            strncat(call_loc_pow," ",1);
-            strncat(call_loc_pow,grid,4);
-            strncat(call_loc_pow," ",1);
-            strncat(call_loc_pow,cdbm,2);
-            strncat(call_loc_pow,"\0",1);
-            ihash=nhash(callsign,strlen(callsign),(uint32_t)146);
-            strcpy(hashtab+ihash*13,callsign);
-            strcpy(loctab+ihash*5,grid);
-        } else {
-            nadd=nu;
-            if( nu > 3 ) nadd=nu-3;
-            if( nu > 7 ) nadd=nu-7;
-            n3=n2/128+32768*(nadd-1);
-            if( !unpackpfx(n3,callsign) ) return 1;
-            ndbm=ntype-nadd;
-            memset(call_loc_pow,0,sizeof(char)*23);
-            sprintf(cdbm,"%2d",ndbm);
-            strncat(call_loc_pow,callsign,strlen(callsign));
-            strncat(call_loc_pow," ",1);
-            strncat(call_loc_pow,cdbm,2);
-            strncat(call_loc_pow,"\0",1);
-            int nu=ndbm%10;
-            if( nu == 0 || nu == 3 || nu == 7 || nu == 10 ) { //make sure power is OK
-                ihash=nhash(callsign,strlen(callsign),(uint32_t)146);
-                strcpy(hashtab+ihash*13,callsign);
-            } else noprint=1;
-        }
-    } else if ( ntype < 0 ) {
-        ndbm=-(ntype+1);
-        memset(grid6,0,sizeof(char)*7);
-//        size_t len=strlen(callsign);
-        size_t len=6;
-        strncat(grid6,callsign+len-1,1);
-        strncat(grid6,callsign,len-1);
-        int nu=ndbm%10;
-        if ((nu != 0 && nu != 3 && nu != 7 && nu != 10) ||
-            !isalpha(grid6[0]) || !isalpha(grid6[1]) ||
-            !isdigit(grid6[2]) || !isdigit(grid6[3])) {
-               // not testing 4'th and 5'th chars because of this case: <PA0SKT/2> JO33 40
-               // grid is only 4 chars even though this is a hashed callsign...
-               //         isalpha(grid6[4]) && isalpha(grid6[5]) ) ) {
-            noprint=1;
-        } 
-        
-        ihash=(n2-ntype-64)/128;
-        if( strncmp(hashtab+ihash*13,"\0",1) != 0 ) {
-            sprintf(callsign,"<%s>",hashtab+ihash*13);
-        } else {
-            sprintf(callsign,"%5s","<...>");
-        }
-        
+        if( ncb >= 935913420 || idbm5 > 18 ) noprint=1;
+
+        unpackcb(ncb, callsign);
+        if( !unpackgrid(ng15<<7, grid) ) return 1;
+        grid[4]=0;
+
+        dec = idbm5/3; rem = idbm5%3;
+        ndbm = dec*10 + (rem==0 ? 0 : (rem==1 ? 3 : 7));
+
         memset(call_loc_pow,0,sizeof(char)*23);
         sprintf(cdbm,"%2d",ndbm);
         strncat(call_loc_pow,callsign,strlen(callsign));
         strncat(call_loc_pow," ",1);
-        strncat(call_loc_pow,grid6,strlen(grid6));
+        strncat(call_loc_pow,grid,4);
         strncat(call_loc_pow," ",1);
         strncat(call_loc_pow,cdbm,2);
         strncat(call_loc_pow,"\0",1);
-        
-        
-        // I don't know what to do with these... They show up as "A000AA" grids.
-        if( ntype == -64 ) noprint=1;
     }
     return noprint;
 }

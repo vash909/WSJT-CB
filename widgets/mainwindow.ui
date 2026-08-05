@@ -4456,6 +4456,31 @@ QLabel[oob=&quot;true&quot;] {
             </widget>
            </item>
            <item>
+            <widget class="QPushButton" name="wsprButton">
+             <property name="minimumSize">
+              <size>
+               <width>32</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>16777215</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="focusPolicy">
+              <enum>Qt::StrongFocus</enum>
+             </property>
+             <property name="toolTip">
+              <string>Switch to WSPR mode</string>
+             </property>
+             <property name="text">
+              <string>WSPR</string>
+             </property>
+            </widget>
+           </item>
+           <item>
             <widget class="QPushButton" name="msk144Button">
              <property name="minimumSize">
               <size>

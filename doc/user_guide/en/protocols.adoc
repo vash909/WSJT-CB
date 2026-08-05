@@ -221,6 +221,22 @@ callsign and locator. Together, these compression techniques amount to
 “source encoding” the user message into the smallest possible number
 of bits.
 
+[NOTE]
+======
+*WSJT-CB variant.* In WSJT-CB, WSPR mode does not use the three standard
+formats above. An 11 m CB callsign cannot be represented as a standard
+amateur callsign, so the fork replaces the source encoding with a
+CB-specific packing: the CB callsign (numeric prefix, one or two letters,
+and numeric suffix) is enumerated bijectively into 30 bits, followed by the
+15-bit 4-character Maidenhead locator and a 5-bit power index, again filling
+exactly 50 bits. The complete callsign therefore travels over the air in
+every transmission and no hash table is involved, so a receiver never shows
+`<...>`. The convolutional code, interleaving, sync vector and 4-FSK
+modulation are unchanged, so weak-signal performance is identical to standard
+WSPR. These messages are decodable only by other WSJT-CB stations: they are
+intentionally not compatible with standard WSPR or with {wsprnet}.
+======
+
 WSPR uses a convolutional code with constraint length K=32 and rate
 r=1/2. Convolution extends the 50 user bits into a total of (50 + K –
 1) × 2 = 162 one-bit symbols. Interleaving is applied to scramble the

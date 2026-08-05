@@ -1030,4 +1030,159 @@ subroutine packpfx(call1,n1,ng,nadd)
   return
 end subroutine packpfx
 
+
+!-----------------------------------------------------------------------
+! WSJT-CB (11 m) WSPR source encoding for CB callsigns.
+! CB callsign structure: <prefix 1-3 digits><letters 1-2><suffix 0-4 digits>
+!   prefix = 1 digit    -> suffix 0-4 digits
+!   prefix = 2-3 digits -> suffix 0-3 digits
+! Bijective mixed-radix enumeration into a 30-bit integer. The exact same
+! shape ordering and offsets are mirrored by the C decoder (unpackcb in
+! lib/wsprd/wsprd_utils.c) and the C encoder (lib/wsprd/wsprsim_utils.c).
+!-----------------------------------------------------------------------
+subroutine cb_offset(tnp,tnl,tns,offset,base)
+! Cumulative offset of shape (tnp,tnl,tns) in canonical order, plus
+! base = 26**tnl * 10**tns. Returns base<0 if the shape is invalid.
+  integer tnp,tnl,tns
+  integer*8 offset,base
+  integer np,nl,ns,nsmax
+  integer*8 sz,p26,p10p,p10s
+  offset=0
+  base=-1
+  do np=1,3
+     if(np.eq.1) then
+        nsmax=4
+     else
+        nsmax=3
+     endif
+     p10p=10_8**np
+     do nl=1,2
+        p26=26_8**nl
+        do ns=0,nsmax
+           p10s=10_8**ns
+           sz=p10p*p26*p10s
+           if(np.eq.tnp .and. nl.eq.tnl .and. ns.eq.tns) then
+              base=p26*p10s
+              return
+           endif
+           offset=offset+sz
+        enddo
+     enddo
+  enddo
+  return
+end subroutine cb_offset
+
+subroutine packcb(callsign,ncb,lbad)
+! Pack a CB callsign into a 30-bit integer. lbad=.true. if not a valid CB call.
+  character*(*) callsign
+  integer ncb
+  logical lbad
+  character*12 s
+  integer np,nl,ns,ip,il,is,i,k
+  integer*8 offset,base,p10s
+  lbad=.true.
+  ncb=0
+  s=adjustl(callsign)
+  do i=1,len_trim(s)
+     if(s(i:i).ge.'a' .and. s(i:i).le.'z') s(i:i)=char(ichar(s(i:i))-32)
+  enddo
+  k=len_trim(s)
+  if(k.lt.2 .or. k.gt.8) return
+  i=1
+  np=0
+  do while(i.le.k .and. s(i:i).ge.'0' .and. s(i:i).le.'9')
+     np=np+1
+     i=i+1
+  enddo
+  nl=0
+  do while(i.le.k .and. s(i:i).ge.'A' .and. s(i:i).le.'Z')
+     nl=nl+1
+     i=i+1
+  enddo
+  ns=0
+  do while(i.le.k .and. s(i:i).ge.'0' .and. s(i:i).le.'9')
+     ns=ns+1
+     i=i+1
+  enddo
+  if(i.le.k) return
+  if(np.lt.1 .or. np.gt.3) return
+  if(nl.lt.1 .or. nl.gt.2) return
+  if(np.eq.1) then
+     if(ns.gt.4) return
+  else
+     if(ns.gt.3) return
+  endif
+  ip=0
+  do i=1,np
+     ip=10*ip+(ichar(s(i:i))-ichar('0'))
+  enddo
+  il=0
+  do i=np+1,np+nl
+     il=26*il+(ichar(s(i:i))-ichar('A'))
+  enddo
+  is=0
+  do i=np+nl+1,np+nl+ns
+     is=10*is+(ichar(s(i:i))-ichar('0'))
+  enddo
+  call cb_offset(np,nl,ns,offset,base)
+  if(base.lt.0) return
+  p10s=10_8**ns
+  ncb=int(offset + ip*base + il*p10s + is)
+  lbad=.false.
+  return
+end subroutine packcb
+
+subroutine unpackcb(ncb,callsign)
+! Inverse of packcb: 30-bit integer -> CB callsign string.
+  integer ncb
+  character*(*) callsign
+  integer np,nl,ns,nsmax,ip,il,is,j,d,pos
+  integer*8 idx,offset,sz,p26,p10p,p10s,base,r
+  idx=ncb
+  callsign=' '
+  offset=0
+  do np=1,3
+     if(np.eq.1) then
+        nsmax=4
+     else
+        nsmax=3
+     endif
+     p10p=10_8**np
+     do nl=1,2
+        p26=26_8**nl
+        do ns=0,nsmax
+           p10s=10_8**ns
+           sz=p10p*p26*p10s
+           if(idx.lt.offset+sz) then
+              r=idx-offset
+              base=p26*p10s
+              ip=int(r/base)
+              r=mod(r,base)
+              il=int(r/p10s)
+              is=int(mod(r,p10s))
+              pos=1
+              do j=np,1,-1
+                 d=mod(ip/(10**(j-1)),10)
+                 callsign(pos:pos)=char(ichar('0')+d)
+                 pos=pos+1
+              enddo
+              do j=nl,1,-1
+                 d=mod(il/(26**(j-1)),26)
+                 callsign(pos:pos)=char(ichar('A')+d)
+                 pos=pos+1
+              enddo
+              do j=ns,1,-1
+                 d=mod(is/(10**(j-1)),10)
+                 callsign(pos:pos)=char(ichar('0')+d)
+                 pos=pos+1
+              enddo
+              return
+           endif
+           offset=offset+sz
+        enddo
+     enddo
+  enddo
+  return
+end subroutine unpackcb
+
 end module packjt

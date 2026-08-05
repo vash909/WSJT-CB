@@ -1,3 +1,9 @@
+NOTE: In WSJT-CB, WSPR mode is CB-only. Your *My Call* must be a valid 11 m
+CB callsign and your *My Grid* a 4-character Maidenhead locator. The full CB
+callsign is transmitted in every frame using a WSJT-CB-specific encoding, so
+decodes are exchanged only between WSJT-CB stations and are not sent to
+wsprnet. Reception performance is the same as standard WSPR.
+
 - Select *WSPR* from the *Mode* menu.  The main window will
 reconfigure itself to the WSPR interface, removing some controls not
 used in WSPR mode.

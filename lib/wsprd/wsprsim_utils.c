@@ -187,69 +187,32 @@ int get_wspr_channel_symbols(char* rawmessage, char* hashtab, char* loctab, unsi
         i++;
     }
     
-    size_t i1=strcspn(message," ");
-    size_t i2=strcspn(message,"/");
-    size_t i3=strcspn(message,"<");
-    size_t i4=strcspn(message,">");
-    size_t mlen=strlen(message);
-    
-    // Use the presence and/or absence of "<" and "/" to decide what
-    // type of message. No sanity checks! Beware!
-    
-    if( i1 >= 3 && i1 < 7 && i2 == mlen && i3 == mlen ) {
-        // Type 1 message: K9AN EN50 33
-        //                 xxnxxxx xxnn nn
+    // WSJT-CB exclusive mode: message is "CALL GRID4 dBm".
+    // Encode the CB callsign (30 bits) + 15-bit grid + 5-bit power index
+    // into the 50 source bits (split n=top 28, m=bottom 22).
+    {
+        char *powstr2;
+        int power, idbm;
+        int32_t ncb;
+        int64_t ng15, n50;
+        char gc[4];
         callsign = strtok(message," ");
-        grid = strtok(NULL," ");
-        powstr = strtok(NULL," ");
-        int power = atoi(powstr);
-        n = pack_call(callsign);
-        
-        for (i=0; i<4; i++) {
-            grid4[i]=get_locator_character_code(*(grid+i));
-        }
-        m = pack_grid4_power(grid4,power);
-        
-    } else if ( i3 == 0 && i4 < mlen ) {
-        // Type 3:      <K1ABC> EN50WC 33
-        //          <PJ4/K1ABC> FK52UD 37
-        // send hash instead of callsign to make room for 6 char grid.
-        // if 4-digit locator is specified, 2 spaces are added to the end.
-        callsign=strtok(message,"<> ");
-        grid=strtok(NULL," ");
-        powstr=strtok(NULL," ");
-        int power = atoi(powstr);
+        grid     = strtok(NULL," ");
+        powstr2  = strtok(NULL," ");
+        if( callsign==NULL || grid==NULL || powstr2==NULL ) return 0;
+        if( !packcb(callsign,&ncb) ) return 0;
+        power = atoi(powstr2);
         if( power < 0 ) power=0;
         if( power > 60 ) power=60;
-        power=power+nu[power%10];
-        ntype=-(power+1);
-        ihash=nhash(callsign,strlen(callsign),(uint32_t)146);
-        m=128*ihash + ntype + 64;
-        
-        char grid6[7];
-        memset(grid6,0,sizeof(char)*7);
-        j=strlen(grid);
-        for(i=0; i<j-1; i++) {
-            grid6[i]=grid[i+1];
-        }
-        grid6[5]=grid[0];
-        n = pack_call(grid6);
-    } else if ( i2 < mlen ) {  // just looks for a right slash
-        // Type 2: PJ4/K1ABC 37
-        callsign = strtok (message," ");
-        if( i2==0 || i2>strlen(callsign) ) return 0; //guards against pathological case
-        powstr = strtok (NULL," ");
-        int power = atoi (powstr);
-        if( power < 0 ) power=0;
-        if( power > 60 ) power=60;
-        power=power+nu[power%10];
-        int n1, ng, nadd;
-        pack_prefix(callsign, &n1, &ng, &nadd);
-        ntype=power + 1 + nadd;
-        m=128*ng+ntype+64;
-        n=n1;
-    } else {
-        return 0;
+        power = power + nu[power%10];
+        idbm = (power/10)*3;
+        if( power%10==3 ) idbm+=1;
+        if( power%10==7 ) idbm+=2;
+        for(i=0; i<4; i++) gc[i]=get_locator_character_code(grid[i]);
+        ng15 = (int64_t)(179 - 10*gc[0] - gc[2])*180 + 10*gc[1] + gc[3];
+        n50 = ((int64_t)ncb<<20) | ((ng15 & 0x7FFF)<<5) | ((int64_t)(idbm & 0x1F));
+        n = (long unsigned int)((n50>>22) & 0x0FFFFFFF);
+        m = (long unsigned int)(n50 & 0x3FFFFF);
     }
 
     // pack 50 bits + 31 (0) tail bits into 11 bytes

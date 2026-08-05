@@ -58,6 +58,10 @@ reception reports to a central database called {wsprnet} that
 provides a mapping facility, archival storage, and many other
 features.
 
+In WSJT-CB, WSPR uses a dedicated source encoding that carries a full 11 m
+CB callsign over the air; such transmissions are decodable only by other
+WSJT-CB stations and are not uploaded to {wsprnet}.
+
 *Echo* mode allows you to detect and measure your own station's echoes
 from the moon and to make other measurements useful for optimizing
 your EME station's performance.

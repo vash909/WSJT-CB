@@ -24,6 +24,12 @@ void deinterleave(unsigned char *sym);
 int doublecomp(const void* elem1, const void* elem2);
 int floatcomp(const void* elem1, const void* elem2);
 
+// WSJT-CB (11 m) CB callsign packing (mirrors packcb/unpackcb in
+// lib/packjt.f90 and the C encoder in lib/wsprd/wsprsim_utils.c).
+void cb_offset(int tnp, int tnl, int tns, int64_t *offset, int64_t *base);
+int  packcb(const char *callsign, int32_t *ncb);
+void unpackcb(int32_t ncb, char *callsign);
+
 int unpk_( signed char *message, char* hashtab, char* loctab, char *call_loc_pow, char *callsign);
 
 #endif

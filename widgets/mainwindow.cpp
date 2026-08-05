@@ -331,6 +331,7 @@ namespace
     return mode == "FT8"
       || mode == "FT4"
       || mode == "FST4"
+      || mode == "WSPR"
       || mode == "Q65";
   }
 
@@ -640,8 +641,8 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   ui->actionMSK144->setEnabled (false);
   ui->actionFST4W->setVisible (false);
   ui->actionFST4W->setEnabled (false);
-  ui->actionWSPR->setVisible (false);
-  ui->actionWSPR->setEnabled (false);
+  ui->actionWSPR->setVisible (true);
+  ui->actionWSPR->setEnabled (true);
   ui->actionEcho->setVisible (false);
   ui->actionEcho->setEnabled (false);
   ui->actionEcho_Graph->setVisible (false);
@@ -2159,6 +2160,7 @@ void MainWindow::set_application_font (QFont const& font)
           ui->houndButton->setMinimumWidth(50);                       // UR for normal + widescreen
           ui->ft8Button->setMinimumWidth(50);                         // UR for normal + widescreen
           ui->ft4Button->setMinimumWidth(50);                         // UR for normal + widescreen
+          ui->wsprButton->setMinimumWidth(50);                        // UR for normal + widescreen
           ui->msk144Button->setMinimumWidth(50);                      // UR for normal + widescreen
           ui->q65Button->setMinimumWidth(50);                         // UR for normal + widescreen
           ui->jt65Button->setMinimumWidth(50);                        // UR for normal + widescreen
@@ -2167,12 +2169,14 @@ void MainWindow::set_application_font (QFont const& font)
           ui->houndButton->setMaximumWidth(40);                       // UR for normal + widescreen
           ui->ft8Button->setMaximumWidth(40);                         // UR for normal + widescreen
           ui->ft4Button->setMaximumWidth(40);                         // UR for normal + widescreen
+          ui->wsprButton->setMaximumWidth(40);                        // UR for normal + widescreen
           ui->msk144Button->setMaximumWidth(40);                      // UR for normal + widescreen
           ui->q65Button->setMaximumWidth(40);                         // UR for normal + widescreen
           ui->jt65Button->setMaximumWidth(40);                        // UR for normal + widescreen
           ui->houndButton->setMinimumWidth(0);                        // UR for normal + widescreen
           ui->ft8Button->setMinimumWidth(0);                          // UR for normal + widescreen
           ui->ft4Button->setMinimumWidth(0);                          // UR for normal + widescreen
+          ui->wsprButton->setMinimumWidth(0);                         // UR for normal + widescreen
           ui->msk144Button->setMinimumWidth(0);                       // UR for normal + widescreen
           ui->q65Button->setMinimumWidth(0);                          // UR for normal + widescreen
           ui->jt65Button->setMinimumWidth(0);                         // UR for normal + widescreen
@@ -2183,6 +2187,7 @@ void MainWindow::set_application_font (QFont const& font)
       ui->houndButton->setMinimumWidth(50);                           // UR for normal + widescreen
       ui->ft8Button->setMinimumWidth(50);                             // UR for normal + widescreen
       ui->ft4Button->setMinimumWidth(50);                             // UR for normal + widescreen
+      ui->wsprButton->setMinimumWidth(50);                            // UR for normal + widescreen
       ui->msk144Button->setMinimumWidth(50);                          // UR for normal + widescreen
       ui->q65Button->setMinimumWidth(50);                             // UR for normal + widescreen
       ui->jt65Button->setMinimumWidth(50);                            // UR for normal + widescreen
@@ -15378,6 +15383,7 @@ void MainWindow::set_mode (QString const& mode)
     if ("FT4" == selected_mode) on_actionFT4_triggered ();
     else if ("FST4" == selected_mode) on_actionFST4_triggered ();
     else if ("FT8" == selected_mode) on_actionFT8_triggered ();
+    else if ("WSPR" == selected_mode) on_actionWSPR_triggered ();
     else if ("Q65" == selected_mode) on_actionQ65_triggered ();
     else on_actionFT8_triggered ();
 }
@@ -15489,6 +15495,14 @@ QString MainWindow::WSPR_message()
   QString sdBm,msg0,msg1,msg2;
   sdBm = sdBm.asprintf(" %d",m_dBm);
   m_tx=1-m_tx;
+
+  if(m_mode=="WSPR") {
+    // WSJT-CB exclusive mode: always the plain "CALL GRID4 dBm" form.
+    // The CB (11 m) callsign is carried in full by the custom 50-bit source
+    // coding (see packcb / wqencode). WSPR type-2 / type-3 formats are not used.
+    return m_config.my_callsign() + " " + m_config.my_grid().mid(0,4) + sdBm;
+  }
+
   int i2=m_config.my_callsign().indexOf("/");
   if(i2>0
      || (6 == m_config.my_grid ().size ()
@@ -15543,6 +15557,11 @@ void MainWindow::on_ft8Button_clicked()
 void MainWindow::on_ft4Button_clicked()
 {
     on_actionFT4_triggered();
+}
+
+void MainWindow::on_wsprButton_clicked()
+{
+    on_actionWSPR_triggered();
 }
 
 void MainWindow::on_msk144Button_clicked()
@@ -16430,6 +16449,15 @@ void MainWindow::check_button_color()
              ui->ft4Button->setStyleSheet("QPushButton {background-color: #505F69; border: 1px solid #32414B; color: #F0F0F0; border-radius: 4px; padding: 3px; outline: none; min-width: 3em;}");
           } else {
              ui->ft4Button->setStyleSheet("QPushButton {background-color: #e1e1e1; border: 1px solid #adadad; border-radius: 0px; padding: 3px; outline: none; min-width: 3em;}");
+          }
+      }
+      if (m_mode=="WSPR") {
+          ui->wsprButton->setStyleSheet("QPushButton {background-color: #00ff00; color: #000000; border: 1px solid #32414B; border-radius: 5px; padding: 3px; outline: none; min-width: 3em;}");
+      } else {
+          if (m_useDarkStyle) {
+             ui->wsprButton->setStyleSheet("QPushButton {background-color: #505F69; border: 1px solid #32414B; color: #F0F0F0; border-radius: 4px; padding: 3px; outline: none; min-width: 3em;}");
+          } else {
+             ui->wsprButton->setStyleSheet("QPushButton {background-color: #e1e1e1; border: 1px solid #adadad; border-radius: 0px; padding: 3px; outline: none; min-width: 3em;}");
           }
       }
       if (m_mode=="MSK144") {

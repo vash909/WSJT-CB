@@ -42,6 +42,7 @@ namespace
       {27045000, Modes::FT4, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
       {27045000, Modes::FST4, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
       {27045000, Modes::Q65, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
+      {27195000, Modes::WSPR, IARURegions::ALL, "CB", "", QDateTime(), QDateTime(), true},
     };
 }
 

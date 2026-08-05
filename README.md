@@ -39,6 +39,39 @@ Because of this, third-party listeners can see decodes like `<...> 26AT016` inst
 This is a protocol/encoding behavior, not an AutoSeq bug.
 If your station has not yet learned the hash-to-callsign mapping (for example because that station has not been decoded in clear text yet), the real callsign may remain hidden until a later decode provides that mapping.
 
+## WSPR for CB Callsigns (WSJT-CB variant, 1.4)
+
+Standard WSPR cannot carry an 11 m CB callsign. Its message formats only pack a
+*standard* amateur callsign (digit in the 2nd or 3rd character) into 28 bits;
+CB callsigns such as `1AT001` or `26CT100` are rejected by the packer. The only
+WSPR path for a non-standard callsign is a 15-bit hash (Type 3), and a receiver
+can turn that hash back into a callsign only if it already learned the mapping
+from a decodable Type-1/Type-2 transmission — which a CB callsign can never
+produce. So plain WSPR would only ever show `<...>` for CB stations, unlike FT8.
+
+WSJT-CB 1.4 therefore replaces the WSPR **source encoding** with a CB-specific,
+self-contained format (WSPR mode is CB-only in this fork):
+
+- The CB callsign (`N{1,3}L{1,2}N{0,3}`, plus the 4-digit-suffix case for a
+  1-digit prefix) is enumerated bijectively into **30 bits** (935,913,420
+  possible callsigns, which fits within 2^30).
+- The 4-character Maidenhead grid takes **15 bits** and the transmit power a
+  **5-bit** index over the 19 standard WSPR dBm levels.
+- Together that is exactly the **50** WSPR source bits, so the full callsign is
+  transmitted in **every** frame — no hash table, receivers never show `<...>`.
+
+The convolutional code (K=32, r=1/2), interleaving, sync vector and 4-FSK
+modulation are untouched, so weak-signal sensitivity is identical to standard
+WSPR. The trade-off is deliberate and matches the fork's goals: these
+transmissions are decodable **only by other WSJT-CB stations** and are **not**
+compatible with standard WSPR/WSJT-X or with wsprnet (which does not host 11 m
+activity anyway). 6-character grids are not used in this mode.
+
+Implementation: `packcb`/`unpackcb` in `lib/packjt.f90` (TX) and the mirrored C
+`packcb`/`unpackcb` in `lib/wsprd/wsprd_utils.c` and `lib/wsprd/wsprsim_utils.c`
+(RX and signal-subtraction), wired through `lib/wqencode.f90` and
+`MainWindow::WSPR_message()`.
+
 ## Modified Files
 
 - `CMakeLists.txt`
@@ -48,6 +81,11 @@ If your station has not yet learned the hash-to-callsign mapping (for example be
 - `models/FrequencyList.cpp`
 - `widgets/mainwindow.cpp`
 - `main.cpp`
+- `lib/packjt.f90` (WSPR CB source coding)
+- `lib/wqencode.f90` (WSPR CB source coding)
+- `lib/wsprd/wsprd_utils.c` (WSPR CB decode)
+- `lib/wsprd/wsprd_utils.h` (WSPR CB decode)
+- `lib/wsprd/wsprsim_utils.c` (WSPR CB encode / subtraction)
 
 ## 1) CB Callsign Support (`N{1,3}L{1,2}N{1,3}` and `N{1,3}L{1,2}/L{2}`)
 
