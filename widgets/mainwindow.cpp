@@ -11902,7 +11902,10 @@ void MainWindow::WSPR_config(bool b)
   ui->DecodeButton->setEnabled(!b);
   bool bFST4W=(m_mode=="FST4W");
   ui->sbTxPercent->setEnabled(!bFST4W or (tr("Random") == ui->RoundRobin->currentText()));
-  ui->band_hopping_group_box->setVisible(true);
+  // WSJT-CB operates only on 11 m, so WSPR band hopping is not applicable.
+  // Keep it disabled as well as hidden in case an older configuration saved it as enabled.
+  ui->band_hopping_group_box->setChecked(false);
+  ui->band_hopping_group_box->setVisible(false);
   ui->RoundRobin->setVisible(bFST4W);
   ui->sbFST4W_RxFreq->setVisible(bFST4W);
   ui->sbFST4W_FTol->setVisible(bFST4W);
