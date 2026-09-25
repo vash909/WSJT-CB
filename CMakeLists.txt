@@ -391,6 +391,9 @@ set (wsjt_FSRCS
   lib/superfox/julian.f90
   lib/superfox/popen_module.f90
   lib/superfox/qpc/qpc_mod.f90
+  lib/ft8var/cb_callsigns.f90
+  lib/ft8var/ft8_decode_ranges.f90
+  lib/ft8var/ft8_mtd_residual.f90
   lib/ft8var/ft8_decodevar.f90
   lib/ft8var/packjt77var.f90
 
@@ -1227,6 +1230,10 @@ endif ()
 if (WSJT_GENERATE_DOCS)
   add_subdirectory (doc)
 endif (WSJT_GENERATE_DOCS)
+option (WSJT_BUILD_DECODER_TESTS "Build FT8 decoder and CB regression tests" OFF)
+if (WSJT_BUILD_DECODER_TESTS)
+  enable_testing ()
+endif ()
 if (EXISTS ${CMAKE_SOURCE_DIR}/tests AND IS_DIRECTORY ${CMAKE_SOURCE_DIR}/tests)
   add_subdirectory (tests)
 endif ()
@@ -1237,6 +1244,10 @@ target_link_libraries (wsjt_cxx ${LIBM_LIBRARIES} Boost::log_setup ${LIBM_LIBRAR
 
 # build an OpenMP variant of the Fortran library routines
 add_library (wsjt_fort STATIC ${wsjt_FSRCS})
+set_target_properties (wsjt_fort PROPERTIES
+  Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran_modules)
+target_include_directories (wsjt_fort BEFORE PUBLIC ${CMAKE_BINARY_DIR}/fortran_modules)
+file (MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran_modules)
 target_link_libraries (wsjt_fort  ${FFTW3_LIBRARIES})
 if (WIN32 AND MINGW AND NOT OPENMP_FOUND)
   target_link_libraries (wsjt_fort gomp)
@@ -1255,6 +1266,7 @@ if (OPENMP_FOUND OR APPLE)
     Fortran_MODULE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran_modules_omp
     )
   file (MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/fortran_modules_omp)
+  target_include_directories (wsjt_fort_omp BEFORE PUBLIC ${CMAKE_BINARY_DIR}/fortran_modules_omp)
   if (APPLE)
     # On  Mac  we don't  have  working  OpenMP  support in  the  C/C++
     # compilers so  we have to manually  set the correct flags  to get

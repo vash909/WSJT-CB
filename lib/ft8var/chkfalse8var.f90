@@ -1,5 +1,6 @@
 subroutine chkfalse8var(msg37,i3,n3,nbadcrc,iaptype,lcall1hash)
 
+  use cb_callsigns, only: is_cb_type4_message
   use ft8_mod1, only : mycall,hiscall,hisgrid4
   character msg37*37,decoded*22,callsign*12,calltmp*12,call_a*12,call_b*12,  &
        grid*12,callmask6*6
@@ -8,6 +9,10 @@ subroutine chkfalse8var(msg37,i3,n3,nbadcrc,iaptype,lcall1hash)
   logical(1) falsedec,lchkcall,lgvalid,lwrongcall
   logical(1), intent(in) :: lcall1hash
   data mask6/'001000','101000','011000'/
+
+! CRC and signal-quality checks have already run in ft8bvar.
+! Complete CB type 4 calls do not follow amateur callsign heuristics.
+  if(i3.eq.4 .and. is_cb_type4_message(msg37)) return
 
   call_a=''
   call_b=''
