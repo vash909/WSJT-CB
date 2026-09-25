@@ -94,7 +94,6 @@ class MessageClient;
 class QTime;
 class WSPRBandHopping;
 class HelpTextWindow;
-class WSPRNet;
 class SoundOutput;
 class Modulator;
 class SoundInput;
@@ -409,11 +408,8 @@ private slots:
   void on_syncSpinBox_valueChanged(int n);
   void on_TxPowerComboBox_currentIndexChanged(int);
   void on_sbTxPercent_valueChanged(int n);
-  void on_cbUploadWSPR_Spots_toggled(bool b);
   void WSPR_config(bool b);
-  void uploadWSPRSpots (bool direct_post = false, QString const& decode_text = QString {});
   void TxAgain();
-  void uploadResponse(QString const& response);
   void on_WSPRfreqSpinBox_valueChanged(int n);
   void on_sbFST4W_RxFreq_valueChanged(int n);
   void on_sbFST4W_FTol_valueChanged(int n);
@@ -719,8 +715,6 @@ private:
   QString m_tBlankLine;
   bool    m_bShMsgs;
   bool    m_bSWL;
-  bool    m_uploadWSPRSpots;
-  bool    m_uploading;
   bool    m_grid6;
   bool    m_tuneup;
   bool    m_bTxTime;
@@ -804,7 +798,6 @@ private:
   QProcess p2;
   QProcess p4;
 
-  WSPRNet *wsprNet;
 
   QTimer m_guiTimer;
   QTimer stopWRTimer;               //Wait & Reply
@@ -814,7 +807,6 @@ private:
   QTimer logQSOTimer;
   QTimer killFileTimer;
   QTimer tuneButtonTimer;
-  QTimer uploadTimer;
   QTimer tuneATU_Timer;
   QTimer TxAgainTimer;
   QTimer minuteTimer;

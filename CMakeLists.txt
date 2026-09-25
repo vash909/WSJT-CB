@@ -315,7 +315,6 @@ set (wsjtx_CXXSRCS
   widgets/mainwindow.cpp
   Configuration.cpp
   main.cpp
-  Network/wsprnet.cpp
   WSPR/WSPRBandHopping.cpp
   widgets/ExportCabrillo.cpp
   widgets/QSYMessage.cpp 
