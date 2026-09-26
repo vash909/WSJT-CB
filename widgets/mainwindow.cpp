@@ -413,6 +413,7 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_config {&m_network_manager, temp_directory, m_settings, &m_logBook, this},
   m_logBook {&m_config},
   m_cloudlog {&m_config, &m_network_manager},
+  m_crxApi {&m_config, &m_network_manager, this},
   m_WSPR_band_hopping {m_settings, &m_config, this},
   m_WSPR_tx_next {false},
   m_rigErrorMessageBox {MessageBox::Critical, tr ("Rig Control Error")
@@ -10863,6 +10864,20 @@ void MainWindow::acceptQSO (QDateTime const& QSO_date_off, QString const& call, 
   if (m_config.cloudlog_enabled())
   {
     m_cloudlog.logQso(ADIF);
+  }
+
+  // Log to CRX API if enabled and logbook forwarding is active
+  if (m_config.spot_to_crx_api () && m_config.crx_forward_logbook ())
+  {
+    m_crxApi.logQso (ADIF);
+  }
+
+  // Spot to CRX DXCluster only when a QSO is actually logged (avoids decode-spam)
+  if (m_config.spot_to_crx_api () && m_config.crx_forward_dxcluster ())
+  {
+
+	m_crxApi.sendSpot (call, grid, dial_freq, mode, rpt_received.toInt (), rpt_sent.toInt ());
+	
   }
 
   blocked=true;                                      // needed to clear DXgrid only optionally

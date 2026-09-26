@@ -203,6 +203,7 @@
 #include "validators/CallsignValidator.hpp"
 #include "Network/LotWUsers.hpp"
 #include "Network/Cloudlog.hpp"
+#include "Network/CrxApi.hpp"
 #include "models/DecodeHighlightingModel.hpp"
 #include "logbook/logbook.h"
 #include "widgets/LazyFillComboBox.hpp"
@@ -579,6 +580,8 @@ private:
   Q_SLOT void on_test_PTT_push_button_clicked (bool checked);
   Q_SLOT void on_pbTestCloudlog_clicked ();
   Q_SLOT void on_gbCloudlog_clicked ();
+  Q_SLOT void on_pbTestCrxApi_clicked ();
+  Q_SLOT void on_pbRefreshCrxLogs_clicked ();
   Q_SLOT void on_force_DTR_combo_box_currentIndexChanged (int);
   Q_SLOT void on_force_RTS_combo_box_currentIndexChanged (int);
   Q_SLOT void on_rig_combo_box_currentIndexChanged (int);
@@ -727,6 +730,7 @@ private:
 
   LotWUsers lotw_users_;
   Cloudlog cloudlog_;
+  CrxApi m_crxApi;
 
   bool restart_sound_input_device_;
   bool restart_sound_output_device_;
@@ -866,6 +870,12 @@ private:
   bool spot_to_psk_reporter_;
   bool spot_to_wsjtcb_server_;
   bool psk_reporter_tcpip_;
+  bool spot_to_crx_api_;
+  QString crx_api_key_;
+  bool crx_forward_logbook_;
+  bool crx_forward_dxcluster_;
+  qint32 crx_logbook_id_;
+  QStringList crx_logbook_names_;
   bool monitor_off_at_startup_;
   bool monitor_last_used_;
   bool log_as_RTTY_;
@@ -1033,6 +1043,11 @@ bool Configuration::spot_to_wsjtcb_server () const
   return is_transceiver_online () && m_->spot_to_wsjtcb_server_;
 }
 bool Configuration::psk_reporter_tcpip () const {return m_->psk_reporter_tcpip_;}
+bool Configuration::spot_to_crx_api () const {return m_->spot_to_crx_api_;}
+QString Configuration::crx_api_key () const {return m_->crx_api_key_;}
+bool Configuration::crx_forward_logbook () const {return m_->crx_forward_logbook_;}
+bool Configuration::crx_forward_dxcluster () const {return m_->crx_forward_dxcluster_;}
+qint32 Configuration::crx_logbook_id () const {return m_->crx_logbook_id_;}
 bool Configuration::monitor_off_at_startup () const {return m_->monitor_off_at_startup_;}
 bool Configuration::monitor_last_used () const {return m_->rig_is_dummy_ || m_->monitor_last_used_;}
 bool Configuration::log_as_RTTY () const {return m_->log_as_RTTY_;}
@@ -1746,6 +1761,7 @@ Configuration::impl::impl (Configuration * self, QNetworkAccessManager * network
   , writeable_data_dir_ {wsjtcb_writable_location (QStandardPaths::DataLocation)}
   , lotw_users_ {network_manager_}
   , cloudlog_ {self, network_manager_}
+  , m_crxApi {self, network_manager_, this}
   , restart_sound_input_device_ {false}
   , restart_sound_output_device_ {false}
   , restart_tci_device_ {false}
@@ -1875,6 +1891,50 @@ Configuration::impl::impl (Configuration * self, QNetworkAccessManager * network
   connect (&cloudlog_, &Cloudlog::apikey_invalid, [this] () {
       ui_->pbTestCloudlog->setStyleSheet ("QPushButton {background-color: red;}");
       ui_->pbTestCloudlog->setToolTip (tr ("API key invalid"));
+    });
+
+  // CRX API key test button
+  connect (&m_crxApi, &CrxApi::apikey_ok, [this] () {
+      ui_->pbTestCrxApi->setStyleSheet ("QPushButton {background-color: green;}");
+      ui_->pbTestCrxApi->setToolTip (tr ("CRX API OK"));
+    });
+  connect (&m_crxApi, &CrxApi::apikey_ro, [this] () {
+      ui_->pbTestCrxApi->setStyleSheet ("QPushButton {background-color: orange;}");
+      ui_->pbTestCrxApi->setToolTip (tr ("CRX API read-only"));
+    });
+  connect (&m_crxApi, &CrxApi::apikey_invalid, [this] () {
+      ui_->pbTestCrxApi->setStyleSheet ("QPushButton {background-color: red;}");
+      ui_->pbTestCrxApi->setToolTip (tr ("CRX API invalid"));
+    });
+  connect (&m_crxApi, &CrxApi::logs_ready, [this] (QList<CrxApi::LogbookEntry> logs) {
+      ui_->crx_logbook_combo_box->clear ();
+      ui_->crx_logbook_combo_box->addItem (tr ("-- Select logbook --"), 0);
+      for (auto const& l : logs) {
+        ui_->crx_logbook_combo_box->addItem (l.log_name, l.log_id);
+      }
+      // Restore previously selected
+      if (crx_logbook_id_ > 0) {
+        for (int i = 1; i < ui_->crx_logbook_combo_box->count (); ++i) {
+          if (ui_->crx_logbook_combo_box->itemData (i).toInt () == crx_logbook_id_) {
+            ui_->crx_logbook_combo_box->setCurrentIndex (i);
+            break;
+          }
+        }
+      }
+    });
+
+  // CRX checkbox toggles visibility of CRX settings form
+  connect (ui_->crx_api_check_box, &QCheckBox::toggled, [this] (bool checked) {
+      auto toggleWidgets = [&] (bool en) {
+        ui_->crx_api_key_label->setEnabled (en);
+        ui_->crx_api_key_line_edit->setEnabled (en);
+        ui_->pbTestCrxApi->setEnabled (en);
+        ui_->crx_logbook_label->setEnabled (en);
+        ui_->crx_logbook_combo_box->setEnabled (en);
+        ui_->pbRefreshCrxLogs->setEnabled (en);
+        ui_->crx_forward_dxcluster_check_box->setEnabled (en);
+      };
+      toggleWidgets (checked);
     });
 
   //
@@ -2101,6 +2161,31 @@ void Configuration::impl::initialize_models ()
   ui_->psk_reporter_check_box->setChecked (spot_to_psk_reporter_);
   ui_->wsjtcb_spot_server_check_box->setChecked (spot_to_wsjtcb_server_);
   ui_->psk_reporter_tcpip_check_box->setChecked (psk_reporter_tcpip_);
+  ui_->crx_api_check_box->setChecked (spot_to_crx_api_);
+  ui_->crx_api_key_line_edit->setText (crx_api_key_);
+  ui_->crx_forward_dxcluster_check_box->setChecked (crx_forward_dxcluster_);
+
+  if (ui_->crx_logbook_combo_box->count () == 0)
+    {
+      ui_->crx_logbook_combo_box->addItem (tr ("-- Select logbook --"), 0);
+      if (crx_logbook_id_ > 0)
+        {
+          ui_->crx_logbook_combo_box->addItem (tr ("Logbook #%1").arg (crx_logbook_id_), crx_logbook_id_);
+          ui_->crx_logbook_combo_box->setCurrentIndex (1);
+        }
+    }
+	
+  // Apply CRX checkbox toggle to child widgets
+  {
+    auto en = spot_to_crx_api_;
+    ui_->crx_api_key_label->setEnabled (en);
+    ui_->crx_api_key_line_edit->setEnabled (en);
+    ui_->pbTestCrxApi->setEnabled (en);
+    ui_->crx_logbook_label->setEnabled (en);
+    ui_->crx_logbook_combo_box->setEnabled (en);
+    ui_->pbRefreshCrxLogs->setEnabled (en);
+    ui_->crx_forward_dxcluster_check_box->setEnabled (en);
+  }
   ui_->monitor_off_check_box->setChecked (monitor_off_at_startup_);
   ui_->monitor_last_used_check_box->setChecked (monitor_last_used_);
   ui_->log_as_RTTY_check_box->setChecked (log_as_RTTY_);
@@ -2265,6 +2350,7 @@ void Configuration::impl::initialize_models ()
   ui_->pbAlerts->setChecked(alert_Enabled_);
 
   ui_->pbTestCloudlog->setStyleSheet ("QPushButton {background-color: none;}");
+  ui_->pbTestCrxApi->setStyleSheet ("QPushButton {background-color: none;}");
 
   check_visibility ();
 
@@ -2441,6 +2527,12 @@ void Configuration::impl::read_settings ()
   spot_to_psk_reporter_ = settings_->value ("PSKReporter", true).toBool ();
   spot_to_wsjtcb_server_ = settings_->value ("WSJTCBSpotServer", false).toBool ();
   psk_reporter_tcpip_ = settings_->value ("PSKReporterTCPIP", false).toBool ();
+
+  spot_to_crx_api_ = settings_->value ("CRXAPIEnabled", false).toBool ();
+  crx_api_key_ = settings_->value ("CRXAPIKey", QString ()).toString ();
+  crx_forward_logbook_ = settings_->value ("CRXForwardLogbook", true).toBool ();
+  crx_forward_dxcluster_ = settings_->value ("CRXForwardDXCluster", false).toBool ();
+  crx_logbook_id_ = settings_->value ("CRXLogbookID", 0).toInt ();
   id_after_73_ = settings_->value ("After73", false).toBool ();
   tx_QSY_allowed_ = settings_->value ("TxQSYAllowed", false).toBool ();
   progressBar_red_ = settings_->value ("ProgressBarRed", true).toBool ();
@@ -2776,6 +2868,11 @@ void Configuration::impl::write_settings ()
   settings_->setValue ("PSKReporter", spot_to_psk_reporter_);
   settings_->setValue ("WSJTCBSpotServer", spot_to_wsjtcb_server_);
   settings_->setValue ("PSKReporterTCPIP", psk_reporter_tcpip_);
+  settings_->setValue ("CRXAPIEnabled", spot_to_crx_api_);
+  settings_->setValue ("CRXAPIKey", crx_api_key_);
+  settings_->setValue ("CRXForwardLogbook", crx_forward_logbook_);
+  settings_->setValue ("CRXForwardDXCluster", crx_forward_dxcluster_);
+  settings_->setValue ("CRXLogbookID", crx_logbook_id_);
   settings_->setValue ("After73", id_after_73_);
   settings_->setValue ("TxQSYAllowed", tx_QSY_allowed_);
   settings_->setValue ("ProgressBarRed", progressBar_red_);
@@ -3400,6 +3497,20 @@ void Configuration::impl::accept ()
   spot_to_psk_reporter_ = ui_->psk_reporter_check_box->isChecked ();
   spot_to_wsjtcb_server_ = ui_->wsjtcb_spot_server_check_box->isChecked ();
   psk_reporter_tcpip_ = ui_->psk_reporter_tcpip_check_box->isChecked ();
+  spot_to_crx_api_ = ui_->crx_api_check_box->isChecked ();
+  crx_api_key_ = ui_->crx_api_key_line_edit->text ().trimmed ();
+  crx_forward_dxcluster_ = ui_->crx_forward_dxcluster_check_box->isChecked ();
+
+  // Resolve selected logbook to ID; keep the saved ID if the combo was never populated
+  {
+    auto idx = ui_->crx_logbook_combo_box->currentIndex ();
+    if (idx >= 0)
+      {
+        crx_logbook_id_ = ui_->crx_logbook_combo_box->itemData (idx).toInt ();
+      }
+    crx_forward_logbook_ = crx_logbook_id_ > 0;
+  }
+
   id_interval_ = ui_->CW_id_interval_spin_box->value ();
   align_steps_ = ui_->align_spin_box->value ();
   align_steps2_ = ui_->align_spin_box2->value ();
@@ -4039,6 +4150,34 @@ void Configuration::impl::on_pbTestCloudlog_clicked ()
 void Configuration::impl::on_gbCloudlog_clicked ()
 {
   ui_->pbTestCloudlog->setStyleSheet ("QPushButton {background-color: none;}");
+}
+
+void Configuration::impl::on_pbTestCrxApi_clicked ()
+{
+  QString key = ui_->crx_api_key_line_edit->text ().trimmed ();
+  if (key.isEmpty ())
+  {
+    MessageBox::warning_message (this, tr ("CRX API Key"),
+                                 tr ("Please enter your CRX API key."));
+    return;
+  }
+  // Temporarily set the key for the test
+  crx_api_key_ = key;
+  ui_->pbTestCrxApi->setStyleSheet ("QPushButton {background-color: none;}");
+  m_crxApi.testApi ();
+}
+
+void Configuration::impl::on_pbRefreshCrxLogs_clicked ()
+{
+  QString key = ui_->crx_api_key_line_edit->text ().trimmed ();
+  if (key.isEmpty ())
+  {
+    MessageBox::warning_message (this, tr ("CRX API Key"),
+                                 tr ("Please enter your CRX API key first."));
+    return;
+  }
+  crx_api_key_ = key;
+  m_crxApi.fetchLogs ();
 }
 
 void Configuration::impl::on_test_PTT_push_button_clicked (bool checked)
