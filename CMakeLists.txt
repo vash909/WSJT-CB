@@ -256,6 +256,7 @@ set (wsjt_qt_CXXSRCS
   Network/FileDownload.cpp
   Network/FoxVerifier.cpp
   Network/Cloudlog.cpp
+  Network/CrxApi.cpp
   models/DecodeHighlightingModel.cpp
   widgets/DecodeHighlightingListView.cpp
   models/FoxLog.cpp
@@ -344,12 +345,14 @@ set_source_files_properties (
   lib/crc14.cpp
   PROPERTIES COMPILE_FLAGS -fpermissive)
 
-if (WIN32 AND WSJT_WITH_OMNIRIG)
+if (WIN32)
   set (wsjt_CXXSRCS
     ${wsjt_CXXSRCS}
     killbyname.cpp
     )
+endif ()
 
+if (WIN32 AND WSJT_WITH_OMNIRIG)
   set (wsjt_qt_CXXSRCS
     ${wsjt_qt_CXXSRCS}
     Transceiver/OmniRigTransceiver.cpp

@@ -2263,36 +2263,139 @@ comments field.</string>
          <property name="title">
           <string>Network Services</string>
          </property>
-         <layout class="QHBoxLayout" name="horizontalLayout_22">
+         <layout class="QVBoxLayout" name="network_services_layout">
           <item>
-           <widget class="QCheckBox" name="psk_reporter_check_box">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The program can send your station details and all decoded signals with grid squares as spots to the http://pskreporter.info web site.&lt;/p&gt;&lt;p&gt;This is used for reverse beacon analysis which is very useful for assessing propagation and system performance.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-            </property>
-            <property name="text">
-             <string>Enable &amp;PSK Reporter Spotting</string>
+           <layout class="QHBoxLayout" name="horizontalLayout_22">
+            <item>
+             <widget class="QCheckBox" name="psk_reporter_check_box">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The program can send your station details and all decoded signals with grid squares as spots to the http://pskreporter.info web site.&lt;/p&gt;&lt;p&gt;This is used for reverse beacon analysis which is very useful for assessing propagation and system performance.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Enable &amp;PSK Reporter Spotting</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="wsjtcb_spot_server_check_box">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Send decoded spots to the WSJT-CB spot server at https://xzgroup.net/spots/api/ingest.php.&lt;/p&gt;&lt;p&gt;This uses the same locator-based data already available in the decode stream and can be enabled independently from PSK Reporter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Enable WSJT-CB Spot Server</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QCheckBox" name="psk_reporter_tcpip_check_box">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this option if a reliable connection is needed&lt;/p&gt;&lt;p&gt;Most users do not need this, the default uses UDP which is more efficient. Only check this if you have evidence that UDP traffic from you to PSK Reporter is being lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Use TCP/IP connection</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item>
+           <widget class="Line" name="network_services_separator">
+            <property name="orientation">
+             <enum>Qt::Horizontal</enum>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="wsjtcb_spot_server_check_box">
+           <widget class="QCheckBox" name="crx_api_check_box">
             <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Send decoded spots to the WSJT-CB spot server at https://xzgroup.net/spots/api/ingest.php.&lt;/p&gt;&lt;p&gt;This uses the same locator-based data already available in the decode stream and can be enabled independently from PSK Reporter.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Enable CRX-API integration to forward logged QSOs to your CRX logbook and optionally send DX spots to the DXCluster via https://s.crx.cloud/&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
             </property>
             <property name="text">
-             <string>Enable WSJT-CB Spot Server</string>
+             <string>Enable CRX-API Service</string>
             </property>
            </widget>
           </item>
           <item>
-           <widget class="QCheckBox" name="psk_reporter_tcpip_check_box">
-            <property name="toolTip">
-             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Check this option if a reliable connection is needed&lt;/p&gt;&lt;p&gt;Most users do not need this, the default uses UDP which is more efficient. Only check this if you have evidence that UDP traffic from you to PSK Reporter is being lost.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+           <layout class="QFormLayout" name="crx_api_form">
+            <property name="fieldGrowthPolicy">
+             <enum>QFormLayout::AllNonFixedFieldsGrow</enum>
             </property>
-            <property name="text">
-             <string>Use TCP/IP connection</string>
-            </property>
-           </widget>
+            <item row="0" column="0">
+             <widget class="QLabel" name="crx_api_key_label">
+              <property name="text">
+               <string>CRX API Key:</string>
+              </property>
+              <property name="buddy">
+               <cstring>crx_api_key_line_edit</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="1">
+             <layout class="QHBoxLayout" name="crx_key_layout">
+              <item>
+               <widget class="QLineEdit" name="crx_api_key_line_edit">
+                <property name="echoMode">
+                 <enum>QLineEdit::Password</enum>
+                </property>
+                <property name="toolTip">
+                 <string>Your CRX API key from https://s.crx.cloud/</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pbTestCrxApi">
+                <property name="text">
+                 <string>🔌 Test</string>
+                </property>
+                <property name="toolTip">
+                 <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Test the CRX API connection. Green = OK, Red = invalid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="crx_logbook_label">
+              <property name="text">
+               <string>Forward to Logbook:</string>
+              </property>
+              <property name="buddy">
+               <cstring>crx_logbook_combo_box</cstring>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="1">
+             <layout class="QHBoxLayout" name="crx_logbook_layout">
+              <item>
+               <widget class="QComboBox" name="crx_logbook_combo_box">
+                <property name="toolTip">
+                 <string>Select the target logbook on CRX for QSO forwarding. Use 🔄 to refresh.</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="pbRefreshCrxLogs">
+                <property name="text">
+                 <string>🔄</string>
+                </property>
+                <property name="toolTip">
+                 <string>Load your logbooks from CRX</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </item>
+            <item row="2" column="0" colspan="2">
+             <widget class="QCheckBox" name="crx_forward_dxcluster_check_box">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Also forward DX spots to the CRX DXCluster network for each decoded station with grid.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>Forward to DXCluster</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>

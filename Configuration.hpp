@@ -168,6 +168,11 @@ public:
   bool spot_to_psk_reporter () const;
   bool spot_to_wsjtcb_server () const;
   bool psk_reporter_tcpip () const;
+  bool spot_to_crx_api () const;
+  QString crx_api_key () const;
+  bool crx_forward_logbook () const;
+  bool crx_forward_dxcluster () const;
+  qint32 crx_logbook_id () const;
   bool monitor_off_at_startup () const;
   bool monitor_last_used () const;
   bool log_as_RTTY () const;

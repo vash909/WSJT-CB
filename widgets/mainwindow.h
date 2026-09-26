@@ -42,6 +42,7 @@
 #include "DisplayManual.hpp"
 #include "Network/PSKReporter.hpp"
 #include "Network/Cloudlog.hpp"
+#include "Network/CrxApi.hpp"
 #include "logbook/logbook.h"
 #include "widgets/QSYMessageCreator.h"
 #include "widgets/QSYMessage.h"
@@ -523,6 +524,7 @@ private:
   Configuration m_config;
   LogBook m_logBook;            // must be after Configuration construction
   Cloudlog m_cloudlog;
+  CrxApi m_crxApi;
   WSPRBandHopping m_WSPR_band_hopping;
   bool m_WSPR_tx_next;
   MessageBox m_rigErrorMessageBox;
