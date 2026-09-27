@@ -4505,6 +4505,20 @@ void MainWindow::createStatusBar()                           //createStatusBar
 
   statusBar ()->addPermanentWidget (&watchdog_label);
   update_watchdog_label ();
+
+  // A permanent branding badge stays visible during temporary status messages.
+  auto * decoder_badge = new QLabel {statusBar ()};
+  decoder_badge->setObjectName ("mbd_decoder_badge");
+  auto badge_pixmap = QPixmap {":/mbd-decoder@4x.png"};
+  badge_pixmap.setDevicePixelRatio (4.0);
+  decoder_badge->setPixmap (badge_pixmap);
+  decoder_badge->setFixedSize (116, 30);
+  decoder_badge->setAlignment (Qt::AlignCenter);
+  decoder_badge->setStyleSheet ("background: transparent; border: none; padding: 0;");
+  decoder_badge->setAccessibleName (QStringLiteral ("MBD Decoder"));
+  decoder_badge->setToolTip (tr ("MBD Decoder - FT8 multithread decoder for WSJT-CB"));
+  decoder_badge->setFocusPolicy (Qt::NoFocus);
+  statusBar ()->addPermanentWidget (decoder_badge);
 }
 
 void MainWindow::setup_status_bar (bool vhf)

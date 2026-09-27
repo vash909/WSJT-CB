@@ -826,6 +826,7 @@ set (TOP_LEVEL_RESOURCES
   icons/Darwin/wsjtx.iconset/icon_128x128.png
   contrib/gpl-v3-logo.png
   artwork/splash.png
+  artwork/mbd-decoder@4x.png
   )
 
 set (PALETTE_FILES
