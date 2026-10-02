@@ -3,12 +3,35 @@
 > You are solely responsible for ensuring full compliance with all applicable local, national, and international radiocommunication laws and regulations.
 > This project is distributed under the GNU General Public License v3.0 (GPLv3); see `COPYING` for details.
 
-# WSJT-CB: a 27MHz version of wsjt-x by Joe Taylor K1JT
-# mod by 1AT106 / 1XZ001 Vash
+# WSJT-CB 1.4: a 27 MHz version of WSJT-X by Joe Taylor K1JT
+
+Modified by 1AT106 / 1XZ001 Vash. Application credits: 1AT106, 1XZ732, 1AT1989.
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
-## Release Notes 1.2
+## Release Notes 1.4.0 — Scarlet
+
+- WSPR now supports CB callsigns with a dedicated encoding that transmits the
+  full callsign, a 4-character locator and transmit power in every frame.
+  This WSPR variant communicates with other WSJT-CB stations; standard
+  WSJT-X/WSPR and WSPRnet cannot decode it. WSPRnet upload was removed.
+- The FT8 multithread decoder incorporates reliability fixes from WSJT-X
+  3.2.0-rc1: coordinated signal subtraction, separate worker spectra, coverage
+  of the full frequency range with the actual OpenMP thread count, and safer
+  FFTW plan caching and worker state.
+- FT8 decoder plausibility checks now accept complete CB callsigns, including
+  type 4 messages with a hashed callsign in either position. CRC and signal
+  quality checks still apply.
+- The interface includes the MBD decoder logo and retains the dark theme and
+  stable settings/log directories introduced in 1.3.
+- Optional regression tests cover FT8 concurrency, frequency ranges, CB
+  callsign packing, AutoSeq decisions and simulated audio decoding. See
+  [the decoder test instructions](tests/ft8/README.md).
+
+Full version history is in [releasenotes.txt](releasenotes.txt). Linux package
+installation and compatibility details are in section 8 below.
+
+## Release Notes 1.2 (historical)
 
 Version 1.2 is a focused refinement of WSJT-CB 1.0. This release does not try to add complexity; instead, it makes the CB-oriented workflow cleaner, more reliable, and more consistent for everyday operation.
 
@@ -149,13 +172,13 @@ Changes:
   - `FT4`
   - `FST4`
   - `Q65`
+  - `WSPR` (CB-specific variant added in 1.4)
 - Hidden from the main UI:
   - `JT4`
   - `JT9`
   - `JT65`
   - `MSK144`
   - `FST4W`
-  - `WSPR`
   - `Echo`
   - `FreqCal`
 - Added/kept default CB working frequencies:
@@ -164,6 +187,7 @@ Changes:
   - `FT4`: `27.045 MHz` (`27045000` Hz), label `CB`
   - `FST4`: `27.045 MHz` (`27045000` Hz), label `CB`
   - `Q65`: `27.045 MHz` (`27045000` Hz), label `CB`
+  - `WSPR`: `27.195 MHz` (`27195000` Hz), label `CB`
 
 Impact:
 - The fork no longer treats 27.265 MHz as out-of-band for normal operation in this added 11m segment.
@@ -282,6 +306,10 @@ These package names were verified against Ubuntu/Kubuntu Noble repositories:
 - `libqt5websockets5-dev`
 - `asciidoc` (only needed if manpages are generated)
 
+For the 1.4 source, check the Hamlib version before building: the package
+name alone does not establish API compatibility. See section 8 for the
+Hamlib requirement and the Ubuntu 20.04 compatibility package.
+
 Example local configure command (no manpages/docs):
 
 ```bash
@@ -291,10 +319,74 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 8) Debian 12 (Bookworm) Build and .deb Packaging
+## 8) Linux .deb Installation and Compatibility
+
+The WSJT-CB 1.4 compatibility test package is named:
+
+```text
+wsjtcb_1.4.0~compat1_amd64.deb
+```
+
+Install it from the directory containing the downloaded file:
+
+```bash
+sudo apt update
+sudo apt install ./wsjtcb_1.4.0~compat1_amd64.deb
+```
+
+Start **WSJT-CB** from the application menu, or run `wsjtcb`. Use APT to
+install the file so it also resolves the required audio, Qt and SQLite
+packages. On Ubuntu/Kubuntu, the Universe repository must be enabled.
+
+This package is for **amd64/x86-64 PCs**, with Ubuntu 20.04 as the oldest
+build baseline (glibc 2.31, GCC 9 and Qt 5.12). Its compatibility targets are
+Ubuntu/Kubuntu 20.04, 22.04 and 24.04, Debian 11, 12 and 13, and derivatives
+with compatible repositories. ARM/Raspberry Pi and 32-bit systems require
+separate builds; Debian 10 is below this package's glibc baseline.
+
+The same `amd64` package passed the following checks on 2026-10-02:
+
+| Distribution | APT installation and library resolution | GUI and `jt9` startup |
+| --- | --- | --- |
+| Ubuntu 20.04 | Passed | Passed |
+| Ubuntu 22.04 | Passed | Passed |
+| Ubuntu 24.04 | Passed | Passed |
+| Debian 11 | Passed | Passed |
+| Debian 12 | Passed | Passed |
+| Debian 13 | Passed | Passed |
+
+These checks used isolated official distro images, Xvfb, an ordinary user
+and read-only system directories. Each GUI run remained active for at least
+35 seconds with its installed decoder running. All six optional decoder
+regression tests also passed in the Ubuntu 20.04 build environment.
+Audio devices, physical CAT/PTT, native Wayland sessions and live QSOs still
+need hardware testing. Kubuntu compatibility is expected from its Ubuntu
+base; a separate KDE desktop session was not tested.
+
+Boost 1.71 and Hamlib 4.6.5 are statically linked, avoiding dependencies on
+their distro-specific library versions. Qt, audio, FFTW and the compiler
+runtime libraries are supplied by the distribution. Package dependencies
+handle both the original Qt package names and the newer `t64` names.
+The archive uses xz compression, supported by the older target systems.
+Decoder and rig-control helpers are installed under `/usr/lib/wsjtcb/bin`,
+with a launcher at `/usr/bin/wsjtcb`, to avoid file conflicts with WSJT-X.
+The `~compat1` suffix identifies this as a package for compatibility testing
+and sorts before a final `1.4.0` package version.
+
+### Building a Distro-Native Package
+
+The following recipe uses the build machine's libraries. Its output is a
+**distro-native package**; compiling on Debian 12 or a newer system does not
+make a binary compatible with Ubuntu 20.04. The broad-compatibility package
+described above uses a separate Ubuntu 20.04 build environment and static
+Boost/Hamlib, rather than the default CPack dependency list.
+
+The current transceiver code requires the Hamlib APIs provided by 4.6.5.
+If a distribution supplies an older Hamlib, build a compatible Hamlib 4.x
+release first and expose its headers, library and `hamlib.pc` to CMake.
 
 These package names are suitable for Debian 12 Bookworm when building a
-release `.deb` locally:
+distro-native `.deb` locally (subject to the Hamlib requirement above):
 
 - `build-essential`
 - `cmake`
@@ -336,24 +428,20 @@ cmake -S . -B build-debian12 -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 
 cmake --build build-debian12 -j"$(nproc)"
-cpack --config build-debian12/CPackConfig.cmake -G DEB
-```
-
-Or use the helper script included in this repository:
-
-```bash
-./scripts/build-debian12-deb.sh
+cpack --config build-debian12/CPackConfig.cmake -G DEB -B build-debian12
 ```
 
 The generated package will be named like:
 
 ```text
-build-debian12/wsjtcb_1.2.0_amd64.deb
+build-debian12/wsjtcb_1.4.0_amd64.deb
 ```
 
-The repository also includes a GitHub Actions workflow at
-`.github/workflows/release-deb.yml` that builds the Debian package and attaches
-it to a published GitHub Release.
+The existing `.github/workflows/release-deb.yml` builds inside Ubuntu 22.04
+and can attach assets to a published GitHub Release. It does not reproduce
+the Ubuntu 20.04 compatibility build described here. The compatibility test
+workflow still refers to an older Debian 13 artifact and branch, so its
+presence alone does not establish compatibility for a new package.
 
 ## 9) Arch Linux / CachyOS Build Notes
 
