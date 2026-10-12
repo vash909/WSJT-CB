@@ -6,7 +6,9 @@
 #define AppPublisher "1AT106 Lorenzo"
 #define AppURL "https://xzgroup.net/wsjt-cb.html"
 #define AppExeName "wsjtcb.exe"
-#define DistDir AddBackslash(SourcePath) + "dist"
+#ifndef DistDir
+  #define DistDir AddBackslash(SourcePath) + "dist"
+#endif
 #define MainExe AddBackslash(DistDir) + "bin\" + AppExeName
 #define LicenseFile AddBackslash(DistDir) + "share\doc\wsjtx\COPYING"
 

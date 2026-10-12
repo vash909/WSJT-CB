@@ -3,7 +3,7 @@
 > You are solely responsible for ensuring full compliance with all applicable local, national, and international radiocommunication laws and regulations.
 > This project is distributed under the GNU General Public License v3.0 (GPLv3); see `COPYING` for details.
 
-# WSJT-CB 1.4: a 27 MHz version of WSJT-X by Joe Taylor K1JT
+# WSJT-CB 1.4.0: a 27 MHz version of WSJT-X by Joe Taylor K1JT
 
 Modified by 1AT106 / 1XZ001 Vash. Application credits: 1AT106, 1XZ732, 1AT1989.
 
@@ -24,6 +24,10 @@ This document describes the code changes currently present in this fork, compare
   quality checks still apply.
 - The interface includes the MBD decoder logo and retains the dark theme and
   stable settings/log directories introduced in 1.3.
+- WSPR band hopping has been removed from the CB interface.
+- The Windows x64 release is packaged as `wsjtcb-1.4.0-win64-setup.exe`,
+  with English and Italian setup languages, OmniRig integration and the
+  required Qt/compiler runtime libraries. See section 10 for installation.
 - Optional regression tests cover FT8 concurrency, frequency ranges, CB
   callsign packing, AutoSeq decisions and simulated audio decoding. See
   [the decoder test instructions](tests/ft8/README.md).
@@ -471,4 +475,35 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-# WSJT-CB
+## 10) Windows x64 Installation (1.4.0)
+
+The Windows installer generated from this repository is:
+
+```text
+installer-output\wsjtcb-1.4.0-win64-setup.exe
+```
+
+Run the installer, choose English or Italian, and complete setup. Windows
+requests administrator permission to install under `Program Files`. Start
+**WSJT-CB** from the Start menu or the optional desktop shortcut.
+
+The package includes the application, `jt9` and `wsprd` decoders, rig-control
+helpers, Qt plugins, data files and runtime libraries. Qt, MinGW and MSYS2
+do not need to be installed on the destination PC. Install OmniRig separately
+if you want to use **OmniRig Rig 1 / Rig 2**; other CAT choices use Hamlib.
+
+This Release build uses Qt 5.15.2 and MinGW/GFortran 8.1.0 with OpenMP
+enabled. All six decoder regression tests passed on Windows on 2026-10-12,
+including 40 simulated CB audio decodes and AutoSeq checks with different
+thread counts. Physical audio devices, CAT/PTT hardware and live QSOs were
+not part of these automated checks.
+
+The installer retains the application identity used by previous WSJT-CB
+installers and reuses the existing installation directory. Settings and logs
+continue to use the stable WSJT-CB data locations introduced in 1.3.
+
+WSPR in 1.4.0 requires another WSJT-CB station using the CB WSPR format;
+standard WSJT-X/WSPR stations and WSPRnet are incompatible with that format.
+
+For the MSYS2 UCRT64 build prerequisites and packaging command, see
+[the Windows build instructions](scripts/README-windows-omnirig.md).
