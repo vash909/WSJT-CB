@@ -1,4 +1,5 @@
 module packjt77var
+  use cb_callsigns, only: is_complete_cb_callsign, is_cb_type4_message
 
 ! use packjt77, only : hash10,hash12,hash22
 
@@ -684,7 +685,9 @@ subroutine unpack77var(c77,nrx,msg,unpk77_success,nthr)
      else
         msg='CQ '//trim(call_2)
      endif
-     if(call_2(1:1).lt.':' .and. call_2(1:1).gt.'/' .and. call_2(2:2).lt.':' .and. call_2(2:2).gt.'/') unpk77_success=.false.
+     if(call_2(1:1).lt.':' .and. call_2(1:1).gt.'/' .and. call_2(2:2).lt.':' .and. call_2(2:2).gt.'/') then
+       if(.not.is_complete_cb_callsign(call_2)) unpk77_success=.false.
+     endif
      if(len_trim(call_2).eq.11) then
        ispace=index(call_2,' '); if(ispace.gt.0 .and. ispace.lt.12) unpk77_success=.false.
        islash=index(call_2,'/'); if(islash.eq.1 .or. islash.eq.2 .or. islash.eq.11 .or. (islash.eq.10 .and. &
@@ -692,7 +695,9 @@ subroutine unpack77var(c77,nrx,msg,unpk77_success,nthr)
        if(islash.lt.6 .and. call_2(11:11).lt.':' .and. call_2(11:11).gt.'/') unpk77_success=.false.
      endif
      if(msg(1:3).ne.'CQ ') then
-       if(call_1(1:1).lt.':' .and. call_1(1:1).gt.'/' .and. call_1(2:2).lt.':' .and.call_1(2:2).gt.'/') unpk77_success=.false.
+       if(call_1(1:1).lt.':' .and. call_1(1:1).gt.'/' .and. call_1(2:2).lt.':' .and.call_1(2:2).gt.'/') then
+         if(.not.is_complete_cb_callsign(call_1)) unpk77_success=.false.
+       endif
        if(len_trim(call_1).eq.11) then
          ispace=index(call_1,' '); if(ispace.gt.0 .and. ispace.lt.12) unpk77_success=.false.
          islash=index(call_1,'/'); if(islash.eq.1 .or. islash.eq.2 .or. islash.eq.11 .or. (islash.eq.10 .and. &
@@ -711,7 +716,7 @@ subroutine unpack77var(c77,nrx,msg,unpk77_success,nthr)
 !071445 -14  0.1  779 ~ W5JZ  ! hash was associated
 ! CQ <...>
 ! with exception to broken by packing message 'JQ1AHT/P <JL1LOF/1> -15' wrongly being transmitted as type 4 message 'JQ1AHT/P <JL1LOF/1>'
-         if(msg(nmsglen:nmsglen).eq.'>') unpk77_success=.false.
+         if(msg(nmsglen:nmsglen).eq.'>' .and. .not.is_cb_type4_message(msg)) unpk77_success=.false.
        endif
      endif
 ! <...> /BZZ/0ZZ/C

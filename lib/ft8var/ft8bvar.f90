@@ -1,12 +1,15 @@
-subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub, &
+subroutine ft8bvar(residual,spectrum,newdat1,nQSOProgress,nfqso,nftx,napwid, &
+     lsubtract, &
      tmpcqdec,tmpmyc,nagainfil,iaptype,f1,xdt,nbadcrc,lft8sdec,msg37,msg37_2,     &
      xsnr,stophint,nthr,lFreeText,ipass,lft8subpass,lspecial,lcqcand,ncqsignal,   &
      nmycsignal,npass,i3bit,lft8s,lmycallstd,lhiscallstd,levenint,loddint,lft8sd, &
      i3,n3,nft8rxfsens,ncount,msgsrcvd,lrepliedother,lhashmsg,lqsothread,         &
-     lft8lowth,lhighsens,lsubtracted,tmpcqsig,tmpmycsig,tmpqsosig,lnohiscall,     &
+     lft8lowth,lhighsens,tmpcqsig,tmpmycsig,tmpqsosig,lnohiscall,     &
      lnomycall,lnohisgrid,qual,iaptype2)
 
   use packjt77var, only : unpack77var
+  use ft8_mtd_residual, only : mtd_commit_subtraction,mtd_mark_spectrum_current, &
+       mtd_refresh_candidate
   use ft8_mod1, only : allmessages,ndecodes,apsym,mcq,m73,mrr73,mrrr,icos7,       &
        naptypes,nhaptypes,one,graymap,oddcopy,evencopy,lastrxmsg,lasthcall,       &
        nlasttx,calldteven,calldtodd,lqsomsgdcd,mycalllen1,msgroot,msgrootlen,     &
@@ -20,14 +23,18 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
        apsymmynsrrr,idtonedxcns73,idtonefox73,idtonespec  !ft8md added
 
   include 'ft8_params.f90'
+  real, intent(inout) :: residual(180000)
+  complex, intent(inout) :: spectrum(0:96000)
+  logical rebuild_spectrum
   character c77*77,msg37*37,msg37_2*37,msgd*37,msgbase37*37,call_a*12,call_b*12
   character callsign*12,grid*12
   character*37 msgsrcvd(130)
   complex cd0(-800:4000),cd1(-800:4000),cd2(-800:4000),cd3(-800:4000),ctwk(32),   &
-       csymb(32),cs(0:7,79),csymbr(32),csr(0:7,79),csig(32),csig0(151680),z1,     &
+       csymb(32),cs(0:7,79),csymbr(32),csr(0:7,79),csig(32),z1,     &
        csymb256(256),cstmp2(0:7,79),csold(0:7,79),cscs(0:7,79)
+  complex, allocatable :: csig0(:)
   real a(5),s8(0:7,79),s82(0:7,79),s2(0:511),sp(0:7),s81(0:7),snrsync(21),        &
-       syncw(7),sumkw(7),scoreratiow(7),freqsub(200),s256(0:8),s2563(0:26),       &
+       syncw(7),sumkw(7),scoreratiow(7),s256(0:8),s2563(0:26),       &
        syncavpart(3)
   real bmeta(174),bmetb(174),bmetc(174),bmetd(174)
   real llra(174),llrb(174),llrc(174),llrd(174),llrz(174)
@@ -41,7 +48,7 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
        lnomycall,lnohisgrid
   logical(1) falsedec,lastsync,ldupemsg,lft8s,lft8sdec,lft8sd,lsdone,ldupeft8sd,  &
        lrepliedother,lhashmsg,lvirtual2,lvirtual3,lsd,lcq,ldeepsync,lcallsstd,    &
-       lfound,lsubptxfreq,lreverse,lchkcall,lgvalid,lwrongcall,lsubtracted,       &
+       lfound,lsubptxfreq,lreverse,lchkcall,lgvalid,lwrongcall,       &
        lcqsignal,loutapwid,lfoundcq,lmycsignal,lfoundmyc,lqsosig,ldxcsig,         &
        lcqdxcsig,lcqdxcnssig,lqsocandave,lcall1hash,lqsosigtype3,lqso73,lqsorr73, &
        lqsorrr,lfoxspecrpt,lfoxstdr73,lapcqonly,lcall2hash,lskipnotap
@@ -185,8 +192,10 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
      endif
   endif
 
-  call ft8_downsamplevar(newdat1,f1,nqso,cd0,cd2,cd3,lhighsens,lsubtracted,npos, &
-       freqsub)   !Mix f1 to baseband and downsample
+  call mtd_refresh_candidate(nthr,f1,newdat1,rebuild_spectrum)
+  call ft8_downsamplevar(residual,spectrum,newdat1,f1,nqso,cd0,cd2,cd3, &
+       lhighsens)   !Mix f1 to baseband and downsample
+  if(rebuild_spectrum) call mtd_mark_spectrum_current(nthr)
 
   lsd=.false.
   isd=1
@@ -2897,6 +2906,7 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
         syncp=0.
         syncm=0.
         k=1
+        allocate(csig0(151680))
         call gen_ft8wavevar(itone,79,1920,2.0,12000.0,0.0,csig0,xjunk,1,151680)
         do i=0,78
            do j=1,32
@@ -2916,6 +2926,7 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
            z1=sum(cd0(i21:i21+31)*conjg(csig))
            syncm = syncm + real(z1)**2 + aimag(z1)**2
         enddo
+        deallocate(csig0)
         call peakup(syncm,sync0,syncp,dx)
         if(abs(dx).gt.1.0) then
            scorr=0.
@@ -2923,12 +2934,7 @@ subroutine ft8bvar(newdat1,nQSOProgress,nfqso,nftx,napwid,lsubtract,npos,freqsub
            scorr=real(noff)*(dx) ! was * dx ft8md
         endif
         xdt3=xdt+scorr*dt2
-        call subtractft8var(itone,f1,xdt3)
-        lsubtracted=.true. ! inside current thread
-        if(npos.lt.200) then
-           npos=npos+1
-           freqsub(npos)=f1
-        endif
+        call mtd_commit_subtraction(nthr,ipass,itone,f1,xdt3,residual)
      endif
   endif
 

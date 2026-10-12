@@ -3,12 +3,39 @@
 > You are solely responsible for ensuring full compliance with all applicable local, national, and international radiocommunication laws and regulations.
 > This project is distributed under the GNU General Public License v3.0 (GPLv3); see `COPYING` for details.
 
-# WSJT-CB: a 27MHz version of wsjt-x by Joe Taylor K1JT
-# mod by 1AT106 / 1XZ001 Vash
+# WSJT-CB 1.4.0: a 27 MHz version of WSJT-X by Joe Taylor K1JT
+
+Modified by 1AT106 / 1XZ001 Vash. Application credits: 1AT106, 1XZ732, 1AT1989.
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
-## Release Notes 1.2
+## Release Notes 1.4.0 — Scarlet
+
+- WSPR now supports CB callsigns with a dedicated encoding that transmits the
+  full callsign, a 4-character locator and transmit power in every frame.
+  This WSPR variant communicates with other WSJT-CB stations; standard
+  WSJT-X/WSPR and WSPRnet cannot decode it. WSPRnet upload was removed.
+- The FT8 multithread decoder incorporates reliability fixes from WSJT-X
+  3.2.0-rc1: coordinated signal subtraction, separate worker spectra, coverage
+  of the full frequency range with the actual OpenMP thread count, and safer
+  FFTW plan caching and worker state.
+- FT8 decoder plausibility checks now accept complete CB callsigns, including
+  type 4 messages with a hashed callsign in either position. CRC and signal
+  quality checks still apply.
+- The interface includes the MBD decoder logo and retains the dark theme and
+  stable settings/log directories introduced in 1.3.
+- WSPR band hopping has been removed from the CB interface.
+- The Windows x64 release is packaged as `wsjtcb-1.4.0-win64-setup.exe`,
+  with English and Italian setup languages, OmniRig integration and the
+  required Qt/compiler runtime libraries. See section 10 for installation.
+- Optional regression tests cover FT8 concurrency, frequency ranges, CB
+  callsign packing, AutoSeq decisions and simulated audio decoding. See
+  [the decoder test instructions](tests/ft8/README.md).
+
+Full version history is in [releasenotes.txt](releasenotes.txt). Linux package
+installation and compatibility details are in section 8 below.
+
+## Release Notes 1.2 (historical)
 
 Version 1.2 is a focused refinement of WSJT-CB 1.0. This release does not try to add complexity; instead, it makes the CB-oriented workflow cleaner, more reliable, and more consistent for everyday operation.
 
@@ -39,6 +66,39 @@ Because of this, third-party listeners can see decodes like `<...> 26AT016` inst
 This is a protocol/encoding behavior, not an AutoSeq bug.
 If your station has not yet learned the hash-to-callsign mapping (for example because that station has not been decoded in clear text yet), the real callsign may remain hidden until a later decode provides that mapping.
 
+## WSPR for CB Callsigns (WSJT-CB variant, 1.4)
+
+Standard WSPR cannot carry an 11 m CB callsign. Its message formats only pack a
+*standard* amateur callsign (digit in the 2nd or 3rd character) into 28 bits;
+CB callsigns such as `1AT001` or `26CT100` are rejected by the packer. The only
+WSPR path for a non-standard callsign is a 15-bit hash (Type 3), and a receiver
+can turn that hash back into a callsign only if it already learned the mapping
+from a decodable Type-1/Type-2 transmission — which a CB callsign can never
+produce. So plain WSPR would only ever show `<...>` for CB stations, unlike FT8.
+
+WSJT-CB 1.4 therefore replaces the WSPR **source encoding** with a CB-specific,
+self-contained format (WSPR mode is CB-only in this fork):
+
+- The CB callsign (`N{1,3}L{1,2}N{0,3}`, plus the 4-digit-suffix case for a
+  1-digit prefix) is enumerated bijectively into **30 bits** (935,913,420
+  possible callsigns, which fits within 2^30).
+- The 4-character Maidenhead grid takes **15 bits** and the transmit power a
+  **5-bit** index over the 19 standard WSPR dBm levels.
+- Together that is exactly the **50** WSPR source bits, so the full callsign is
+  transmitted in **every** frame — no hash table, receivers never show `<...>`.
+
+The convolutional code (K=32, r=1/2), interleaving, sync vector and 4-FSK
+modulation are untouched, so weak-signal sensitivity is identical to standard
+WSPR. The trade-off is deliberate and matches the fork's goals: these
+transmissions are decodable **only by other WSJT-CB stations** and are **not**
+compatible with standard WSPR/WSJT-X or with wsprnet (which does not host 11 m
+activity anyway). 6-character grids are not used in this mode.
+
+Implementation: `packcb`/`unpackcb` in `lib/packjt.f90` (TX) and the mirrored C
+`packcb`/`unpackcb` in `lib/wsprd/wsprd_utils.c` and `lib/wsprd/wsprsim_utils.c`
+(RX and signal-subtraction), wired through `lib/wqencode.f90` and
+`MainWindow::WSPR_message()`.
+
 ## Modified Files
 
 - `CMakeLists.txt`
@@ -48,6 +108,11 @@ If your station has not yet learned the hash-to-callsign mapping (for example be
 - `models/FrequencyList.cpp`
 - `widgets/mainwindow.cpp`
 - `main.cpp`
+- `lib/packjt.f90` (WSPR CB source coding)
+- `lib/wqencode.f90` (WSPR CB source coding)
+- `lib/wsprd/wsprd_utils.c` (WSPR CB decode)
+- `lib/wsprd/wsprd_utils.h` (WSPR CB decode)
+- `lib/wsprd/wsprsim_utils.c` (WSPR CB encode / subtraction)
 
 ## 1) CB Callsign Support (`N{1,3}L{1,2}N{1,3}` and `N{1,3}L{1,2}/L{2}`)
 
@@ -111,13 +176,13 @@ Changes:
   - `FT4`
   - `FST4`
   - `Q65`
+  - `WSPR` (CB-specific variant added in 1.4)
 - Hidden from the main UI:
   - `JT4`
   - `JT9`
   - `JT65`
   - `MSK144`
   - `FST4W`
-  - `WSPR`
   - `Echo`
   - `FreqCal`
 - Added/kept default CB working frequencies:
@@ -126,6 +191,7 @@ Changes:
   - `FT4`: `27.045 MHz` (`27045000` Hz), label `CB`
   - `FST4`: `27.045 MHz` (`27045000` Hz), label `CB`
   - `Q65`: `27.045 MHz` (`27045000` Hz), label `CB`
+  - `WSPR`: `27.195 MHz` (`27195000` Hz), label `CB`
 
 Impact:
 - The fork no longer treats 27.265 MHz as out-of-band for normal operation in this added 11m segment.
@@ -244,6 +310,10 @@ These package names were verified against Ubuntu/Kubuntu Noble repositories:
 - `libqt5websockets5-dev`
 - `asciidoc` (only needed if manpages are generated)
 
+For the 1.4 source, check the Hamlib version before building: the package
+name alone does not establish API compatibility. See section 8 for the
+Hamlib requirement and the Ubuntu 20.04 compatibility package.
+
 Example local configure command (no manpages/docs):
 
 ```bash
@@ -253,10 +323,74 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 8) Debian 12 (Bookworm) Build and .deb Packaging
+## 8) Linux .deb Installation and Compatibility
+
+The WSJT-CB 1.4 compatibility test package is named:
+
+```text
+wsjtcb_1.4.0~compat1_amd64.deb
+```
+
+Install it from the directory containing the downloaded file:
+
+```bash
+sudo apt update
+sudo apt install ./wsjtcb_1.4.0~compat1_amd64.deb
+```
+
+Start **WSJT-CB** from the application menu, or run `wsjtcb`. Use APT to
+install the file so it also resolves the required audio, Qt and SQLite
+packages. On Ubuntu/Kubuntu, the Universe repository must be enabled.
+
+This package is for **amd64/x86-64 PCs**, with Ubuntu 20.04 as the oldest
+build baseline (glibc 2.31, GCC 9 and Qt 5.12). Its compatibility targets are
+Ubuntu/Kubuntu 20.04, 22.04 and 24.04, Debian 11, 12 and 13, and derivatives
+with compatible repositories. ARM/Raspberry Pi and 32-bit systems require
+separate builds; Debian 10 is below this package's glibc baseline.
+
+The same `amd64` package passed the following checks on 2026-10-02:
+
+| Distribution | APT installation and library resolution | GUI and `jt9` startup |
+| --- | --- | --- |
+| Ubuntu 20.04 | Passed | Passed |
+| Ubuntu 22.04 | Passed | Passed |
+| Ubuntu 24.04 | Passed | Passed |
+| Debian 11 | Passed | Passed |
+| Debian 12 | Passed | Passed |
+| Debian 13 | Passed | Passed |
+
+These checks used isolated official distro images, Xvfb, an ordinary user
+and read-only system directories. Each GUI run remained active for at least
+35 seconds with its installed decoder running. All six optional decoder
+regression tests also passed in the Ubuntu 20.04 build environment.
+Audio devices, physical CAT/PTT, native Wayland sessions and live QSOs still
+need hardware testing. Kubuntu compatibility is expected from its Ubuntu
+base; a separate KDE desktop session was not tested.
+
+Boost 1.71 and Hamlib 4.6.5 are statically linked, avoiding dependencies on
+their distro-specific library versions. Qt, audio, FFTW and the compiler
+runtime libraries are supplied by the distribution. Package dependencies
+handle both the original Qt package names and the newer `t64` names.
+The archive uses xz compression, supported by the older target systems.
+Decoder and rig-control helpers are installed under `/usr/lib/wsjtcb/bin`,
+with a launcher at `/usr/bin/wsjtcb`, to avoid file conflicts with WSJT-X.
+The `~compat1` suffix identifies this as a package for compatibility testing
+and sorts before a final `1.4.0` package version.
+
+### Building a Distro-Native Package
+
+The following recipe uses the build machine's libraries. Its output is a
+**distro-native package**; compiling on Debian 12 or a newer system does not
+make a binary compatible with Ubuntu 20.04. The broad-compatibility package
+described above uses a separate Ubuntu 20.04 build environment and static
+Boost/Hamlib, rather than the default CPack dependency list.
+
+The current transceiver code requires the Hamlib APIs provided by 4.6.5.
+If a distribution supplies an older Hamlib, build a compatible Hamlib 4.x
+release first and expose its headers, library and `hamlib.pc` to CMake.
 
 These package names are suitable for Debian 12 Bookworm when building a
-release `.deb` locally:
+distro-native `.deb` locally (subject to the Hamlib requirement above):
 
 - `build-essential`
 - `cmake`
@@ -298,24 +432,20 @@ cmake -S . -B build-debian12 -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 
 cmake --build build-debian12 -j"$(nproc)"
-cpack --config build-debian12/CPackConfig.cmake -G DEB
-```
-
-Or use the helper script included in this repository:
-
-```bash
-./scripts/build-debian12-deb.sh
+cpack --config build-debian12/CPackConfig.cmake -G DEB -B build-debian12
 ```
 
 The generated package will be named like:
 
 ```text
-build-debian12/wsjtcb_1.2.0_amd64.deb
+build-debian12/wsjtcb_1.4.0_amd64.deb
 ```
 
-The repository also includes a GitHub Actions workflow at
-`.github/workflows/release-deb.yml` that builds the Debian package and attaches
-it to a published GitHub Release.
+The existing `.github/workflows/release-deb.yml` builds inside Ubuntu 22.04
+and can attach assets to a published GitHub Release. It does not reproduce
+the Ubuntu 20.04 compatibility build described here. The compatibility test
+workflow still refers to an older Debian 13 artifact and branch, so its
+presence alone does not establish compatibility for a new package.
 
 ## 9) Arch Linux / CachyOS Build Notes
 
@@ -345,4 +475,35 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-# WSJT-CB
+## 10) Windows x64 Installation (1.4.0)
+
+The Windows installer generated from this repository is:
+
+```text
+installer-output\wsjtcb-1.4.0-win64-setup.exe
+```
+
+Run the installer, choose English or Italian, and complete setup. Windows
+requests administrator permission to install under `Program Files`. Start
+**WSJT-CB** from the Start menu or the optional desktop shortcut.
+
+The package includes the application, `jt9` and `wsprd` decoders, rig-control
+helpers, Qt plugins, data files and runtime libraries. Qt, MinGW and MSYS2
+do not need to be installed on the destination PC. Install OmniRig separately
+if you want to use **OmniRig Rig 1 / Rig 2**; other CAT choices use Hamlib.
+
+This Release build uses Qt 5.15.2 and MinGW/GFortran 8.1.0 with OpenMP
+enabled. All six decoder regression tests passed on Windows on 2026-10-12,
+including 40 simulated CB audio decodes and AutoSeq checks with different
+thread counts. Physical audio devices, CAT/PTT hardware and live QSOs were
+not part of these automated checks.
+
+The installer retains the application identity used by previous WSJT-CB
+installers and reuses the existing installation directory. Settings and logs
+continue to use the stable WSJT-CB data locations introduced in 1.3.
+
+WSPR in 1.4.0 requires another WSJT-CB station using the CB WSPR format;
+standard WSJT-X/WSPR stations and WSPRnet are incompatible with that format.
+
+For the MSYS2 UCRT64 build prerequisites and packaging command, see
+[the Windows build instructions](scripts/README-windows-omnirig.md).

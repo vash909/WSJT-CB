@@ -91,7 +91,6 @@
 #include "validators/LiveFrequencyValidator.hpp"
 #include "Network/MessageClient.hpp"
 #include "Network/FoxVerifier.hpp"
-#include "Network/wsprnet.h"
 #include "signalmeter.h"
 #include "HelpTextWindow.hpp"
 #include "SampleDownloader.hpp"
@@ -331,6 +330,7 @@ namespace
     return mode == "FT8"
       || mode == "FT4"
       || mode == "FST4"
+      || mode == "WSPR"
       || mode == "Q65";
   }
 
@@ -504,7 +504,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_lastMessageType {-1},
   m_bShMsgs {false},
   m_bSWL {false},
-  m_uploading {false},
   m_grid6 {false},
   m_tuneup {false},
   m_bTxTime {false},
@@ -530,7 +529,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_onAirFreq0 {0.0},
   m_first_error {true},
   tx_status_label {tr ("Receiving")},
-  wsprNet {new WSPRNet {&m_network_manager, this}},
   m_baseCall {Radio::base_callsign (m_config.my_callsign ())},
   m_appDir {QApplication::applicationDirPath ()},
   m_cqStr {""},
@@ -640,8 +638,8 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   ui->actionMSK144->setEnabled (false);
   ui->actionFST4W->setVisible (false);
   ui->actionFST4W->setEnabled (false);
-  ui->actionWSPR->setVisible (false);
-  ui->actionWSPR->setEnabled (false);
+  ui->actionWSPR->setVisible (true);
+  ui->actionWSPR->setEnabled (true);
   ui->actionEcho->setVisible (false);
   ui->actionEcho->setEnabled (false);
   ui->actionEcho_Graph->setVisible (false);
@@ -1120,8 +1118,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   killFileTimer.setSingleShot(true);
   connect(&killFileTimer, &QTimer::timeout, this, &MainWindow::killFile);
 
-  uploadTimer.setSingleShot(true);
-  connect(&uploadTimer, &QTimer::timeout, [this] () {uploadWSPRSpots ();});
 
   TxAgainTimer.setSingleShot(true);
   connect(&TxAgainTimer, SIGNAL(timeout()), this, SLOT(TxAgain()));
@@ -1317,7 +1313,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   m_saveDecoded=ui->actionSave_decoded->isChecked();
   m_saveAll=ui->actionSave_all->isChecked();
   ui->TxPowerComboBox->setCurrentIndex(int(.3 * m_dBm + .2));
-  ui->cbUploadWSPR_Spots->setChecked(m_uploadWSPRSpots);
   if((m_ndepth&7)==1) ui->actionQuickDecode->setChecked(true);
   if((m_ndepth&7)==2) ui->actionMediumDecode->setChecked(true);
   if((m_ndepth&7)==3) ui->actionDeepestDecode->setChecked(true);
@@ -1344,7 +1339,6 @@ MainWindow::MainWindow(QDir const& temp_directory, bool multiple,
   VHF_features_enabled(m_config.enable_VHF_features());
   m_wideGraph->setVHF(m_config.enable_VHF_features());
 
-  connect( wsprNet, SIGNAL(uploadStatus(QString)), this, SLOT(uploadResponse(QString)));
 
   statusChanged();
 
@@ -1607,7 +1601,6 @@ void MainWindow::writeSettings()
   m_settings->setValue("dBm",m_dBm);
   m_settings->setValue("RR73",m_send_RR73);
   m_settings->setValue ("WSPRPreferType1", ui->WSPR_prefer_type_1_check_box->isChecked ());
-  m_settings->setValue("UploadSpots",m_uploadWSPRSpots);
   m_settings->setValue("NoOwnCall",ui->cbNoOwnCall->isChecked());
   m_settings->setValue ("BandHopping", ui->band_hopping_group_box->isChecked ());
   m_settings->setValue ("MaxDrift", ui->sbMaxDrift->value());
@@ -2011,7 +2004,6 @@ void MainWindow::readSettings()
     on_txrb4_doubleClicked();
   }
   ui->WSPR_prefer_type_1_check_box->setChecked (m_settings->value ("WSPRPreferType1", true).toBool ());
-  m_uploadWSPRSpots=m_settings->value("UploadSpots",false).toBool();
   ui->cbNoOwnCall->setChecked(m_settings->value("NoOwnCall",false).toBool());
   ui->band_hopping_group_box->setChecked (m_settings->value ("BandHopping", false).toBool());
   // setup initial value of tx attenuator
@@ -2159,6 +2151,7 @@ void MainWindow::set_application_font (QFont const& font)
           ui->houndButton->setMinimumWidth(50);                       // UR for normal + widescreen
           ui->ft8Button->setMinimumWidth(50);                         // UR for normal + widescreen
           ui->ft4Button->setMinimumWidth(50);                         // UR for normal + widescreen
+          ui->wsprButton->setMinimumWidth(50);                        // UR for normal + widescreen
           ui->msk144Button->setMinimumWidth(50);                      // UR for normal + widescreen
           ui->q65Button->setMinimumWidth(50);                         // UR for normal + widescreen
           ui->jt65Button->setMinimumWidth(50);                        // UR for normal + widescreen
@@ -2167,12 +2160,14 @@ void MainWindow::set_application_font (QFont const& font)
           ui->houndButton->setMaximumWidth(40);                       // UR for normal + widescreen
           ui->ft8Button->setMaximumWidth(40);                         // UR for normal + widescreen
           ui->ft4Button->setMaximumWidth(40);                         // UR for normal + widescreen
+          ui->wsprButton->setMaximumWidth(40);                        // UR for normal + widescreen
           ui->msk144Button->setMaximumWidth(40);                      // UR for normal + widescreen
           ui->q65Button->setMaximumWidth(40);                         // UR for normal + widescreen
           ui->jt65Button->setMaximumWidth(40);                        // UR for normal + widescreen
           ui->houndButton->setMinimumWidth(0);                        // UR for normal + widescreen
           ui->ft8Button->setMinimumWidth(0);                          // UR for normal + widescreen
           ui->ft4Button->setMinimumWidth(0);                          // UR for normal + widescreen
+          ui->wsprButton->setMinimumWidth(0);                         // UR for normal + widescreen
           ui->msk144Button->setMinimumWidth(0);                       // UR for normal + widescreen
           ui->q65Button->setMinimumWidth(0);                          // UR for normal + widescreen
           ui->jt65Button->setMinimumWidth(0);                         // UR for normal + widescreen
@@ -2183,6 +2178,7 @@ void MainWindow::set_application_font (QFont const& font)
       ui->houndButton->setMinimumWidth(50);                           // UR for normal + widescreen
       ui->ft8Button->setMinimumWidth(50);                             // UR for normal + widescreen
       ui->ft4Button->setMinimumWidth(50);                             // UR for normal + widescreen
+      ui->wsprButton->setMinimumWidth(50);                            // UR for normal + widescreen
       ui->msk144Button->setMinimumWidth(50);                          // UR for normal + widescreen
       ui->q65Button->setMinimumWidth(50);                             // UR for normal + widescreen
       ui->jt65Button->setMinimumWidth(50);                            // UR for normal + widescreen
@@ -4509,6 +4505,20 @@ void MainWindow::createStatusBar()                           //createStatusBar
 
   statusBar ()->addPermanentWidget (&watchdog_label);
   update_watchdog_label ();
+
+  // A permanent branding badge stays visible during temporary status messages.
+  auto * decoder_badge = new QLabel {statusBar ()};
+  decoder_badge->setObjectName ("mbd_decoder_badge");
+  auto badge_pixmap = QPixmap {":/mbd-decoder@4x.png"};
+  badge_pixmap.setDevicePixelRatio (4.0);
+  decoder_badge->setPixmap (badge_pixmap);
+  decoder_badge->setFixedSize (116, 30);
+  decoder_badge->setAlignment (Qt::AlignCenter);
+  decoder_badge->setStyleSheet ("background: transparent; border: none; padding: 0;");
+  decoder_badge->setAccessibleName (QStringLiteral ("MBD Decoder"));
+  decoder_badge->setToolTip (tr ("MBD Decoder - FT8 multithread decoder for WSJT-CB"));
+  decoder_badge->setFocusPolicy (Qt::NoFocus);
+  statusBar ()->addPermanentWidget (decoder_badge);
 }
 
 void MainWindow::setup_status_bar (bool vhf)
@@ -4899,7 +4909,6 @@ void MainWindow::trim_view (bool checked)
   ui->horizontalLayout_7->layout()->setSpacing(spacing);
   ui->horizontalLayout_8->layout()->setSpacing(spacing);
   ui->horizontalLayout_9->layout()->setSpacing(spacing);
-  ui->horizontalLayout_10->layout()->setSpacing(spacing);
   ui->horizontalLayout_11->layout()->setSpacing(spacing);
   ui->horizontalLayout_12->layout()->setSpacing(spacing);
   ui->horizontalLayout_13->layout()->setSpacing(spacing);
@@ -5786,17 +5795,6 @@ void MainWindow::to_jt9(qint32 n, qint32 istart, qint32 idone)
 void MainWindow::decodeDone ()
 {
   if(m_mode=="Q65") m_wideGraph->drawRed(0,0);
-  if ("FST4W" == m_mode)
-    {
-      if (m_uploadWSPRSpots
-          && m_config.is_transceiver_online ()) { // need working rig control
-#if QT_VERSION >= QT_VERSION_CHECK (5, 15, 0)
-        uploadTimer.start(QRandomGenerator::global ()->bounded (0, 20000)); // Upload delay
-#else
-        uploadTimer.start(20000 * qrand()/((double)RAND_MAX + 1.0)); // Upload delay
-#endif
-      }
-    }
   auto tnow = QDateTime::currentDateTimeUtc ();
   double tdone = fmod(double(tnow.time().second()),m_TRperiod);
   int mswait;
@@ -6345,11 +6343,6 @@ void MainWindow::readFromStdout()                             //readFromStdout
       }
       write_all("Rx", line_read.trimmed());
     }   // Filtering out some false decodes, and don't write all.txt for such
-
-      if ("FST4W" == m_mode)
-        {
-          uploadWSPRSpots (true, line_read);
-        }
 
       if(m_mode=="FT8" and SpecOp::FOX == m_specOp and
          (decodedtext.string().contains("R+") or decodedtext.string().contains("R-"))) {
@@ -7685,10 +7678,11 @@ void MainWindow::postWsjtCbSpot (QString const& dx_call, QString const& dx_grid,
   payload.insert ("spot", spot);
 
   auto * reply = m_network_manager.post (request, QJsonDocument {payload}.toJson (QJsonDocument::Compact));
-  connect (reply, &QNetworkReply::finished, this, [reply] () {
+  connect (reply, &QNetworkReply::finished, this, [this, reply] () {
     if (QNetworkReply::NoError != reply->error ())
       {
         LOG_WARN (QString {"WSJT-CB spot server upload failed: %1"}.arg (reply->errorString ()).toStdString ());
+        showStatusMessage (tr ("Spotting to WSJT-CB spot server unavailable"));
       }
     reply->deleteLater ();
   });
@@ -11896,7 +11890,10 @@ void MainWindow::WSPR_config(bool b)
   ui->DecodeButton->setEnabled(!b);
   bool bFST4W=(m_mode=="FST4W");
   ui->sbTxPercent->setEnabled(!bFST4W or (tr("Random") == ui->RoundRobin->currentText()));
-  ui->band_hopping_group_box->setVisible(true);
+  // WSJT-CB operates only on 11 m, so WSPR band hopping is not applicable.
+  // Keep it disabled as well as hidden in case an older configuration saved it as enabled.
+  ui->band_hopping_group_box->setChecked(false);
+  ui->band_hopping_group_box->setVisible(false);
   ui->RoundRobin->setVisible(bFST4W);
   ui->sbFST4W_RxFreq->setVisible(bFST4W);
   ui->sbFST4W_FTol->setVisible(bFST4W);
@@ -13607,16 +13604,9 @@ void MainWindow::p1ReadFromStdout()                        //p1readFromStdout
       ndecodes_label.setText(QString::number(m_nWSPRdecodes));
       m_nWSPRdecodes=0;
       ui->DecodeButton->setChecked (false);
-      if(m_uploadWSPRSpots && m_config.is_transceiver_online()) { // need working rig control
-#if QT_VERSION >= QT_VERSION_CHECK (5, 15, 0)
-        uploadTimer.start(QRandomGenerator::global ()->bounded (0, 20000)); // Upload delay
-#else
-        uploadTimer.start(20000 * qrand()/((double)RAND_MAX + 1.0)); // Upload delay
-#endif
-      } else {
-        QFile f {QDir::toNativeSeparators (m_config.writeable_data_dir ().absoluteFilePath ("wspr_spots.txt"))};
-        if (f.exists ()) f.remove ();
-      }
+      // CB WSPR spots are local only; discard the decoder upload file.
+      QFile f {QDir::toNativeSeparators (m_config.writeable_data_dir ().absoluteFilePath ("wspr_spots.txt"))};
+      if (f.exists ()) f.remove ();
       m_RxLog=0;
       m_startAnother=m_loopall;
       m_decoderBusy = false;
@@ -13731,61 +13721,9 @@ void MainWindow::WSPR_history(Frequency dialFreq, int ndecodes)
   }
 }
 
-void MainWindow::uploadWSPRSpots (bool direct_post, QString const& decode_text)
-{
-  // do not spot if disabled, replays, or if rig control not working
-  if(!m_uploadWSPRSpots || m_diskData || !m_config.is_transceiver_online ()) return;
-  if(m_uploading && !decode_text.size ()) {
-    qDebug() << "Previous upload has not completed, spots were lost";
-    wsprNet->abortOutstandingRequests ();
-    m_uploading = false;
-  }
-  QString rfreq = QString("%1").arg((m_dialFreqRxWSPR + 1500) / 1e6, 0, 'f', 6);
-  QString tfreq = QString("%1").arg((m_dialFreqRxWSPR +
-                        ui->TxFreqSpinBox->value()) / 1e6, 0, 'f', 6);
-  auto pct = QString::number (ui->autoButton->isChecked () ? ui->sbTxPercent->value () : 0);
-  if (direct_post)
-    {
-      // queues one FST4W spot
-      wsprNet->post (m_config.my_callsign (), m_config.my_grid (), rfreq, tfreq,
-                     m_mode, m_TRperiod, pct,
-                     QString::number (m_dBm), version (), decode_text);
-    }
-  else
-    {
-      // queues spots for each decode in wspr_spots.txt
-      wsprNet->upload (m_config.my_callsign (), m_config.my_grid (), rfreq, tfreq,
-                       m_mode, m_TRperiod, pct,
-                       QString::number (m_dBm), version (),
-                       m_config.writeable_data_dir ().absoluteFilePath ("wspr_spots.txt"));
-    }
-  // trigger upload of any queued spots
-  if (!decode_text.size ())
-    {
-      m_uploading = true;
-    }
-}
-
-void MainWindow::uploadResponse(QString const& response)
-{
-  if (response == "done") {
-    m_uploading=false;
-  } else {
-    if (response.startsWith ("Upload Failed")) {
-      m_uploading=false;
-    }
-    qDebug () << "WSPRnet.org status:" << response;
-  }
-}
-
 void MainWindow::on_TxPowerComboBox_currentIndexChanged(int index)
 {
   m_dBm = ui->TxPowerComboBox->itemData (index).toInt ();
-}
-
-void MainWindow::on_cbUploadWSPR_Spots_toggled(bool b)
-{
-  m_uploadWSPRSpots=b;
 }
 
 void MainWindow::on_WSPRfreqSpinBox_valueChanged(int n)
@@ -15377,6 +15315,7 @@ void MainWindow::set_mode (QString const& mode)
     if ("FT4" == selected_mode) on_actionFT4_triggered ();
     else if ("FST4" == selected_mode) on_actionFST4_triggered ();
     else if ("FT8" == selected_mode) on_actionFT8_triggered ();
+    else if ("WSPR" == selected_mode) on_actionWSPR_triggered ();
     else if ("Q65" == selected_mode) on_actionQ65_triggered ();
     else on_actionFT8_triggered ();
 }
@@ -15488,6 +15427,14 @@ QString MainWindow::WSPR_message()
   QString sdBm,msg0,msg1,msg2;
   sdBm = sdBm.asprintf(" %d",m_dBm);
   m_tx=1-m_tx;
+
+  if(m_mode=="WSPR") {
+    // WSJT-CB exclusive mode: always the plain "CALL GRID4 dBm" form.
+    // The CB (11 m) callsign is carried in full by the custom 50-bit source
+    // coding (see packcb / wqencode). WSPR type-2 / type-3 formats are not used.
+    return m_config.my_callsign() + " " + m_config.my_grid().mid(0,4) + sdBm;
+  }
+
   int i2=m_config.my_callsign().indexOf("/");
   if(i2>0
      || (6 == m_config.my_grid ().size ()
@@ -15542,6 +15489,11 @@ void MainWindow::on_ft8Button_clicked()
 void MainWindow::on_ft4Button_clicked()
 {
     on_actionFT4_triggered();
+}
+
+void MainWindow::on_wsprButton_clicked()
+{
+    on_actionWSPR_triggered();
 }
 
 void MainWindow::on_msk144Button_clicked()
@@ -16429,6 +16381,15 @@ void MainWindow::check_button_color()
              ui->ft4Button->setStyleSheet("QPushButton {background-color: #505F69; border: 1px solid #32414B; color: #F0F0F0; border-radius: 4px; padding: 3px; outline: none; min-width: 3em;}");
           } else {
              ui->ft4Button->setStyleSheet("QPushButton {background-color: #e1e1e1; border: 1px solid #adadad; border-radius: 0px; padding: 3px; outline: none; min-width: 3em;}");
+          }
+      }
+      if (m_mode=="WSPR") {
+          ui->wsprButton->setStyleSheet("QPushButton {background-color: #00ff00; color: #000000; border: 1px solid #32414B; border-radius: 5px; padding: 3px; outline: none; min-width: 3em;}");
+      } else {
+          if (m_useDarkStyle) {
+             ui->wsprButton->setStyleSheet("QPushButton {background-color: #505F69; border: 1px solid #32414B; color: #F0F0F0; border-radius: 4px; padding: 3px; outline: none; min-width: 3em;}");
+          } else {
+             ui->wsprButton->setStyleSheet("QPushButton {background-color: #e1e1e1; border: 1px solid #adadad; border-radius: 0px; padding: 3px; outline: none; min-width: 3em;}");
           }
       }
       if (m_mode=="MSK144") {

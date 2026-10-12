@@ -6,8 +6,7 @@ Network/MessageClient.cpp \
 Network/NetworkAccessManager.cpp \
 Network/NetworkMessage.cpp \
 Network/NetworkServerLookup.cpp \
-Network/PSKReporter.cpp \
-Network/wsprnet.cpp
+Network/PSKReporter.cpp
 
 HEADERS    += \
 Network/FileDownload.hpp \
@@ -17,5 +16,4 @@ Network/MessageClient.hpp \
 Network/NetworkAccessManager.hpp \
 Network/NetworkMessage.hpp \
 Network/NetworkServerLookup.hpp \
-Network/PSKReporter.hpp \
-Network/wsprnet.h
+Network/PSKReporter.hpp

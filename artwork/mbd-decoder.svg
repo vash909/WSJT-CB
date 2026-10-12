@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="108" height="28" viewBox="0 0 216 56">
+  <title>MBD Decoder</title>
+  <desc>A compact blue computer-era badge with a signal star and striped MBD lettering.</desc>
+  <defs>
+    <clipPath id="scanlines">
+      <path d="M0 6h216v3.5H0z M0 10.5h216V14H0z M0 15h216v3.5H0z
+               M0 19.5h216V23H0z M0 24h216v3.5H0z M0 28.5h216V32H0z"/>
+    </clipPath>
+  </defs>
+  <rect x="1" y="1" width="214" height="54" rx="7" fill="#122333" stroke="#4b718b" stroke-width="2"/>
+  <g fill="none" stroke="#9ddcff" stroke-linecap="round">
+    <path d="M12 34C9 23 22 10 39 10c12 0 20 6 20 14" stroke-width="2.5"/>
+    <path d="M18 43c12 5 29 1 42-11" stroke-width="2.5"/>
+    <path d="M8 28h8m-6 6h10m-5 6h9" stroke-width="2"/>
+  </g>
+  <path d="m37 15 4.5 9.4L52 26l-7.6 7.4 1.8 10.4L37 38.9l-9.3 4.9 1.8-10.4L22 26l10.5-1.6Z" fill="#9ddcff"/>
+  <path d="M68 10v36" stroke="#39576e" stroke-width="1.5"/>
+  <g fill="#b5e6ff" fill-rule="evenodd" clip-path="url(#scanlines)">
+    <path d="M78 6h10l9 11 9-11h10v26h-10V19l-9 10-9-10v13H78Z"/>
+    <path d="M124 6h23c9 0 13 3 13 7 0 3-2 5-5 6 4 1 6 3 6 6 0 5-4 7-14 7h-23Z
+             M134 12v5h11c3 0 4-1 4-2.5s-1-2.5-4-2.5Z M134 22v4h12c3 0 4-1 4-2s-1-2-4-2Z"/>
+    <path d="M168 6h17c13 0 20 5 20 13s-7 13-20 13h-17Z M178 13v12h7c6 0 10-2 10-6s-4-6-10-6Z"/>
+  </g>
+  <!-- Outlined lettering keeps the wordmark independent of installed fonts. -->
+  <g fill="none" stroke="#c0d2df" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+    <path d="M80 49V39h6l4 3v4l-4 3Z"/>
+    <path d="M109 39H99v10h10m-10-5h8"/>
+    <path d="M128 39h-7l-3 3v4l3 3h7"/>
+    <path d="m140 39-3 3v4l3 3h4l3-3v-4l-3-3Z"/>
+    <path d="M156 49V39h6l4 3v4l-4 3Z"/>
+    <path d="M185 39h-10v10h10m-10-5h8"/>
+    <path d="M194 49V39h7l3 2v2l-3 2h-7m6 0 4 4"/>
+  </g>
+</svg>
