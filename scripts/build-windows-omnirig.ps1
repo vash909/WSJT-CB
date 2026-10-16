@@ -171,6 +171,8 @@ copy_deps() {
   done
 }
 
+# Qt can load OpenSSL dynamically, so it is not always visible to ldd.
+cp -p /ucrt64/bin/libssl-*.dll /ucrt64/bin/libcrypto-*.dll "$dest/"
 copy_deps "$app"
 while IFS= read -r -d '' dll; do
   copy_deps "$dll"

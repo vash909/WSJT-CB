@@ -49,35 +49,13 @@ the decoder and application-path regression tests before staging the installer.
 The release workflow also installs the generated EXE and verifies that the GUI
 and decoder start without any build-tool DLL directories on PATH.
 
-## 1.4.1 release build on the Qt/MinGW toolchain
+## Reproducing the GitHub release build
 
-To build the 1.4.1 Windows release with the established Qt/MinGW toolchain,
-use Qt 5.15.2, MinGW/GFortran 8.1.0, Boost 1.74 and the locally installed
-static Hamlib 4.5.5 and PortAudio libraries. This is a separate toolchain from the UCRT64 script above.
-OpenMP is enabled in this build, including the FT8 multithread decoder.
+The manual [release workflow](../.github/workflows/release-packages.yml)
+lists the UCRT64 packages and setup commands used for 1.4.1. It builds
+Hamlib 4.6.5 from a verified source archive, installs OmniRig and Inno Setup,
+and invokes this script with `-RunTests` and a fresh staging directory.
+See `scripts/ci/` for the dependency setup and installer smoke test.
 
-To configure this toolchain, put the matching CMake, MinGW and Qt `bin`
-directories on `PATH`, and pass the Qt, Boost, Hamlib, PortAudio and libusb
-prefixes in `CMAKE_PREFIX_PATH`. Configure a new build directory with:
-
-```powershell
-cmake -S . -B build-user/release-1.4.1 -G "MinGW Makefiles" `
-  -DCMAKE_BUILD_TYPE=Release `
-  -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF `
-  -DWSJT_WITH_OMNIRIG=ON -DWSJT_BUILD_DECODER_TESTS=ON `
-  -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=FALSE `
-  "-DCMAKE_PREFIX_PATH=<Qt>;<Boost>;<Hamlib>;<PortAudio>;<libusb>" `
-  "-DFFTW3_ROOT_DIR=<FFTW>" `
-  "-DCMAKE_INSTALL_PREFIX=$PWD/build-user/release-1.4.1/stage"
-cmake --build build-user/release-1.4.1 --parallel 6
-ctest --test-dir build-user/release-1.4.1 --output-on-failure
-cmake --install build-user/release-1.4.1
-& "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
-  "/DDistDir=$PWD\build-user\release-1.4.1\stage" wsjtcb_dist_x64.iss
-```
-
-Replace the angle-bracket paths with the installed dependency prefixes.
-The tests also require Python 3 and the dependency DLL directories on
-`PATH`. Use a fresh staging directory so obsolete DLLs from previous
-releases are not included. `DistDir` defaults to `dist` when omitted from
-the Inno Setup command.
+Use matching UCRT64 libraries throughout the build. The older Qt 5.15.2 /
+MinGW 8.1 toolchain recipe does not describe the current release artifacts.

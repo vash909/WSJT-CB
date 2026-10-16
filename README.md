@@ -11,6 +11,10 @@ This document describes the code changes currently present in this fork, compare
 
 ## Release Notes 1.4.1 — Scarlet
 
+- Fixed WSPR and radio-control errors caused by settings or files still pointing
+  to the old branded application directory. Known legacy paths now migrate to
+  `WSJT-CB`, preserving existing files and separate rig profiles.
+
 - WSPR now supports CB callsigns with a dedicated encoding that transmits the
   full callsign, a 4-character locator and transmit power in every frame.
   This WSPR variant communicates with other WSJT-CB stations; standard
@@ -312,7 +316,7 @@ These package names were verified against Ubuntu/Kubuntu Noble repositories:
 
 For the 1.4 source, check the Hamlib version before building: the package
 name alone does not establish API compatibility. See section 8 for the
-Hamlib requirement and the Ubuntu 20.04 compatibility package.
+Hamlib requirement and the distribution-specific release packages.
 
 Example local configure command (no manpages/docs):
 
@@ -323,129 +327,76 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 8) Linux .deb Installation and Compatibility
+## 8) Linux DEB/RPM Installation and Compatibility
 
-The WSJT-CB 1.4 compatibility test package is named:
+Version 1.4.1 uses separate **amd64/x86-64** packages for each supported
+system. Download the file matching your distribution and version from
+[GitHub Releases](https://github.com/vash909/WSJT-CB/releases).
 
-```text
-wsjtcb_1.4.1~compat1_amd64.deb
-```
+| Target system | Package |
+| --- | --- |
+| Ubuntu 22.04 | `wsjtcb_1.4.1_ubuntu22.04_amd64.deb` |
+| Ubuntu 24.04 | `wsjtcb_1.4.1_ubuntu24.04_amd64.deb` |
+| Debian 12 | `wsjtcb_1.4.1_debian12_amd64.deb` |
+| Debian 13 | `wsjtcb_1.4.1_debian13_amd64.deb` |
+| Fedora 43 | `wsjtcb-1.4.1-fedora43.x86_64.rpm` |
+| Fedora 44 | `wsjtcb-1.4.1-fedora44.x86_64.rpm` |
 
-Install it from the directory containing the downloaded file:
-
-```bash
-sudo apt update
-sudo apt install ./wsjtcb_1.4.1~compat1_amd64.deb
-```
-
-Start **WSJT-CB** from the application menu, or run `wsjtcb`. Use APT to
-install the file so it also resolves the required audio, Qt and SQLite
-packages. On Ubuntu/Kubuntu, the Universe repository must be enabled.
-
-This package is for **amd64/x86-64 PCs**, with Ubuntu 20.04 as the oldest
-build baseline (glibc 2.31, GCC 9 and Qt 5.12). Its compatibility targets are
-Ubuntu/Kubuntu 20.04, 22.04 and 24.04, Debian 11, 12 and 13, and derivatives
-with compatible repositories. ARM/Raspberry Pi and 32-bit systems require
-separate builds; Debian 10 is below this package's glibc baseline.
-
-The same `amd64` package passed the following checks on 2026-10-02:
-
-| Distribution | APT installation and library resolution | GUI and `jt9` startup |
-| --- | --- | --- |
-| Ubuntu 20.04 | Passed | Passed |
-| Ubuntu 22.04 | Passed | Passed |
-| Ubuntu 24.04 | Passed | Passed |
-| Debian 11 | Passed | Passed |
-| Debian 12 | Passed | Passed |
-| Debian 13 | Passed | Passed |
-
-These checks used isolated official distro images, Xvfb, an ordinary user
-and read-only system directories. Each GUI run remained active for at least
-35 seconds with its installed decoder running. All six optional decoder
-regression tests also passed in the Ubuntu 20.04 build environment.
-Audio devices, physical CAT/PTT, native Wayland sessions and live QSOs still
-need hardware testing. Kubuntu compatibility is expected from its Ubuntu
-base; a separate KDE desktop session was not tested.
-
-Boost 1.71 and Hamlib 4.6.5 are statically linked, avoiding dependencies on
-their distro-specific library versions. Qt, audio, FFTW and the compiler
-runtime libraries are supplied by the distribution. Package dependencies
-handle both the original Qt package names and the newer `t64` names.
-The archive uses xz compression, supported by the older target systems.
-Decoder and rig-control helpers are installed under `/usr/lib/wsjtcb/bin`,
-with a launcher at `/usr/bin/wsjtcb`, to avoid file conflicts with WSJT-X.
-The `~compat1` suffix identifies this as a package for compatibility testing
-and sorts before a final `1.4.1` package version.
-
-### Building a Distro-Native Package
-
-The following recipe uses the build machine's libraries. Its output is a
-**distro-native package**; compiling on Debian 12 or a newer system does not
-make a binary compatible with Ubuntu 20.04. The broad-compatibility package
-described above uses a separate Ubuntu 20.04 build environment and static
-Boost/Hamlib, rather than the default CPack dependency list.
-
-The current transceiver code requires the Hamlib APIs provided by 4.6.5.
-If a distribution supplies an older Hamlib, build a compatible Hamlib 4.x
-release first and expose its headers, library and `hamlib.pc` to CMake.
-
-These package names are suitable for Debian 12 Bookworm when building a
-distro-native `.deb` locally (subject to the Hamlib requirement above):
-
-- `build-essential`
-- `cmake`
-- `ninja-build`
-- `gfortran`
-- `dpkg-dev`
-- `debhelper`
-- `libudev-dev`
-- `libboost-log-dev`
-- `libboost-thread-dev`
-- `libfftw3-dev`
-- `libhamlib-dev`
-- `libusb-1.0-0-dev`
-- `qtbase5-dev`
-- `qtmultimedia5-dev`
-- `qttools5-dev`
-- `qttools5-dev-tools`
-- `libqt5serialport5-dev`
-- `libqt5websockets5-dev`
-
-Install them with:
+For example, on Ubuntu 24.04:
 
 ```bash
 sudo apt update
-sudo apt install -y \
-  build-essential cmake ninja-build gfortran dpkg-dev debhelper \
-  libudev-dev libboost-log-dev libboost-thread-dev libfftw3-dev \
-  libhamlib-dev libusb-1.0-0-dev qtbase5-dev qtmultimedia5-dev \
-  qttools5-dev qttools5-dev-tools libqt5serialport5-dev \
-  libqt5websockets5-dev
+sudo apt install ./wsjtcb_1.4.1_ubuntu24.04_amd64.deb
 ```
 
-Build and package manually:
+On Fedora 44:
 
 ```bash
-cmake -S . -B build-debian12 -G Ninja \
-  -DCMAKE_BUILD_TYPE=Release \
-  -DWSJT_SKIP_MANPAGES=ON \
-  -DWSJT_GENERATE_DOCS=OFF
-
-cmake --build build-debian12 -j"$(nproc)"
-cpack --config build-debian12/CPackConfig.cmake -G DEB -B build-debian12
+sudo dnf install ./wsjtcb-1.4.1-fedora44.x86_64.rpm
 ```
 
-The generated package will be named like:
+Use APT or DNF so the required libraries are installed automatically.
+Ubuntu needs the Universe repository enabled. Start **WSJT-CB** from the
+application menu or run `wsjtcb`.
 
-```text
-build-debian12/wsjtcb_1.4.1_amd64.deb
+Each package is compiled against its target distribution's libraries.
+Dependencies are derived from the resulting binaries; Qt multimedia and
+SQLite plugins are included in the dependency list. Hamlib 4.6.5 is linked
+statically, avoiding incompatibility with older system Hamlib versions.
+Boost, Qt, FFTW and compiler runtime libraries come from the target system.
+Do not install a package built for another distribution or release.
+
+The manual workflow
+[Build and Verify Release Packages](.github/workflows/release-packages.yml)
+runs the path-migration and decoder regression tests. It then installs each
+package in a fresh official distribution container, checks dependencies,
+and starts the installed GUI and `jt9` decoder for 40 seconds under Xvfb
+as an ordinary user. The release notes report the results for published
+artifacts. These checks do not exercise physical audio devices, CAT/PTT,
+native Wayland sessions or live QSOs.
+
+Helpers such as `jt9` and `wsprd` are installed under `/usr/lib/wsjtcb/bin`,
+with a launcher at `/usr/bin/wsjtcb`, to avoid conflicts with WSJT-X.
+ARM, 32-bit systems, Ubuntu 20.04 and Debian 11 are outside this release's
+package test matrix; old compatibility-test results do not apply to 1.4.1.
+
+### Reproducing a native package
+
+The CI scripts install build dependencies, build pinned Hamlib and create a
+package with generated dependencies. Run them inside a disposable container,
+not directly on your desktop. For example, from the repository root:
+
+```bash
+docker run --rm -v "$PWD:/src" -w /src debian:12 \
+  bash scripts/ci/build-linux.sh debian12
+docker run --rm -v "$PWD:/src" -w /src debian:12 \
+  bash scripts/ci/test-linux-package.sh debian12
 ```
 
-The existing `.github/workflows/release-deb.yml` builds inside Ubuntu 22.04
-and can attach assets to a published GitHub Release. It does not reproduce
-the Ubuntu 20.04 compatibility build described here. The compatibility test
-workflow still refers to an older Debian 13 artifact and branch, so its
-presence alone does not establish compatibility for a new package.
+The package and test reports are written to `dist/debian12/`. Replace both
+the image and target name for another system listed above. The superseded
+`release-deb.yml` and `test-deb-package-compatibility.yml` workflows are
+disabled; the manual release workflow provides the current build procedure.
 
 ## 9) Arch Linux / CachyOS Build Notes
 
@@ -492,11 +443,12 @@ helpers, Qt plugins, data files and runtime libraries. Qt, MinGW and MSYS2
 do not need to be installed on the destination PC. Install OmniRig separately
 if you want to use **OmniRig Rig 1 / Rig 2**; other CAT choices use Hamlib.
 
-This Release build uses Qt 5.15.2 and MinGW/GFortran 8.1.0 with OpenMP
-enabled. All six decoder regression tests passed on Windows on 2026-10-12,
-including 40 simulated CB audio decodes and AutoSeq checks with different
-thread counts. Physical audio devices, CAT/PTT hardware and live QSOs were
-not part of these automated checks.
+The release workflow uses MSYS2 UCRT64, Qt 5, GCC/GFortran and Hamlib
+4.6.5 with OpenMP enabled. It runs seven regression tests, including path
+migration, 40 simulated CB audio decodes and AutoSeq checks with different
+thread counts, then installs the EXE and starts the GUI and decoder without
+compiler DLL directories on PATH. Published release notes report the results.
+Physical audio devices, CAT/PTT hardware and live QSOs require separate tests.
 
 The installer retains the application identity used by previous WSJT-CB
 installers and reuses the existing installation directory. Settings and logs

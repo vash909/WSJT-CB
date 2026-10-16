@@ -11,7 +11,7 @@ if command -v apt-get >/dev/null; then
   test -z "$(dpkg --audit)"
   dpkg-query -W -f='${Version}\n' wsjtcb | grep -x 1.4.1
 else
-  dnf install -y "$out"/*.rpm xorg-x11-server-Xvfb xorg-x11-xauth xorg-x11-utils \
+  dnf install -y "$out"/*.rpm xorg-x11-server-Xvfb xorg-x11-xauth xwininfo \
     procps-ng python3 util-linux shadow-utils
   dnf check
   rpm -V wsjtcb

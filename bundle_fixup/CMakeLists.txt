@@ -95,7 +95,6 @@ if (APPLE OR WIN32)
       DIRECTORY
       ${QT_PLUGINS_DIR}/platforms
       ${QT_PLUGINS_DIR}/styles
-      ${QT_PLUGINS_DIR}/accessible
       ${QT_PLUGINS_DIR}/audio
       ${QT_PLUGINS_DIR}/imageformats
       DESTINATION ${WSJT_PLUGIN_DESTINATION}
@@ -106,6 +105,12 @@ if (APPLE OR WIN32)
       PATTERN "*offscreen*${CMAKE_SHARED_LIBRARY_SUFFIX}" EXCLUDE
       PATTERN "*quick*${CMAKE_SHARED_LIBRARY_SUFFIX}" EXCLUDE
       PATTERN "*d${CMAKE_SHARED_LIBRARY_SUFFIX}" EXCLUDE
+      )
+    # Recent Qt builds integrate accessibility and omit this plugin directory.
+    install (DIRECTORY "${QT_PLUGINS_DIR}/accessible"
+      DESTINATION ${WSJT_PLUGIN_DESTINATION}
+      CONFIGURATIONS Release MinSizeRel RelWithDebInfo
+      OPTIONAL FILES_MATCHING PATTERN "*${CMAKE_SHARED_LIBRARY_SUFFIX}"
       )
     install (
       FILES
