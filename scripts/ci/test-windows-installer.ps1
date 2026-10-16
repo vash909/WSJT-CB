@@ -1,5 +1,7 @@
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
+$sourceCommit = git rev-parse HEAD
+if ($LASTEXITCODE -ne 0) { throw 'Cannot identify source commit' }
 $installer = (Resolve-Path 'installer-output/wsjtcb-1.4.1-win64-setup.exe').Path
 $installDir = Join-Path $env:RUNNER_TEMP 'wsjtcb-installed'
 $installLog = Join-Path $PWD 'installer-output/install.log'
@@ -36,6 +38,6 @@ try {
   Get-CimInstance Win32_Process -Filter "ParentProcessId=$($process.Id)" |
     ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }
 }
-git rev-parse HEAD | Set-Content 'installer-output/SOURCE_COMMIT.txt'
+$sourceCommit | Set-Content 'installer-output/SOURCE_COMMIT.txt'
 $hash = (Get-FileHash -Algorithm SHA256 $installer).Hash.ToLowerInvariant()
 "$hash  wsjtcb-1.4.1-win64-setup.exe" | Set-Content 'installer-output/SHA256SUMS.txt'
