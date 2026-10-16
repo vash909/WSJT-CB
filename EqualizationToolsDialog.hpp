@@ -19,6 +19,8 @@ public:
                                     , QDir const& data_directory
                                     , QVector<double> const& coefficients
                                     , QWidget * = nullptr);
+  ~EqualizationToolsDialog ();
+
   Q_SLOT void show ();
 
   Q_SIGNAL void phase_equalization_changed (QVector<double> const&);

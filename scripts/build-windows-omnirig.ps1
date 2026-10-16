@@ -5,6 +5,7 @@ param(
   [string]$MsysBash = "C:\msys64\usr\bin\bash.exe",
   [string]$InnoSetupCompiler = "",
   [switch]$SkipInstaller,
+  [switch]$RunTests,
   [switch]$Clean
 )
 
@@ -124,13 +125,18 @@ $configureCommand = @(
   "-DWSJT_ENABLE_WERROR=OFF",
   "-DWSJT_WITH_OMNIRIG=ON",
   "-DWSJT_SKIP_BUNDLE_FIXUP=ON",
-  "-DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=TRUE",
+  "-DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=FALSE",
+  "-DWSJT_BUILD_DECODER_TESTS=$(if ($RunTests) { 'ON' } else { 'OFF' })",
+  "-DWSJT_BUILD_PATH_TESTS=$(if ($RunTests) { 'ON' } else { 'OFF' })",
   "-DQt5_DIR=/ucrt64/lib/cmake/Qt5",
   "-DCMAKE_PREFIX_PATH=/ucrt64"
 ) -join " "
 
 Invoke-Msys -Step "Configure CMake for Windows/UCRT64 with OmniRig" -Command $configureCommand
 Invoke-Msys -Step "Build WSJT-CB" -Command "cmake --build '$BuildMsys' --config Release --parallel $Jobs"
+if ($RunTests) {
+  Invoke-Msys -Step "Run regression tests" -Command "ctest --test-dir '$BuildMsys' --output-on-failure"
+}
 Invoke-Msys -Step "Install staged files into dist" -Command "cmake --install '$BuildMsys' --config Release"
 
 $deployCommand = @'
@@ -168,7 +174,7 @@ copy_deps() {
 copy_deps "$app"
 while IFS= read -r -d '' dll; do
   copy_deps "$dll"
-done < <(find "__DIST__" -type f -iname '*.dll' -print0)
+done < <(find "__DIST__" -type f \( -iname '*.dll' -o -iname '*.exe' \) -print0)
 
 ldd "$app" | tee "$ldd_log"
 if grep -i "not found" "$ldd_log"; then
@@ -187,7 +193,7 @@ if (-not $SkipInstaller) {
   $iscc = Find-InnoSetupCompiler
   Write-Host ""
   Write-Host "==> Build Inno Setup installer"
-  & $iscc (Join-Path $RepoRoot "wsjtcb_dist_x64.iss")
+  & $iscc "/DDistDir=$DistPath" (Join-Path $RepoRoot "wsjtcb_dist_x64.iss")
   if ($LASTEXITCODE -ne 0) {
     throw "Inno Setup failed with exit code $LASTEXITCODE"
   }

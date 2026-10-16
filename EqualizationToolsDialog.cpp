@@ -271,6 +271,8 @@ EqualizationToolsDialog::EqualizationToolsDialog (QSettings * settings
 {
 }
 
+EqualizationToolsDialog::~EqualizationToolsDialog () = default;
+
 void EqualizationToolsDialog::show ()
 {
   m_->show ();

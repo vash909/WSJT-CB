@@ -44,10 +44,10 @@ Expected tools and dependencies:
 - OmniRig installed on Windows.
 - Inno Setup 6 installed on Windows.
 
-OpenMP is intentionally disabled in the scripted build because this MinGW/MSYS2
-environment hit an assembler/runtime compatibility issue with automatic OpenMP
-detection. The build still links the needed GNU OpenMP runtime where the code
-uses explicit OpenMP symbols.
+OpenMP is enabled for the FT8 multithread decoder. Pass `-RunTests` to run
+the decoder and application-path regression tests before staging the installer.
+The release workflow also installs the generated EXE and verifies that the GUI
+and decoder start without any build-tool DLL directories on PATH.
 
 ## 1.4.1 release build on the Qt/MinGW toolchain
 

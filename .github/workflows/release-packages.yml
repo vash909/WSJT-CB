@@ -1,0 +1,119 @@
+name: Build and Verify Release Packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-packages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  linux:
+    name: Linux ${{ matrix.target }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {target: ubuntu22.04, image: 'ubuntu:22.04'}
+          - {target: ubuntu24.04, image: 'ubuntu:24.04'}
+          - {target: debian12, image: 'debian:12'}
+          - {target: debian13, image: 'debian:13'}
+          - {target: fedora43, image: 'fedora:43'}
+          - {target: fedora44, image: 'fedora:44'}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Build native package and run regression tests
+        env:
+          TARGET_IMAGE: ${{ matrix.image }}
+          TARGET_NAME: ${{ matrix.target }}
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src "$TARGET_IMAGE" \
+            bash scripts/ci/build-linux.sh "$TARGET_NAME"
+      - name: Install and launch in a clean target system
+        env:
+          TARGET_IMAGE: ${{ matrix.image }}
+          TARGET_NAME: ${{ matrix.target }}
+        run: |
+          docker run --rm -v "$PWD:/src" -w /src "$TARGET_IMAGE" \
+            bash scripts/ci/test-linux-package.sh "$TARGET_NAME"
+      - name: Upload verified package
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wsjtcb-1.4.1-${{ matrix.target }}
+          path: dist/${{ matrix.target }}/
+          if-no-files-found: error
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: diagnostics-${{ matrix.target }}
+          path: |
+            build-user/ci-${{ matrix.target }}/Testing/Temporary/
+            dist/${{ matrix.target }}/*.txt
+            dist/${{ matrix.target }}/*.log
+
+  windows:
+    name: Windows x64 installer
+    runs-on: windows-2022
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - name: Install compiler and libraries
+        id: msys2
+        uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e # v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            git make autoconf automake libtool tar diffutils
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-gcc-fortran
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-ninja
+            mingw-w64-ucrt-x86_64-pkgconf
+            mingw-w64-ucrt-x86_64-qt5-base
+            mingw-w64-ucrt-x86_64-qt5-activeqt
+            mingw-w64-ucrt-x86_64-qt5-tools
+            mingw-w64-ucrt-x86_64-qt5-multimedia
+            mingw-w64-ucrt-x86_64-qt5-serialport
+            mingw-w64-ucrt-x86_64-qt5-websockets
+            mingw-w64-ucrt-x86_64-boost
+            mingw-w64-ucrt-x86_64-fftw
+            mingw-w64-ucrt-x86_64-portaudio
+            mingw-w64-ucrt-x86_64-libusb
+            mingw-w64-ucrt-x86_64-python
+      - name: Build pinned Hamlib
+        shell: msys2 {0}
+        run: bash scripts/ci/build-hamlib.sh /ucrt64 shared
+      - name: Install OmniRig and Inno Setup
+        shell: pwsh
+        run: ./scripts/ci/setup-windows.ps1
+      - name: Build, test and package
+        shell: pwsh
+        run: |
+          ./scripts/build-windows-omnirig.ps1 -BuildDir build-user/windows-ci -DistDir dist/windows `
+            -RunTests -Jobs 4 -MsysBash "${{ steps.msys2.outputs.msys2-location }}\usr\bin\bash.exe" `
+            -InnoSetupCompiler "$env:RUNNER_TEMP\innosetup\ISCC.exe"
+      - name: Install and launch packaged application
+        shell: pwsh
+        run: ./scripts/ci/test-windows-installer.ps1
+      - name: Upload verified installer
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: wsjtcb-1.4.1-windows-x64
+          path: installer-output/
+          if-no-files-found: error
+      - name: Upload diagnostics
+        if: failure()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: diagnostics-windows
+          path: |
+            build-user/windows-ci/Testing/Temporary/
+            installer-output/*.txt
+            installer-output/*.log

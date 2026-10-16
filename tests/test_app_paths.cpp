@@ -10,7 +10,7 @@
 #include <iostream>
 #include <stdexcept>
 
-#if defined (Q_OS_UNIX) && !defined (Q_OS_MACOS)
+#if !defined (Q_OS_MACOS)
 namespace
 {
   QString const branded_name {"WSJT-CB by 1AT106 1XZ732 1AT1989"};
@@ -48,19 +48,30 @@ namespace
 int main (int argc, char ** argv)
 {
   QCoreApplication app {argc, argv};
-#if !defined (Q_OS_UNIX) || defined (Q_OS_MACOS)
-  // These fixtures redirect all standard locations through XDG variables.
-  // Do not touch real AppData/Library folders on other platforms.
-  std::cout << "Path fixtures require XDG standard locations\n";
+#if defined (Q_OS_MACOS)
+  // Linux uses isolated XDG roots; Windows uses a temporary organization folder.
+  // A corresponding macOS fixture is not implemented.
+  std::cout << "Path fixtures are implemented for Linux and Windows\n";
   return 77;
 #else
   try
     {
+#ifdef Q_OS_WIN
+      QTemporaryDir sandbox {QStandardPaths::writableLocation (QStandardPaths::GenericDataLocation)
+                               + "/wsjtcb-path-tests-XXXXXX"};
+      QCoreApplication::setOrganizationName (QFileInfo {sandbox.path ()}.fileName ());
+#else
       QTemporaryDir sandbox;
+#endif
       require (sandbox.isValid (), "Cannot create test sandbox");
       QDir root {sandbox.path ()};
+#ifdef Q_OS_WIN
+      auto const data_root = root.path ();
+      auto const config_root = root.path ();
+#else
       auto const data_root = root.filePath ("data");
       auto const config_root = root.filePath ("config");
+#endif
       auto const system_config = root.filePath ("system-config");
       qputenv ("XDG_DATA_HOME", data_root.toUtf8 ());
       qputenv ("XDG_CONFIG_HOME", config_root.toUtf8 ());
@@ -113,10 +124,15 @@ int main (int argc, char ** argv)
       require (read_file (hamlib_path) == "legacy Hamlib settings", "Hamlib configuration was not migrated");
       write_file (hamlib_path, "current Hamlib settings");
       require (read_file (wsjtcb_locate (QStandardPaths::AppConfigLocation, "hamlib_settings.json")) == "current Hamlib settings", "Legacy settings replaced current settings");
+#ifndef Q_OS_WIN
       require (wsjtcb_writable_location (QStandardPaths::ConfigLocation) == config_root, "Generic config location changed");
       require (!QFileInfo::exists (config_root + "/hamlib_settings.json"), "App data leaked into generic config location");
       write_file (system_config + "/WSJT-CB/system.json", "system settings");
       require (wsjtcb_locate (QStandardPaths::AppConfigLocation, "system.json") == system_config + "/WSJT-CB/system.json", "System configuration fallback was lost");
+#else
+      require (wsjtcb_writable_location (QStandardPaths::ConfigLocation) == new_config, "Windows config must use the stable folder");
+      require (wsjtcb_migrate_data_path (QDir::toNativeSeparators (old_data.toUpper () + "/SAVE")) == new_data + "/SAVE", "Windows native path/case migration failed");
+#endif
       require (wsjtcb_locate (QStandardPaths::AppConfigLocation, "missing.json").isEmpty (), "Missing lookup should be empty");
 
       set_instance (" - Radio B");

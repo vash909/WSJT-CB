@@ -1,6 +1,8 @@
 Release Notes
 
-Version 1.4.1
+Version 1.4.1 — Scarlet
+
+- Fixed legacy data-folder references affecting WSPR audio saves and HRD/TCI/Hamlib radio interfaces. Existing audio paths are migrated to the stable WSJT-CB folder without overwriting current files or mixing rig instances.
 
 
 - WSPR now works with CB (11 m) callsigns. Standard WSPR cannot pack a CB callsign: its formats only encode a standard amateur callsign into 28 bits, and the only alternative (a 15-bit hashed callsign) can be resolved by a receiver just if it was previously learned from a decodable standard transmission, which a CB callsign can never send. Plain WSPR would therefore only ever show "<...>" for CB stations.
