@@ -15,6 +15,7 @@
 #include <QDebug>
 #include <hamlib/rig.h>
 #include "pimpl_impl.hpp"
+#include "qt_helpers.hpp"
 #include "moc_HamlibTransceiver.cpp"
 
 #if HAVE_HAMLIB_OLD_CACHING
@@ -592,7 +593,7 @@ void HamlibTransceiver::load_user_settings ()
   //
   // user defined Hamlib settings
   //
-  auto settings_file_name = QStandardPaths::locate (QStandardPaths::AppConfigLocation
+  auto settings_file_name = wsjtcb_locate (QStandardPaths::AppConfigLocation
                                                     , "hamlib_settings.json");
   if (!settings_file_name.isEmpty ())
     {

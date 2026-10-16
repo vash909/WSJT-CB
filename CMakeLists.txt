@@ -60,7 +60,7 @@ if (NOT DEFINED CMAKE_Fortran_COMPILER AND NOT DEFINED ENV{FC})
 endif ()
 
 project (wsjtx
-  VERSION 1.4.0.0
+  VERSION 1.4.1.0
   LANGUAGES C CXX Fortran
   )
 set (PROJECT_DESCRIPTION "WSJT-CB: Digital Modes for Weak Signal Communications in CB Radio")
@@ -1232,7 +1232,8 @@ if (WSJT_GENERATE_DOCS)
   add_subdirectory (doc)
 endif (WSJT_GENERATE_DOCS)
 option (WSJT_BUILD_DECODER_TESTS "Build FT8 decoder and CB regression tests" OFF)
-if (WSJT_BUILD_DECODER_TESTS)
+option (WSJT_BUILD_PATH_TESTS "Build application path migration regression tests" OFF)
+if (WSJT_BUILD_DECODER_TESTS OR WSJT_BUILD_PATH_TESTS)
   enable_testing ()
 endif ()
 if (EXISTS ${CMAKE_SOURCE_DIR}/tests AND IS_DIRECTORY ${CMAKE_SOURCE_DIR}/tests)

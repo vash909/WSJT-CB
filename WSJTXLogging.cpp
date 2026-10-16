@@ -1,6 +1,5 @@
 #include "WSJTXLogging.hpp"
 
-#include <algorithm>
 #include <string>
 #include <exception>
 #include <sstream>
@@ -20,11 +19,8 @@
 #include <boost/container/flat_map.hpp>
 
 #include <QtGlobal>
-#include <QCoreApplication>
-#include <QDateTime>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QTextStream>
 #include <QString>
 #include <QStandardPaths>
@@ -48,9 +44,6 @@ BOOST_LOG_ATTRIBUTE_KEYWORD(channel, "Channel", std::string)
 
 namespace
 {
-  char const * stable_application_name_property = "wsjtcb.settingsApplicationName";
-  char const * stable_application_base_name = "WSJT-CB";
-
   // Top level exception handler that gets exceptions from filters and
   // formatters.
   struct exception_handler
@@ -67,74 +60,6 @@ namespace
       throw;
     }
   };
-
-  QString stable_application_name ()
-  {
-    auto app = QCoreApplication::instance ();
-    auto name = app ? app->property (stable_application_name_property).toString ().trimmed () : QString {};
-    return name.isEmpty () ? QCoreApplication::applicationName () : name;
-  }
-
-  QString stable_writable_location (QStandardPaths::StandardLocation location)
-  {
-    auto path = QStandardPaths::writableLocation (location);
-    auto stable_name = stable_application_name ();
-    auto visible_name = QCoreApplication::applicationName ();
-    QFileInfo path_info {path};
-    if (!stable_name.isEmpty () && !visible_name.isEmpty () && path_info.fileName () == visible_name)
-      {
-        return path_info.dir ().absoluteFilePath (stable_name);
-      }
-    return path;
-  }
-
-  bool copy_directory (QString const& source_path, QString const& target_path)
-  {
-    QDir source_dir {source_path};
-    if (!source_dir.exists ())
-      {
-        return false;
-      }
-
-    QDir target_dir;
-    if (!target_dir.mkpath (target_path))
-      {
-        return false;
-      }
-
-    for (auto const& entry: source_dir.entryInfoList (QDir::NoDotAndDotDot | QDir::Files | QDir::Dirs))
-      {
-        auto target_file = QDir {target_path}.absoluteFilePath (entry.fileName ());
-        if (entry.isDir ())
-          {
-            copy_directory (entry.absoluteFilePath (), target_file);
-          }
-        else if (!QFileInfo::exists (target_file))
-          {
-            QFile::copy (entry.absoluteFilePath (), target_file);
-          }
-      }
-    return true;
-  }
-
-  void migrate_legacy_app_local_data (QString const& target_path)
-  {
-    QDir target_parent {QDir::cleanPath (QDir {target_path}.absoluteFilePath (".."))};
-    QFileInfo target_info {target_path};
-    auto legacy_dirs = target_parent.entryInfoList (QStringList {QString {stable_application_base_name} + "*"},
-                                                    QDir::Dirs | QDir::NoDotAndDotDot);
-    std::sort (legacy_dirs.begin (), legacy_dirs.end (), [] (QFileInfo const& lhs, QFileInfo const& rhs) {
-        return lhs.lastModified () > rhs.lastModified ();
-      });
-
-    for (auto const& legacy_info: legacy_dirs)
-      {
-        if (legacy_info.absoluteFilePath () != target_info.absoluteFilePath ())
-          {
-            copy_directory (legacy_info.absoluteFilePath (), target_path);
-          }
-      }
-  }
 
   // Reroute Qt messages to the system logger
   void qt_log_handler (QtMsgType type, QMessageLogContext const& context, QString const& msg)
@@ -190,8 +115,7 @@ namespace
     //
 
     // Default log file location.
-    QDir app_data {stable_writable_location (QStandardPaths::AppLocalDataLocation)};
-    migrate_legacy_app_local_data (app_data.absolutePath ());
+    QDir app_data {wsjtcb_writable_location (QStandardPaths::AppLocalDataLocation)};
     app_data.mkpath (".");
     Logger::init ();          // Basic setup of attributes
 
@@ -263,15 +187,8 @@ WSJTXLogging::WSJTXLogging ()
      logging::make_exception_handler<std::runtime_error, std::logic_error> (exception_handler {})
      );
 
-  migrate_legacy_app_local_data (stable_writable_location (QStandardPaths::AppLocalDataLocation));
-
   // Check for a user-defined logging configuration settings file.
-  auto log_config_path = QDir {stable_writable_location (QStandardPaths::ConfigLocation)}
-    .absoluteFilePath ("wsjtcb_log_config.ini");
-  if (!QFileInfo::exists (log_config_path))
-    {
-      log_config_path = QStandardPaths::locate (QStandardPaths::ConfigLocation, "wsjtcb_log_config.ini");
-    }
+  auto log_config_path = wsjtcb_locate (QStandardPaths::ConfigLocation, "wsjtcb_log_config.ini");
   QFile log_config {log_config_path};
   if (log_config.exists () && log_config.open (QFile::ReadOnly) && log_config.isReadable ())
     {
@@ -285,11 +202,11 @@ WSJTXLogging::WSJTXLogging ()
          {"DocumentsLocation", QStandardPaths::writableLocation (QStandardPaths::DocumentsLocation)},
          {"TempLocation", QStandardPaths::writableLocation (QStandardPaths::TempLocation)},
          {"HomeLocation", QStandardPaths::writableLocation (QStandardPaths::HomeLocation)},
-         {"CacheLocation", QStandardPaths::writableLocation (QStandardPaths::CacheLocation)},
+         {"CacheLocation", wsjtcb_writable_location (QStandardPaths::CacheLocation)},
          {"GenericCacheLocation", QStandardPaths::writableLocation (QStandardPaths::GenericCacheLocation)},
          {"GenericDataLocation", QStandardPaths::writableLocation (QStandardPaths::GenericDataLocation)},
-         {"AppDataLocation", stable_writable_location (QStandardPaths::AppDataLocation)},
-         {"AppLocalDataLocation", stable_writable_location (QStandardPaths::AppLocalDataLocation)},
+         {"AppDataLocation", wsjtcb_writable_location (QStandardPaths::AppDataLocation)},
+         {"AppLocalDataLocation", wsjtcb_writable_location (QStandardPaths::AppLocalDataLocation)},
         };
       // Parse the configration settings substituting the variable if found.
       QString new_config;

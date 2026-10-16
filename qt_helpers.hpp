@@ -12,6 +12,7 @@
 #include <QMetaType>
 #include <QMetaEnum>
 #include <QStandardPaths>
+#include <QStringList>
 
 #define ENUM_QDATASTREAM_OPS_DECL(CLASS, ENUM)				\
   QDataStream& operator << (QDataStream&, CLASS::ENUM const&);			\
@@ -80,7 +81,11 @@ void throw_qstring (QString const& qs)
 QString font_as_stylesheet (QFont const&);
 
 QString wsjtcb_stable_application_name ();
+QStringList wsjtcb_legacy_application_names ();
 QString wsjtcb_writable_location (QStandardPaths::StandardLocation location);
+QString wsjtcb_locate (QStandardPaths::StandardLocation location, QString const& file_name);
+// Rebase only paths within a legacy data directory for the current instance.
+QString wsjtcb_migrate_data_path (QString const& path);
 
 // do what is necessary to change a dynamic property and trigger any
 // conditional style sheet updates

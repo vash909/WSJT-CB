@@ -1758,7 +1758,7 @@ void MainWindow::readSettings()
   restoreState (m_settings->value ("state", saveState ()).toByteArray ());
   ui->dxCallEntry->setText (m_settings->value ("DXcall", QString {}).toString ());
   ui->dxGridEntry->setText (m_settings->value ("DXgrid", QString {}).toString ());
-  m_path = m_settings->value("MRUdir", m_config.save_directory ().absolutePath ()).toString ();
+  m_path = wsjtcb_migrate_data_path (m_settings->value("MRUdir", m_config.save_directory ().absolutePath ()).toString ());
   m_txFirst = m_settings->value("TxFirst",false).toBool();
   auto displayMsgAvg = m_settings->value ("MsgAvgDisplayed", false).toBool ();
   auto displayFoxLog = m_settings->value ("FoxLogDisplayed", false).toBool ();
@@ -16036,7 +16036,7 @@ void MainWindow::on_actionDefault_event_logging_triggered()
 #if defined(Q_OS_WIN)
     QFile::remove (QDir {wsjtcb_writable_location (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #else
-    QFile::remove (QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
+    QFile::remove (QDir {wsjtcb_writable_location (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini"));
 #endif
 }
 
@@ -16045,7 +16045,7 @@ void MainWindow::on_actionDiagnostic_mode_triggered()
 #if defined(Q_OS_WIN)
     static QFile f {QDir {wsjtcb_writable_location (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
+    static QFile f {QDir {wsjtcb_writable_location (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;
@@ -16105,7 +16105,7 @@ void MainWindow::on_actionDisable_event_logging_triggered()
 #if defined(Q_OS_WIN)
     static QFile f {QDir {wsjtcb_writable_location (QStandardPaths::DataLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #else
-    static QFile f {QDir {QStandardPaths::writableLocation (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
+    static QFile f {QDir {wsjtcb_writable_location (QStandardPaths::ConfigLocation)}.absoluteFilePath ("wsjtcb_log_config.ini")};
 #endif
     if(!f.open(QIODevice::WriteOnly | QIODevice::Text)) {
       QMessageBox mb;

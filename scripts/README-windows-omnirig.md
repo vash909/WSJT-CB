@@ -22,7 +22,7 @@ The script performs these steps:
 The installer is written to:
 
 ```text
-installer-output\wsjtcb-1.4.0-win64-setup.exe
+installer-output\wsjtcb-1.4.1-win64-setup.exe
 ```
 
 ## Useful options
@@ -49,11 +49,11 @@ environment hit an assembler/runtime compatibility issue with automatic OpenMP
 detection. The build still links the needed GNU OpenMP runtime where the code
 uses explicit OpenMP symbols.
 
-## 1.4.0 release build on the Qt/MinGW toolchain
+## 1.4.1 release build on the Qt/MinGW toolchain
 
-The 1.4.0 Windows release was built with Qt 5.15.2, MinGW/GFortran 8.1.0,
-Boost 1.74 and the locally installed static Hamlib 4.5.5 and PortAudio
-libraries. This is a separate toolchain from the UCRT64 script above.
+To build the 1.4.1 Windows release with the established Qt/MinGW toolchain,
+use Qt 5.15.2, MinGW/GFortran 8.1.0, Boost 1.74 and the locally installed
+static Hamlib 4.5.5 and PortAudio libraries. This is a separate toolchain from the UCRT64 script above.
 OpenMP is enabled in this build, including the FT8 multithread decoder.
 
 To configure this toolchain, put the matching CMake, MinGW and Qt `bin`
@@ -61,19 +61,19 @@ directories on `PATH`, and pass the Qt, Boost, Hamlib, PortAudio and libusb
 prefixes in `CMAKE_PREFIX_PATH`. Configure a new build directory with:
 
 ```powershell
-cmake -S . -B build-user/release-1.4.0 -G "MinGW Makefiles" `
+cmake -S . -B build-user/release-1.4.1 -G "MinGW Makefiles" `
   -DCMAKE_BUILD_TYPE=Release `
   -DWSJT_SKIP_MANPAGES=ON -DWSJT_GENERATE_DOCS=OFF `
   -DWSJT_WITH_OMNIRIG=ON -DWSJT_BUILD_DECODER_TESTS=ON `
   -DCMAKE_DISABLE_FIND_PACKAGE_OpenMP=FALSE `
   "-DCMAKE_PREFIX_PATH=<Qt>;<Boost>;<Hamlib>;<PortAudio>;<libusb>" `
   "-DFFTW3_ROOT_DIR=<FFTW>" `
-  "-DCMAKE_INSTALL_PREFIX=$PWD/build-user/release-1.4.0/stage"
-cmake --build build-user/release-1.4.0 --parallel 6
-ctest --test-dir build-user/release-1.4.0 --output-on-failure
-cmake --install build-user/release-1.4.0
+  "-DCMAKE_INSTALL_PREFIX=$PWD/build-user/release-1.4.1/stage"
+cmake --build build-user/release-1.4.1 --parallel 6
+ctest --test-dir build-user/release-1.4.1 --output-on-failure
+cmake --install build-user/release-1.4.1
 & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" `
-  "/DDistDir=$PWD\build-user\release-1.4.0\stage" wsjtcb_dist_x64.iss
+  "/DDistDir=$PWD\build-user\release-1.4.1\stage" wsjtcb_dist_x64.iss
 ```
 
 Replace the angle-bracket paths with the installed dependency prefixes.

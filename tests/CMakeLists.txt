@@ -1,3 +1,11 @@
+if (WSJT_BUILD_PATH_TESTS)
+  add_executable (test_app_paths test_app_paths.cpp ${CMAKE_SOURCE_DIR}/qt_helpers.cpp)
+  target_include_directories (test_app_paths PRIVATE ${CMAKE_SOURCE_DIR})
+  target_link_libraries (test_app_paths Qt5::Widgets Qt5::Network)
+  add_test (NAME app_paths COMMAND test_app_paths)
+  set_tests_properties (app_paths PROPERTIES TIMEOUT 30 SKIP_RETURN_CODE 77)
+endif ()
+
 if (NOT WSJT_BUILD_DECODER_TESTS)
   return ()
 endif ()

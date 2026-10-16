@@ -3,13 +3,13 @@
 > You are solely responsible for ensuring full compliance with all applicable local, national, and international radiocommunication laws and regulations.
 > This project is distributed under the GNU General Public License v3.0 (GPLv3); see `COPYING` for details.
 
-# WSJT-CB 1.4.0: a 27 MHz version of WSJT-X by Joe Taylor K1JT
+# WSJT-CB 1.4.1: a 27 MHz version of WSJT-X by Joe Taylor K1JT
 
 Modified by 1AT106 / 1XZ001 Vash. Application credits: 1AT106, 1XZ732, 1AT1989.
 
 This document describes the code changes currently present in this fork, compared to the original WSJT-X source snapshot used as base.
 
-## Release Notes 1.4.0 — Scarlet
+## Release Notes 1.4.1 — Scarlet
 
 - WSPR now supports CB callsigns with a dedicated encoding that transmits the
   full callsign, a 4-character locator and transmit power in every frame.
@@ -25,7 +25,7 @@ This document describes the code changes currently present in this fork, compare
 - The interface includes the MBD decoder logo and retains the dark theme and
   stable settings/log directories introduced in 1.3.
 - WSPR band hopping has been removed from the CB interface.
-- The Windows x64 release is packaged as `wsjtcb-1.4.0-win64-setup.exe`,
+- The Windows x64 release is packaged as `wsjtcb-1.4.1-win64-setup.exe`,
   with English and Italian setup languages, OmniRig integration and the
   required Qt/compiler runtime libraries. See section 10 for installation.
 - Optional regression tests cover FT8 concurrency, frequency ranges, CB
@@ -328,14 +328,14 @@ cmake -S . -B build -G Ninja \
 The WSJT-CB 1.4 compatibility test package is named:
 
 ```text
-wsjtcb_1.4.0~compat1_amd64.deb
+wsjtcb_1.4.1~compat1_amd64.deb
 ```
 
 Install it from the directory containing the downloaded file:
 
 ```bash
 sudo apt update
-sudo apt install ./wsjtcb_1.4.0~compat1_amd64.deb
+sudo apt install ./wsjtcb_1.4.1~compat1_amd64.deb
 ```
 
 Start **WSJT-CB** from the application menu, or run `wsjtcb`. Use APT to
@@ -375,7 +375,7 @@ The archive uses xz compression, supported by the older target systems.
 Decoder and rig-control helpers are installed under `/usr/lib/wsjtcb/bin`,
 with a launcher at `/usr/bin/wsjtcb`, to avoid file conflicts with WSJT-X.
 The `~compat1` suffix identifies this as a package for compatibility testing
-and sorts before a final `1.4.0` package version.
+and sorts before a final `1.4.1` package version.
 
 ### Building a Distro-Native Package
 
@@ -438,7 +438,7 @@ cpack --config build-debian12/CPackConfig.cmake -G DEB -B build-debian12
 The generated package will be named like:
 
 ```text
-build-debian12/wsjtcb_1.4.0_amd64.deb
+build-debian12/wsjtcb_1.4.1_amd64.deb
 ```
 
 The existing `.github/workflows/release-deb.yml` builds inside Ubuntu 22.04
@@ -475,12 +475,12 @@ cmake -S . -B build -G Ninja \
   -DWSJT_GENERATE_DOCS=OFF
 ```
 
-## 10) Windows x64 Installation (1.4.0)
+## 10) Windows x64 Installation (1.4.1)
 
 The Windows installer generated from this repository is:
 
 ```text
-installer-output\wsjtcb-1.4.0-win64-setup.exe
+installer-output\wsjtcb-1.4.1-win64-setup.exe
 ```
 
 Run the installer, choose English or Italian, and complete setup. Windows
@@ -502,7 +502,7 @@ The installer retains the application identity used by previous WSJT-CB
 installers and reuses the existing installation directory. Settings and logs
 continue to use the stable WSJT-CB data locations introduced in 1.3.
 
-WSPR in 1.4.0 requires another WSJT-CB station using the CB WSPR format;
+WSPR in 1.4.1 requires another WSJT-CB station using the CB WSPR format;
 standard WSJT-X/WSPR stations and WSPRnet are incompatible with that format.
 
 For the MSYS2 UCRT64 build prerequisites and packaging command, see

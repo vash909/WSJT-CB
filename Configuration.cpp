@@ -2430,7 +2430,17 @@ void Configuration::impl::read_settings ()
   txDelay_ = settings_->value ("TxDelay",0.2).toDouble();
   aggressive_ = settings_->value ("Aggressive", 4).toInt ();
   RxBandwidth_ = settings_->value ("RxBandwidth", 2500).toInt ();
-  save_directory_.setPath (settings_->value ("SaveDir", default_save_directory_.absolutePath ()).toString ());
+  auto const saved_directory = settings_->value ("SaveDir", default_save_directory_.absolutePath ()).toString ();
+  auto const migrated_directory = wsjtcb_migrate_data_path (saved_directory);
+  save_directory_.setPath (migrated_directory);
+  if (migrated_directory != saved_directory)
+    {
+      if (!save_directory_.mkpath ("."))
+        {
+          throw_qstring (tr ("Cannot create audio save directory: %1").arg (migrated_directory));
+        }
+      settings_->setValue ("SaveDir", migrated_directory);
+    }
 
   tci_audio_ = settings_->value ("TCIAudio", tci_audio_).toBool ();
 
