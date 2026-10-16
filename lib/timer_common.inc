@@ -1,3 +1,3 @@
-  integer :: level, onlevel(0:10)
-  common/timer_private/ level, onlevel
-  !$omp threadprivate(/timer_private/)
+  ! Module storage avoids unsupported TLS COMMON assembly on MinGW GCC 16.
+  integer, save :: level = 0, onlevel(0:10) = 0
+  !$omp threadprivate(level, onlevel)

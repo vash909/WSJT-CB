@@ -10,6 +10,8 @@ module timer_impl
 
   private
 
+  include 'timer_common.inc'
+
   integer, parameter :: MAXCALL=100
   integer :: lu=6
   real :: dut
@@ -64,10 +66,7 @@ contains
     ! k=1 (tstop). Accumulates sums of these times in array ut (user time).
     ! Also traces all calls (for debugging purposes) if limtrace.gt.0
     !
-    ! If this is used with OpenMP than the /timer_private/ common
-    ! block must be copyed into each thread of a thread team by using
-    ! the copyin() clause on the !$omp parallel directive that creates
-    ! the team.
+    ! Nesting state belongs to each OpenMP thread and starts at zero.
 
     implicit none
 
@@ -78,7 +77,6 @@ contains
     integer :: n,ndiv,ntrace=0
     !$ integer :: tid
     character(len=8) :: tname
-    include 'timer_common.inc'
 
     !$omp critical(timer)
     if(limtrace.lt.0) go to 999
@@ -246,8 +244,6 @@ contains
     use timer_module, only: timer
     implicit none
     character(len=*), optional, intent(in) :: filename
-    include 'timer_common.inc'
-    data level/0/, onlevel/11 * 0/
     if (present (filename)) then
        open (newunit=lu, file=filename, status='unknown')
     else
